@@ -11,7 +11,7 @@
   --scroll-ink:#BFA4FF; --accent:#C09B6B;
   --headerH: 72px;              /* Sticky Header-Höhe */
   --headH: 120px;               /* Sticky-Headline-Höhe (per JS gesetzt) */
-  --gapUnderHead: 16px;         /* Luft unter Headline */
+  --gapUnderHead: 8px;         /* Headline näher an Kachel */
   --tileGap: 58vh;              /* Scroll-Weg zwischen Kacheln */
 }
 
@@ -66,23 +66,39 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 }
 
 .leistungen-hero .wrap{position:relative;z-index:1;padding-top:clamp(28px,6vw,56px)}
-.leistungen-hero::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(11,11,11,0) 60%,rgba(11,11,11,.65) 82%,rgba(11,11,11,1) 100%)
-}
+/* NEU – kein Abdunkeln mehr */
+.leistungen-hero::after{ display:none; }
+/* Rot für den ganzen Abschnitt (Header + Sticky + Kacheln) */
+#leistungen,
+.offerB,
+.offerB .wrap,
+.sticky-head,
+.stack-rail { background:#f5201f; }
+
 .bigcaps{letter-spacing:.16em;font-size:14px;color:var(--muted);text-transform:uppercase;margin:0 0 8px}
 .headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0 0 10px}
 
 /* LEISTUNGEN: Variante B – Sticky Headline + 3 Kacheln kleben darunter */
-.offerB{margin-top:-15vh;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-top:16px}
+.offerB{
+  margin-top:-22vh;  /* weiter nach oben gezogen */
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding-top:16px;
+}
+
 .offerB .wrap{position:relative} /* für Hand-Overlay */
 
 /* Wackelnde Hand rechts über „Was ich anbiete“ */
 .hand-wrap{
-  position:sticky; top:calc(var(--headerH) - 6px);
-  display:flex; justify-content:flex-end; z-index:6; pointer-events:none;
+  position:sticky;
+  top: calc(var(--headerH) - 20px); /* höher positioniert */
+  display:flex;
+  justify-content:flex-end;
+  z-index:6;
+  pointer-events:none;
   margin-bottom:8px;
 }
+
 .hand-hint{
   width: clamp(160px, 20vw, 280px);
  height:auto; filter:drop-shadow(0 6px 18px rgba(0,0,0,.35));
@@ -97,9 +113,11 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* Sticky Headline */
 .sticky-head{
-  position:sticky; top:var(--headerH); z-index:5;
+  position:sticky;
+  top:var(--headerH);
+  z-index:5;
   background:linear-gradient(180deg,#0b0b0b,#0b0b0bE6);
-  padding:12px 0 8px;
+  padding:8px 0 6px; /* kompakter */
 }
 .sticky-head .label{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#ccc;margin-bottom:6px}
 .sticky-head h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:.2em 0}
