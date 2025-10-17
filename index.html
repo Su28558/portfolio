@@ -1,32 +1,198 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dein Name – Webdesign & Entwicklung</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        margin: 4rem;
-        line-height: 1.6;
-        color: #222;
-      }
-      a {
-        color: #333;
-      }
-      main {
-        max-width: 600px;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Ich gestalte und entwickle Websites</h1>
-      <p>
-        Diese Seite ist handgeschrieben – kein WordPress, kein Baukasten.<br />
-        Für Kund:innen setze ich einfache, wartbare Websites mit WordPress um.
-      </p>
-      <p><a href="mailto:deine@mailadresse.de">Projekt anfragen</a></p>
-    </main>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dein Name – Webdesign & Art Direction</title>
+  <meta name="description" content="Gestaltung vor Technik: klare Typografie, präzise Layouts, schnelle Websites. WordPress für Kund:innen, reiner Code für das Portfolio." />
+  <meta name="color-scheme" content="light dark" />
+  <!-- Fonts: Display + Grotesk -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#fff; --fg:#121212; --muted:#5e5e5e; --line:#e9e9e9;
+      --accent:#0a0a0a; /* Akzent anpassbar, z.B. #1F5FFF */
+      --max:1180px; --col: min(3.5rem, 5vw); /* Rhythmus */
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a6a6a6; --line:#1e1e1e; --accent:#f2f2f2; }
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--fg)}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.5}
+    a{color:inherit; text-underline-offset: .22em}
+    .wrap{max-width:var(--max); margin-inline:auto; padding-inline: clamp(16px, 3vw, 28px)}
+    header{border-bottom:2px solid var(--fg); padding:14px 0; position:sticky; top:0; background:var(--bg); z-index:10}
+    .row{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .brand{font-family:Fraunces,serif; font-weight:700; letter-spacing:-.01em; text-decoration:none}
+    nav a{font-size:14px; text-decoration:none; border-bottom:2px solid transparent; margin-left:18px}
+    nav a:hover{border-color:var(--fg)}
+    /* HERO */
+    .hero{padding-block: clamp(48px, 8vw, 120px); border-bottom:1px solid var(--line)}
+    .eyebrow{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+    h1.display{
+      font-family:Fraunces,serif; font-weight:700; line-height:1.05;
+      font-size: clamp(36px, 6.2vw, 76px); letter-spacing:-.015em; margin:.25em 0 .1em;
+    }
+    .lead{max-width: 54ch; color:var(--muted); font-size:clamp(16px,2.2vw,18px)}
+    .cta{display:inline-block; margin-top:24px; border:2px solid var(--fg); padding:12px 18px; border-radius:12px; text-decoration:none}
+    /* FEATURE STRIP */
+    .strip{display:flex; flex-wrap:wrap; gap:18px; margin-top:22px; color:var(--muted); font-size:14px}
+    .dot::before{content:"•"; margin:0 .5em}
+    /* WORK GRID */
+    section{padding-block:42px; border-bottom:1px solid var(--line)}
+    h2.kicker{font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 8px}
+    h3.section{font-family:Fraunces,serif; font-size: clamp(22px, 2.8vw, 32px); margin:0 0 18px}
+    .grid{display:grid; gap: clamp(14px,2.4vw,18px)}
+    .grid.work{grid-template-columns:1fr; }
+    @media (min-width:820px){ .grid.work{grid-template-columns: 1.2fr 1fr 1fr} .span-2{grid-column: span 2} }
+    .card{position:relative; border:2px solid var(--fg); border-radius:18px; overflow:hidden; background:linear-gradient(0deg, rgba(0,0,0,.03), rgba(0,0,0,0))}
+    .card img{width:100%; height:auto; display:block; aspect-ratio: 16/10; object-fit: cover}
+    .cap{position:absolute; left:0; bottom:0; width:100%; padding:12px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      backdrop-filter: blur(6px); background: color-mix(in oklab, var(--bg) 76%, transparent);
+      border-top:1px solid var(--line); font-size:14px
+    }
+    .cap b{font-weight:600}
+    .pill{border:1.8px solid var(--fg); border-radius:999px; padding:2px 10px; font-size:12px}
+    /* SERVICES + PRINCIPLES */
+    .cols{display:grid; gap:22px; grid-template-columns:1fr}
+    @media(min-width:980px){ .cols{grid-template-columns:1.3fr .9fr} }
+    .box{border:2px solid var(--fg); border-radius:16px; padding:18px}
+    .list{margin:0; padding:0; list-style:none}
+    .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
+    /* FOOTER */
+    footer{padding:20px 0; color:var(--muted); font-size:14px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap row">
+      <a class="brand" href="/">Dein&nbsp;Name</a>
+      <nav>
+        <a href="#arbeiten">Arbeiten</a>
+        <a href="#leistungen">Leistungen</a>
+        <a href="#ansatz">Ansatz</a>
+        <a href="#about">Über</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO: Design-first Statement -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow">Design → Code</div>
+        <h1 class="display">Gestaltung, die wirkt.<br>Websites, die bleiben.</h1>
+        <p class="lead">
+          Ich verbinde Art Direction mit solider Umsetzung: klare Typografie, präzise Raster, spürbare Ruhe.
+          Für Kund:innen realisiere ich schlanke WordPress-Sites; mein eigenes Portfolio läuft als reiner Code.
+        </p>
+        <a class="cta" href="#kontakt">Projekt anfragen</a>
+        <div class="strip">
+          <span>Typografie &amp; Layout</span><span class="dot"></span>
+          <span>Design-Systeme</span><span class="dot"></span>
+          <span>Barrierefreiheit</span><span class="dot"></span>
+          <span>Performance</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK: Bildkacheln mit Captions -->
+    <section id="arbeiten">
+      <div class="wrap">
+        <h2 class="kicker">Portfolio</h2>
+        <h3 class="section">Ausgewählte Arbeiten</h3>
+        <div class="grid work">
+          <figure class="card span-2">
+            <img src="/assets/work-1.jpg" alt="Case A – Redesign Unternehmenswebsite" loading="lazy">
+            <figcaption class="cap">
+              <b>Case A – Redesign</b>
+              <span class="pill">WordPress Block-Theme</span>
+            </figcaption>
+          </figure>
+          <figure class="card">
+            <img src="/assets/work-2.jpg" alt="Case B – Portfolio einer Fotografin" loading="lazy">
+            <figcaption class="cap">
+              <b>Case B – Portfolio</b>
+              <span class="pill">Reiner Code</span>
+            </figcaption>
+          </figure>
+          <figure class="card">
+            <img src="/assets/work-3.jpg" alt="Case C – Onepager für Beratung" loading="lazy">
+            <figcaption class="cap">
+              <b>Case C – Onepager</b>
+              <span class="pill">WP + Patterns</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES + PRINCIPLES: klar & kuratiert -->
+    <section id="leistungen">
+      <div class="wrap cols">
+        <div class="box">
+          <h2 class="kicker">Leistungen</h2>
+          <h3 class="section">Gestaltung & Umsetzung</h3>
+          <ul class="list">
+            <li><strong>Webdesign</strong> — Typografie, Raster, Komponenten; reduziert & markentreu.</li>
+            <li><strong>Entwicklung</strong> — sauberes Frontend; für Kund:innen meist WordPress (Block-Theme), Spezialfälle als reiner Code.</li>
+            <li><strong>Care</strong> — Updates, Backups, Page-Speed-Checks; Schulung für Redaktionen.</li>
+          </ul>
+        </div>
+        <aside class="box" id="ansatz">
+          <h2 class="kicker">Ansatz</h2>
+          <h3 class="section">Weniger Lärm, mehr Klarheit</h3>
+          <ul class="list">
+            <li>Strenges Layout-Raster & definierte Weißräume</li>
+            <li>Kontraste, Hierarchien, Lesbarkeit</li>
+            <li>&lt; 10 Plugins pro Site, keine Builder-Abhängigkeiten</li>
+            <li>Pagespeed 95–100, LCP &lt; 2.5s, CLS &lt; 0.1</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="wrap">
+        <h2 class="kicker">Über</h2>
+        <h3 class="section">Hallo, ich bin Dein Name</h3>
+        <div class="box">
+          <p>
+            Ich komme aus der Gestaltung, nicht aus der Server-Ecke. Mir geht es um Ruhe, Rhythmus und klare Prioritäten auf der Seite.
+            Technik nutze ich, um genau das präzise umzusetzen — nicht um sie zu zeigen.
+          </p>
+          <p style="color:var(--muted)">Tools: Figma/Sketch, VS Code, GitHub · Stack: HTML/CSS/JS, WordPress Block-Themes</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="kontakt">
+      <div class="wrap">
+        <h2 class="kicker">Kontakt</h2>
+        <h3 class="section">Projekt anfragen</h3>
+        <div class="box">
+          <p>Schreib mir kurz Ziele, Umfang, Timing. Ich melde mich mit einer klaren Empfehlung.</p>
+          <p><a class="cta" href="mailto:deine@mailadresse.de?subject=Projektanfrage%20Website">E-Mail senden</a></p>
+          <p style="color:var(--muted); font-size:14px">Impressum & Datenschutz kannst du als eigene Seiten ergänzen.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap row" style="flex-wrap:wrap; gap:8px">
+      <span>© <span id="y"></span> Dein Name</span><span aria-hidden="true">·</span>
+      <a href="/impressum.html">Impressum</a><span aria-hidden="true">·</span>
+      <a href="/datenschutz.html">Datenschutz</a>
+    </div>
+  </footer>
+
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
 </html>
