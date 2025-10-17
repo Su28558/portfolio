@@ -1,68 +1,441 @@
-<script>
-// Gradient-Themes: passe hier die Stimmungen an
-const THEMES = {
-  dawn:  { c1:"#cfe6ff", c2:"#ffffff", c3:"#e9f0ff",  dark:false }, // bläulich > weiß
-  paper: { c1:"#ffffff", c2:"#ffffff", c3:"#ffffff",  dark:false }, // komplett hell
-  dusk:  { c1:"#97a7ff", c2:"#ebedff", c3:"#0f1422",  dark:false }, // milder Übergang Richtung dunkel
-  night: { c1:"#232738", c2:"#111319", c3:"#07090f",  dark:true  }  // dunkler Bereich
-};
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Denice-Su Cronauer – Online-Redaktion & Webgestaltung</title>
+  <meta name="description" content="Online-Redakteurin & Content Managerin. Gestaltung und Aufbau moderner, strukturierter Websites. Redaktion trifft Design." />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-(function(){
-  const bg = document.querySelector('.bgfx');
-  const sections = [...document.querySelectorAll('section[data-theme], .marquee-wrap[data-theme]')];
+  <style>
+  :root{
+    --fg:#121212; --muted:#666; --line:#e8e8e8;
+    --accent:#B8915A; --scroll-ink:#A88BFF;
+    --tint1:#f8f8f8; --tint2:#f4f4f4; --tint3:#f1f1f1;
+  }
 
-  // IntersectionObserver – aktiver Abschnitt bestimmt Farben
-  const io = new IntersectionObserver((entries)=>{
-    // wähle den Eintrag mit der größten Sichtbarkeit
-    let best = null;
-    entries.forEach(e=>{
-      if(!best || e.intersectionRatio > best.intersectionRatio){ best = e; }
-    });
-    if(!best) return;
-    const themeName = best.target.getAttribute('data-theme') || 'paper';
-    const t = THEMES[themeName] || THEMES.paper;
+  /* Reset & Layout */
+  *{box-sizing:border-box}
+  html,body{margin:0; padding:0; overflow-x:hidden}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--fg); background:transparent}
+  a{color:inherit; text-decoration:none}
+  .wrap{max-width:1180px; margin:auto; padding:0 clamp(16px,3vw,24px)}
+  section{padding:48px 0; border-bottom:1px solid var(--line); background:transparent}
 
-    // sanfte Umschaltung der Gradient-Farben via neue Background-Zusammensetzung
-    bg.style.setProperty('--cx', '50%');
-    bg.style.setProperty('--cy', '40%');
-    // Neuer Hintergrund mit t.c1/c2/c3 (wir setzen direkt als CSS-String, damit die Transition greift)
-    bg.style.background = `
+  /* Fixed Background Gradient (scroll-abhängig) */
+  .bgfx{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    --cx:50%; --cy:40%;
+    background:
       radial-gradient(1200px 800px at var(--cx) var(--cy),
-        color-mix(in oklab, ${t.c1} 92%, transparent) 0%,
-        color-mix(in oklab, ${t.c2} 85%, transparent) 55%,
-        color-mix(in oklab, ${t.c3} 90%, transparent) 100%),
+        color-mix(in oklab, #cfe6ff 92%, transparent) 0%,
+        color-mix(in oklab, #ffffff 85%, transparent) 55%,
+        color-mix(in oklab, #0c0f18 90%, transparent) 100%),
       radial-gradient(800px 600px at calc(var(--cx) + 20%) calc(var(--cy) + 15%),
-        color-mix(in oklab, ${t.c1} 22%, transparent) 0%,
+        color-mix(in oklab, #cfe6ff 22%, transparent) 0%,
         transparent 70%),
       linear-gradient(180deg,
-        color-mix(in oklab, ${t.c1} 20%, ${t.c2}) 0%,
-        ${t.c2} 60%,
-        color-mix(in oklab, ${t.c3} 40%, ${t.c2}) 100%)`;
-
-    document.body.classList.toggle('theme-dark', !!t.dark);
-    document.body.classList.toggle('theme-light', !t.dark);
-  }, { threshold:[0, .25, .5, .75, 1] });
-
-  sections.forEach(s=>io.observe(s));
-
-  // Parallax/Pointer – BG-Zentrum bewegt sich leicht (dezent, performance-schonend)
-  let raf = null, cx = 50, cy = 40, targetCx = 50, targetCy = 40;
-  function animate(){
-    cx += (targetCx - cx) * 0.08;
-    cy += (targetCy - cy) * 0.08;
-    document.querySelector('.bgfx').style.setProperty('--cx', cx+'%');
-    document.querySelector('.bgfx').style.setProperty('--cy', cy+'%');
-    raf = null;
+        color-mix(in oklab, #cfe6ff 20%, #ffffff) 0%,
+        #ffffff 60%,
+        color-mix(in oklab, #0c0f18 40%, #ffffff) 100%);
+    transition: background 900ms ease, filter 900ms ease, opacity 300ms ease;
   }
-  function onPointer(x, y){
-    const ww = window.innerWidth, wh = window.innerHeight;
-    targetCx = 35 + (x/ww)*30;  // 35%..65%
-    targetCy = 30 + (y/wh)*30;  // 30%..60%
-    if(!raf) raf = requestAnimationFrame(animate);
+  .bgfx::after{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.08; mix-blend-mode:overlay;
+    background-image:
+      url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>\
+      <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/></filter>\
+      <rect width='100%%' height='100%%' filter='url(#n)' opacity='0.25'/></svg>");
+    background-size:160px 160px;
   }
-  window.addEventListener('mousemove', (e)=> onPointer(e.clientX, e.clientY), {passive:true});
-  window.addEventListener('touchmove', (e)=>{
-    const t = e.touches[0]; if(t) onPointer(t.clientX, t.clientY);
-  }, {passive:true});
-})();
-</script>
+  body.theme-dark  { --fg:#f2f2f2; --muted:#bdbdbd; --line:#1b1b1b; }
+  body.theme-light { --fg:#121212; --muted:#666;   --line:#e8e8e8; }
+
+  /* Header */
+  header{position:sticky; top:0; z-index:20; background:transparent; backdrop-filter:blur(6px); border-bottom:1px solid var(--line)}
+  .row{display:flex; justify-content:space-between; align-items:center; padding:12px 0}
+  .brand{font-family:Fraunces,serif; font-weight:700; font-size:20px}
+  .nav-toggle{border:2px solid var(--fg); background:transparent; border-radius:12px; width:42px; height:42px; font-size:22px; cursor:pointer}
+  .nav-panel{display:none; background:transparent; border-bottom:1px solid var(--line)}
+  .nav-panel.open{display:block}
+  .nav-menu{display:flex; gap:8px; padding:8px 0; flex-wrap:wrap}
+  .nav-menu a{padding:8px 12px; border-radius:8px}
+  .nav-menu a:hover{background:rgba(0,0,0,.06)}
+  @media (prefers-color-scheme: dark){
+    .nav-menu a:hover{background:rgba(255,255,255,.08)}
+  }
+
+  /* Hero */
+  .hero{padding:80px 0 56px}
+  .eyebrow{text-transform:uppercase; letter-spacing:.12em; color:var(--muted); font-size:12px}
+  h1.display{font-family:Fraunces,serif; font-size:clamp(48px,8vw,100px); line-height:1.05; margin:.2em 0}
+  .display .char{transition:color .15s ease}
+  .display .char.is-colored{color:var(--scroll-ink)}
+  .lead{color:var(--muted); max-width:60ch}
+  .cta-inline{display:flex; align-items:center; gap:12px; margin-top:20px; flex-wrap:wrap}
+  .label{font-weight:600; font-size:18px}
+  .fire-icon{width:44px; cursor:pointer; animation:wobble 2.2s ease-in-out infinite}
+  @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
+
+  /* Laufbanner */
+  .marquee-wrap{background:transparent; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .marquee{white-space:nowrap; overflow:hidden; position:relative}
+  .track{
+    display:inline-block; padding-block: clamp(0px,0.5vw,4px); line-height:1.02;
+    font-family:"Archivo Black",system-ui,sans-serif; font-size:clamp(32px,9vw,96px);
+    letter-spacing:.04em; color:var(--fg);
+    animation:scroll-left 32s linear infinite;
+  }
+  .track span{margin:0 1.2em}
+  .marquee:hover .track, .marquee.paused .track{animation-play-state:paused}
+  @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* Content */
+  .kicker{text-transform:uppercase; letter-spacing:.12em; font-size:14px; color:var(--muted); margin-bottom:8px}
+  .section{font-family:Fraunces,serif; font-size:clamp(22px,2.5vw,32px); margin-top:0}
+  .cols{display:grid; gap:24px}
+  @media(min-width:900px){.cols{grid-template-columns:1.3fr 1fr}}
+  .box{border:1px solid var(--line); border-radius:12px; padding:20px; transition:border-color .3s, box-shadow .3s}
+  .box:hover{border-color:var(--accent); box-shadow:0 4px 20px rgba(0,0,0,.06)}
+  .list{list-style:none; padding:0; margin:0}
+  .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
+
+  /* Sticky section */
+  .sticky-section{position:relative}
+  .sticky-grid{display:grid; gap:24px}
+  @media(min-width:900px){.sticky-grid{grid-template-columns:0.6fr 1.4fr; gap:32px}}
+  .sticky-col{position:sticky; top:90px; align-self:start}
+  .scroll-block{background:var(--tint1); border-radius:12px; padding:24px; transition:background .4s, transform .4s; margin-bottom:24px}
+  .scroll-block.is-active{background:color-mix(in oklab,var(--accent)20%,transparent); transform:translateY(-4px)}
+
+  /* CTAs */
+  .cta{display:inline-block; border:2px solid var(--fg); padding:12px 18px; border-radius:12px; text-decoration:none; transition:.3s}
+  .cta:hover{border-color:var(--accent); transform:translateY(-2px)}
+  .funny{position:relative; height:60px}
+  button.prank{border:2px solid var(--fg); background:transparent; border-radius:12px; padding:12px 18px; cursor:pointer}
+  .funny.is-flying button.prank{position:absolute; left:50%; top:0; transform:translateX(-50%)}
+
+  footer{padding:24px 0; text-align:center; color:var(--muted); font-size:14px; background:transparent}
+
+  /* Feuerball */
+  .fireball-flying{position:fixed; width:44px; z-index:50; pointer-events:none; animation:spin 1s linear infinite; filter:drop-shadow(0 4px 12px rgba(168,139,255,.4))}
+  @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .fb-spark{position:fixed; width:10px; height:10px; border-radius:50%; background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0)); pointer-events:none; z-index:49; animation:fbSpark .6s ease-out forwards}
+  @keyframes fbSpark{0%{opacity:.9; transform:scale(1)}100%{opacity:0; transform:scale(.3)}}
+  </style>
+</head>
+
+<body class="theme-light">
+  <!-- Fixed Gradient Layer -->
+  <div class="bgfx" aria-hidden="true"></div>
+
+  <header>
+    <div class="wrap row">
+      <a class="brand" href="#">Denice-Su Cronauer</a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false">+</button>
+    </div>
+    <div class="nav-panel" id="navPanel">
+      <div class="wrap">
+        <nav class="nav-menu">
+          <a href="#leistungen">Leistungen</a>
+          <a href="#ansatz">Ansatz</a>
+          <a href="#kontakt">Kontakt</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero" data-theme="dawn">
+      <div class="wrap">
+        <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
+        <h1 class="display" id="headline">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
+        <p class="lead">Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen. Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.</p>
+        <div class="cta-inline">
+          <span class="label">Zum Kontaktformular</span>
+          <img id="fireBtn" class="fire-icon" src="feuer.png" alt="Feuerball">
+        </div>
+      </div>
+    </section>
+
+    <!-- LAUFBANNER -->
+    <section class="marquee-wrap" aria-label="Kompetenzen" data-theme="paper">
+      <div class="marquee" id="marquee" tabindex="0">
+        <div class="track" aria-hidden="true">
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span> ·
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span>
+        </div>
+        <div class="track" aria-hidden="true">
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span> ·
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEISTUNGEN -->
+    <section id="leistungen" data-theme="paper">
+      <div class="wrap cols">
+        <div class="box">
+          <h2 class="kicker">Leistungen</h2>
+          <h3 class="section">Was ich anbiete</h3>
+          <ul class="list">
+            <li><strong>Content & Redaktion:</strong> Themenplanung, UX-Writing, SEO-Texte, Content-Strategie.</li>
+            <li><strong>Website-Gestaltung & Aufbau:</strong> Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite.</li>
+            <li><strong>CMS-Pflege & Betreuung:</strong> sicherer Umgang mit WordPress, TYPO3, Magnolia u.v.m.</li>
+          </ul>
+        </div>
+        <aside class="box">
+          <h2 class="kicker">Einblicke</h2>
+          <h3 class="section">Artikel</h3>
+          <ul class="list">
+            <li><a href="https://www.moccu.com/insights/digital-design/ux-writing-audit/" target="_blank" rel="noopener">UX-Writing-Audit – warum gute Texte genauso wichtig sind wie gutes Design</a></li>
+            <li><a href="https://www.moccu.com/insights/content-marketing/copybook/" target="_blank" rel="noopener">Copybook – wie Content-Teams konsistente Texte schreiben</a></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- STICKY -->
+    <section id="ansatz" class="sticky-section" data-theme="dusk">
+      <div class="wrap sticky-grid">
+        <div class="sticky-col">
+          <h2 class="kicker">Ansatz</h2>
+          <h3 class="section">Wie ich arbeite</h3>
+          <p>Ich glaube an Reduktion, Klarheit und gute Übergänge – auch im digitalen Raum. Jede Website ist eine Erzählung, die man führen und gestalten kann.</p>
+        </div>
+        <div>
+          <article class="scroll-block"><h4>01 · Denken in Inhalt</h4><p>Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.</p></article>
+          <article class="scroll-block"><h4>02 · Gestaltung als Sprache</h4><p>Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus.</p></article>
+          <article class="scroll-block"><h4>03 · Technik als Werkzeug</h4><p>Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section id="kontakt" data-theme="night">
+      <div class="wrap">
+        <h2 class="kicker">Kontakt</h2>
+        <h3 class="section">Kontaktformular</h3>
+        <div class="box">
+          <p>Schreib mir kurz Ziele, Umfang, Timing. Ich melde mich mit einer klaren Empfehlung.</p>
+          <div class="cta-row" style="display:flex;gap:12px;flex-wrap:wrap">
+            <a class="cta" href="mailto:denice@mailadresse.de?subject=Projektanfrage%20Website">E-Mail senden</a>
+            <div class="funny" id="funnyWrap">
+              <button id="callBtn" class="prank">Ruf mich an</button>
+            </div>
+          </div>
+          <p style="color:var(--muted);font-size:14px;margin-top:10px">Impressum & Datenschutz folgen.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap">© <span id="y"></span> Denice-Su Cronauer</div></footer>
+
+  <script>
+  document.getElementById('y').textContent=new Date().getFullYear();
+
+  // Plus-Navigation
+  const navToggle=document.getElementById('navToggle');
+  const navPanel=document.getElementById('navPanel');
+  navToggle.addEventListener('click',()=>{
+    const open=navToggle.getAttribute('aria-expanded')==='true';
+    navToggle.setAttribute('aria-expanded',!open);
+    navPanel.classList.toggle('open',!open);
+    navToggle.textContent=open?'+':'×';
+  });
+
+  // H1 Buchstaben färben (früherer Start)
+  (function(){
+    const h1=document.getElementById('headline');
+    const hero=document.getElementById('hero');
+    const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
+    h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
+    const chars=h1.querySelectorAll('.char');
+    function update(){
+      const r=hero.getBoundingClientRect();
+      const total=Math.max(r.height,1);
+      const bias=total*0.75; // früher
+      const passed=Math.min(Math.max(-r.top+bias,0),total+bias);
+      const progress=passed/(total+bias);
+      const count=Math.floor(chars.length*progress);
+      chars.forEach((c,i)=>c.classList.toggle('is-colored',i<count));
+    }
+    update(); window.addEventListener('scroll',update,{passive:true}); window.addEventListener('resize',update);
+  })();
+
+  // Marquee pausierbar per Klick/Space
+  (function(){
+    const mq=document.getElementById('marquee');
+    mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
+    mq?.addEventListener('keydown',e=>{
+      if(e.key===' '||e.key==='Enter'){e.preventDefault();mq.classList.toggle('paused');}
+    });
+  })();
+
+  // Sticky Aktiv-Highlight (optisch)
+  (function(){
+    const blocks=document.querySelectorAll('.scroll-block');
+    function mark(){
+      const mid=window.innerHeight*0.45;
+      blocks.forEach(b=>{
+        const r=b.getBoundingClientRect();
+        b.classList.toggle('is-active', r.top<mid && r.bottom>mid);
+      });
+    }
+    mark(); window.addEventListener('scroll',mark,{passive:true}); window.addEventListener('resize',mark);
+  })();
+
+  // Fliehender Button
+  (function(){
+    const wrap=document.getElementById('funnyWrap');
+    const btn=document.getElementById('callBtn');
+    if(!wrap||!btn)return;
+    wrap.addEventListener('mousemove',e=>{
+      wrap.classList.add('is-flying');
+      const rect=btn.getBoundingClientRect();
+      const distX=e.clientX-(rect.left+rect.width/2);
+      const distY=e.clientY-(rect.top+rect.height/2);
+      const distance=Math.hypot(distX,distY);
+      if(distance<140){
+        const offsetX=(Math.random()-0.5)*320;
+        const offsetY=(Math.random()-0.5)*140;
+        btn.style.transform=`translate(${offsetX}px,${offsetY}px)`;
+      }
+    });
+    wrap.addEventListener('mouseleave',()=>{ btn.style.transform=''; wrap.classList.remove('is-flying'); });
+  })();
+
+  // Feuerball + langsamer Smooth-Scroll
+  (function(){
+    const img=document.getElementById('fireBtn');
+    const target=document.getElementById('kontakt');
+
+    function smoothScrollTo(targetY,duration){
+      const startY=window.scrollY;
+      const delta=targetY-startY;
+      const startT=performance.now();
+      const ease=t=>t<.5?2*t*t:-1+(4-2*t)*t;
+      function tick(now){
+        const p=Math.min((now-startT)/duration,1);
+        window.scrollTo(0,startY+delta*ease(p));
+        if(p<1)requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function flyOnce(){
+      if(!img||!target)return;
+      const r=img.getBoundingClientRect();
+      const startX=r.left+r.width/2;
+      const startY=r.top+r.height/2;
+      const tRect=target.getBoundingClientRect();
+      const endX=window.innerWidth/2;
+      const endY=tRect.top+window.scrollY+20;
+
+      const clone=img.cloneNode(true);
+      clone.classList.add('fireball-flying');
+      document.body.appendChild(clone);
+
+      const duration=2200;
+      let start=null,lastSpark=0;
+      function sparkAt(x,y){
+        const s=document.createElement('span');
+        s.className='fb-spark';
+        const size=8+Math.random()*10;
+        s.style.width=size+'px'; s.style.height=size+'px';
+        s.style.left=x+'px'; s.style.top=y+'px';
+        document.body.appendChild(s);
+        s.addEventListener('animationend',()=>s.remove());
+      }
+      function step(ts){
+        if(!start)start=ts;
+        const p=Math.min((ts-start)/duration,1);
+        const ease=p<.5?2*p*p:-1+(4-2*p)*p;
+        const arc=Math.sin(p*Math.PI)*80;
+        const x=startX+(endX-startX)*ease;
+        const y=startY+(endY-startY)*ease+arc;
+        clone.style.left=x+'px';
+        clone.style.top=(y-window.scrollY)+'px';
+        if(ts-lastSpark>45){lastSpark=ts; sparkAt(x,y-window.scrollY); }
+        if(p<1)requestAnimationFrame(step); else clone.remove();
+      }
+      requestAnimationFrame(step);
+      smoothScrollTo(endY, duration);
+    }
+    img?.addEventListener('click',e=>{e.preventDefault();flyOnce();});
+  })();
+
+  // Scroll-Gradient Theme Switch (like knut.studio softness)
+  (function(){
+    const THEMES = {
+      dawn:  { c1:"#cfe6ff", c2:"#ffffff", c3:"#e9f0ff",  dark:false },
+      paper: { c1:"#ffffff", c2:"#ffffff", c3:"#ffffff",  dark:false },
+      dusk:  { c1:"#97a7ff", c2:"#ebedff", c3:"#0f1422",  dark:false },
+      night: { c1:"#232738", c2:"#111319", c3:"#07090f",  dark:true  }
+    };
+    const bg = document.querySelector('.bgfx');
+    const sections = [...document.querySelectorAll('section[data-theme], .marquee-wrap[data-theme]')];
+
+    const io = new IntersectionObserver((entries)=>{
+      let best=null;
+      entries.forEach(e=>{ if(!best || e.intersectionRatio>best.intersectionRatio) best=e; });
+      if(!best) return;
+      const themeName=best.target.getAttribute('data-theme')||'paper';
+      const t=THEMES[themeName]||THEMES.paper;
+
+      bg.style.background = `
+        radial-gradient(1200px 800px at var(--cx) var(--cy),
+          color-mix(in oklab, ${t.c1} 92%, transparent) 0%,
+          color-mix(in oklab, ${t.c2} 85%, transparent) 55%,
+          color-mix(in oklab, ${t.c3} 90%, transparent) 100%),
+        radial-gradient(800px 600px at calc(var(--cx) + 20%) calc(var(--cy) + 15%),
+          color-mix(in oklab, ${t.c1} 22%, transparent) 0%,
+          transparent 70%),
+        linear-gradient(180deg,
+          color-mix(in oklab, ${t.c1} 20%, ${t.c2}) 0%,
+          ${t.c2} 60%,
+          color-mix(in oklab, ${t.c3} 40%, ${t.c2}) 100%)`;
+
+      document.body.classList.toggle('theme-dark', !!t.dark);
+      document.body.classList.toggle('theme-light', !t.dark);
+    }, { threshold:[0,.25,.5,.75,1] });
+    sections.forEach(s=>io.observe(s));
+
+    // dezente Parallax-Reaktion
+    let raf=null, cx=50, cy=40, targetCx=50, targetCy=40;
+    function animate(){
+      cx += (targetCx - cx) * 0.08;
+      cy += (targetCy - cy) * 0.08;
+      bg.style.setProperty('--cx', cx+'%');
+      bg.style.setProperty('--cy', cy+'%');
+      raf=null;
+    }
+    function onPointer(x,y){
+      const ww=window.innerWidth, wh=window.innerHeight;
+      targetCx = 35 + (x/ww)*30; // 35..65 %
+      targetCy = 30 + (y/wh)*30; // 30..60 %
+      if(!raf) raf=requestAnimationFrame(animate);
+    }
+    window.addEventListener('mousemove', e=>onPointer(e.clientX,e.clientY), {passive:true});
+    window.addEventListener('touchmove', e=>{
+      const t=e.touches[0]; if(t) onPointer(t.clientX,t.clientY);
+    }, {passive:true});
+  })();
+  </script>
+</body>
+</html>
