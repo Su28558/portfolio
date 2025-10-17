@@ -9,7 +9,6 @@
 
   <style>
   :root{
-    /* Dark Theme Basis */
     --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a7a7a7; --line:#1e1e1e;
     --accent:#C09B6B; --scroll-ink:#BFA4FF;
     --shadow:0 10px 30px rgba(0,0,0,.35);
@@ -46,13 +45,13 @@
   .fire-icon{width:44px; cursor:pointer; animation:wobble 2.2s ease-in-out infinite; filter:drop-shadow(0 6px 18px rgba(191,164,255,.28))}
   @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-  /* Laufbanner (auf dunkel) */
-  .marquee-wrap{background:transparent; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  /* Laufbanner – weißer Hintergrund, schwarze Schrift */
+  .marquee-wrap{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
   .marquee{white-space:nowrap; overflow:hidden; position:relative}
   .track{
     display:inline-block; padding-block: clamp(0px,0.5vw,4px); line-height:1.02;
     font-family:"Archivo Black",system-ui,sans-serif; font-size:clamp(32px,9vw,96px);
-    letter-spacing:.04em; color:var(--fg);
+    letter-spacing:.04em; color:#000;
     animation:scroll-left 32s linear infinite;
   }
   .track span{margin:0 1.2em}
@@ -62,62 +61,63 @@
   /* Standard-Kästen */
   .kicker{text-transform:uppercase; letter-spacing:.12em; font-size:14px; color:var(--muted); margin-bottom:8px}
   .section{font-family:Fraunces,serif; font-size:clamp(22px,2.5vw,32px); margin-top:0}
-  .cols{display:grid; gap:24px}
-  @media(min-width:900px){.cols{grid-template-columns:1.3fr 1fr}}
   .box{border:1px solid var(--line); border-radius:var(--radius); padding:20px; transition:border-color .3s, box-shadow .3s}
   .box:hover{border-color:var(--accent); box-shadow:var(--shadow)}
-  .list{list-style:none; padding:0; margin:0}
-  .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
 
-  /* === NEUES LEISTUNGEN-MODUL (scrollbasiert, überlappend, mit BG-Bild) === */
-  .offer{position:relative; padding:0; border:none}
-  .offer .inner{position:relative; padding: clamp(28px,4vw,48px); overflow:visible}
-  .offer::before{
-    content:""; position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(0,0,0,.50), rgba(0,0,0,.40) 30%, rgba(0,0,0,.55) 100%),
-               url('hintergrund1.png') center/cover no-repeat;
-    filter:saturate(1.05) contrast(1.02);
-    z-index:0;
-  }
-  .offer .grid{position:relative; z-index:1; display:grid; gap:24px}
-  @media(min-width:980px){ .offer .grid{grid-template-columns:0.7fr 1.3fr; align-items:start} }
+  /* ===== Neues Leistungen-Modul =====
+     Layout: Überschrift oben, darunter eine durchgehende Fläche
+     Rechts: große Themenkarten (scrollbar, leicht überlappend, snap)
+     Links: sticky Erklärung, die sich beim Scrollen aktualisiert
+  */
+  #leistungen{border-bottom:none; padding-bottom:0;} /* nicht „getrennt“ wirken */
+  .offer-head{margin-top:12px; margin-bottom:18px}
+  .offer{position:relative; padding:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.03) 60%, rgba(255,255,255,.02));}
+  .offer .inner{position:relative; padding: clamp(24px,4vw,46px) 0;}
+  .offer .grid{display:grid; gap:24px; align-items:start}
+  @media(min-width:980px){ .offer .grid{grid-template-columns:0.9fr 1.1fr; gap:36px} }
 
-  /* Linke, sticky Headline-Spalte */
-  .offer .sticky-col{position:sticky; top:96px; align-self:start}
+  /* Linke sticky Spalte (Erklärung) */
+  .offer .sticky-col{position:sticky; top:96px; align-self:start; padding-left: clamp(16px,3vw,24px)}
   .offer .sticky-card{
     border:1px solid rgba(255,255,255,.18); background:rgba(12,12,14,.45); backdrop-filter:blur(6px);
     border-radius:var(--radius); padding:20px 18px; box-shadow:0 10px 30px rgba(0,0,0,.35);
   }
-  .offer .label{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px}
-  .offer .current{font-family:Fraunces,serif; font-size:clamp(22px,3vw,34px); margin:0}
+  .offer .sticky-card .label{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px}
+  .offer .sticky-card h3{font-family:Fraunces,serif; font-size:clamp(22px,3vw,34px); margin:.2em 0 .4em}
+  .offer .sticky-card p{margin:0; color:var(--fg); opacity:.92}
 
-  /* Rechte Scroll-Spalte */
-  .offer .steps{position:relative}
-  .offer .step{
-    position:relative;
-    margin-top:-42px; /* Überlappung */
+  /* Rechte Scroll-Spalte (Themen) */
+  .offer .scroll-col{position:relative; padding-right: clamp(16px,3vw,24px)}
+  .topics{position:relative; max-width:720px; margin-left:auto}
+  .topics::before, .topics::after{
+    content:""; position:sticky; display:block; height:60px; pointer-events:none; z-index:2;
+    top:96px; /* align mit sticky top */
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
   }
-  .offer .step:first-child{margin-top:0}
-  .offer .card{
+  .topics::after{
+    top:auto; bottom:0; height:64px;
+    -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+            mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+  }
+
+  .step{ position:relative; margin-top:-32px } /* Überlappung */
+  .step:first-child{ margin-top:0 }
+  .card{
     border:1px solid rgba(255,255,255,.18);
-    background:linear-gradient(180deg, rgba(20,20,24,.75), rgba(20,20,24,.60));
+    background:linear-gradient(180deg, rgba(22,22,26,.78), rgba(22,22,26,.64));
     backdrop-filter:blur(4px);
     border-radius:var(--radius);
     padding:22px 20px;
     box-shadow:0 20px 40px rgba(0,0,0,.45);
-    transition:transform .35s ease, border-color .35s ease, background .35s ease, box-shadow .35s ease;
+    transition:transform .35s ease, border-color .35s ease, background .35s ease, box-shadow .35s ease, outline-color .2s ease;
+    scroll-margin-top:110px; /* Anker-Offset */
+    outline:2px solid transparent;
   }
-  .offer .card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.28); box-shadow:0 24px 46px rgba(0,0,0,.5); }
-  .offer .card h4{margin:0 0 8px; font-family:Fraunces,serif; font-weight:600; font-size:20px}
-  .offer .card p{margin:0; color:var(--fg); opacity:.92}
-
-  /* Sticky „Wie ich arbeite“ (wie gehabt) */
-  .sticky-section{position:relative}
-  .sticky-grid{display:grid; gap:24px}
-  @media(min-width:900px){.sticky-grid{grid-template-columns:0.6fr 1.4fr; gap:32px}}
-  .sticky-col{position:sticky; top:90px; align-self:start}
-  .scroll-block{background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:var(--radius); padding:24px; transition:background .4s, transform .4s; margin-bottom:24px}
-  .scroll-block.is-active{background:rgba(255,255,255,.08); transform:translateY(-4px)}
+  .card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.28); box-shadow:0 24px 46px rgba(0,0,0,.5) }
+  .card.is-active{ outline-color: rgba(192,155,107,.45) }
+  .card h4{margin:0 0 8px; font-family:Fraunces,serif; font-weight:600; font-size:22px}
+  .card p{margin:0; color:var(--fg); opacity:.92}
 
   /* CTAs */
   .cta{display:inline-block; border:2px solid var(--fg); padding:12px 18px; border-radius:12px; text-decoration:none; transition:.3s}
@@ -167,7 +167,7 @@
       </div>
     </section>
 
-    <!-- LAUFBANNER -->
+    <!-- LAUFBANNER (weiß/schwarz) -->
     <section class="marquee-wrap" aria-label="Kompetenzen">
       <div class="marquee" id="marquee" tabindex="0">
         <div class="track" aria-hidden="true">
@@ -193,65 +193,79 @@
       </div>
     </section>
 
-    <!-- NEUES LEISTUNGEN-MODUL -->
-    <section id="leistungen" class="offer">
-      <div class="inner">
-        <div class="wrap grid">
-          <!-- sticky Headline -->
-          <div class="sticky-col">
-            <div class="sticky-card">
-              <div class="label">Leistungen</div>
-              <h3 class="current" id="offerCurrent">Was ich anbiete</h3>
-            </div>
-          </div>
+    <!-- WAS ICH ANBIETE – Überschrift -->
+    <section id="leistungen" style="padding-top:28px; padding-bottom:0; border-bottom:none;">
+      <div class="wrap">
+        <h2 class="section offer-head">Was ich anbiete</h2>
+      </div>
 
-          <!-- Steps rechts (überlappend) -->
-          <div class="steps" id="offerSteps">
-            <div class="step">
-              <article class="card" data-title="Was ich anbiete">
-                <h4>Was ich anbiete</h4>
-                <p>Ich verbinde redaktionelle Klarheit mit strukturierter Gestaltung – von der Idee bis zur fertigen Seite.</p>
-              </article>
+      <!-- Modul (nicht getrennt) -->
+      <div class="offer">
+        <div class="inner">
+          <div class="wrap grid">
+            <!-- links: sticky Erklärung (füllt sich dynamisch) -->
+            <div class="sticky-col">
+              <div class="sticky-card">
+                <div class="label">Leistungen</div>
+                <h3 id="offerTitle">Content & Redaktion</h3>
+                <p id="offerDesc">Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.</p>
+              </div>
             </div>
 
-            <div class="step">
-              <article class="card" data-title="Content & Redaktion">
-                <h4>Content & Redaktion</h4>
-                <p>Th­­emenplanung, UX-Writing, SEO-Texte, Content-Strategie. Texte, die führen – Tonalität, Struktur und Wirkung im Blick.</p>
-              </article>
-            </div>
+            <!-- rechts: Topics (scrollbar, überlappend) -->
+            <div class="scroll-col">
+              <div class="topics" id="topics">
+                <div class="step">
+                  <article class="card is-active"
+                    data-title="Content & Redaktion"
+                    data-desc="Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.">
+                    <h4>Content & Redaktion</h4>
+                    <p>Redaktion ist das Fundament: klare Botschaft, starke Struktur, konsistente Tonalität.</p>
+                  </article>
+                </div>
 
-            <div class="step">
-              <article class="card" data-title="Website-Gestaltung & Aufbau">
-                <h4>Website-Gestaltung & Aufbau</h4>
-                <p>Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.</p>
-              </article>
-            </div>
+                <div class="step">
+                  <article class="card"
+                    data-title="Website-Gestaltung & Aufbau"
+                    data-desc="Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.">
+                    <h4>Website-Gestaltung & Aufbau</h4>
+                    <p>Wireframes, Textsysteme, visuelle Grammatik – alles greift ineinander und führt Nutzer:innen sauber durchs Thema.</p>
+                  </article>
+                </div>
 
-            <div class="step">
-              <article class="card" data-title="CMS-Pflege & Betreuung">
-                <h4>CMS-Pflege & Betreuung</h4>
-                <p>Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – inklusive Redaktionsprozessen und Qualitätssicherung.</p>
-              </article>
+                <div class="step">
+                  <article class="card"
+                    data-title="CMS-Pflege & Betreuung"
+                    data-desc="Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – redaktionelle Workflows, Qualitätssicherung, modulare Inhalte.">
+                    <h4>CMS-Pflege & Betreuung</h4>
+                    <p>Strukturierte Inhalte, klare Prozesse und saubere Pflege – damit dein System langfristig leicht bleibt.</p>
+                  </article>
+                </div>
+
+                <div class="step">
+                  <article class="card"
+                    data-title="Workshops & Guidelines"
+                    data-desc="UX-Writing-Audits, Copy-Guidelines, Content-Design-Workshops – damit Teams konsistent und effizient arbeiten.">
+                    <h4>Workshops & Guidelines</h4>
+                    <p>Mit kleinen Formaten viel bewegen: Audits, Playbooks und kurze Trainings mit echtem Praxisbezug.</p>
+                  </article>
+                </div>
+              </div>
             </div>
+            <!-- /scroll-col -->
           </div>
         </div>
       </div>
     </section>
 
-    <!-- STICKY „Wie ich arbeite“ -->
-    <section id="ansatz" class="sticky-section">
-      <div class="wrap sticky-grid">
-        <div class="sticky-col">
-          <h2 class="kicker">Ansatz</h2>
-          <h3 class="section">Wie ich arbeite</h3>
-          <p>Ich glaube an Reduktion, Klarheit und gute Übergänge – auch im digitalen Raum. Jede Website ist eine Erzählung, die man führen und gestalten kann.</p>
-        </div>
-        <div>
-          <article class="scroll-block"><h4>01 · Denken in Inhalt</h4><p>Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.</p></article>
-          <article class="scroll-block"><h4>02 · Gestaltung als Sprache</h4><p>Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus.</p></article>
-          <article class="scroll-block"><h4>03 · Technik als Werkzeug</h4><p>Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen.</p></article>
-        </div>
+    <!-- ANSATZ -->
+    <section id="ansatz">
+      <div class="wrap">
+        <h2 class="kicker">Ansatz</h2>
+        <h3 class="section">Wie ich arbeite</h3>
+        <div class="scroll-block"><h4>01 · Denken in Inhalt</h4><p>Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.</p></div>
+        <div class="scroll-block"><h4>02 · Gestaltung als Sprache</h4><p>Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus.</p></div>
+        <div class="scroll-block"><h4>03 · Technik als Werkzeug</h4><p>Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen.</p></div>
       </div>
     </section>
 
@@ -299,7 +313,7 @@
     function update(){
       const r=hero.getBoundingClientRect();
       const total=Math.max(r.height,1);
-      const bias=total*0.75; // früher
+      const bias=total*0.75;
       const passed=Math.min(Math.max(-r.top+bias,0),total+bias);
       const progress=passed/(total+bias);
       const count=Math.floor(chars.length*progress);
@@ -397,26 +411,38 @@
     img?.addEventListener('click',e=>{e.preventDefault();flyOnce();});
   })();
 
-  // === Logik für das Leistungen-Modul: Headline links aktualisieren ===
+  // Leistungen-Modul: rechte Karte bestimmt linke Erklärung + Active State
   (function(){
-    const current = document.getElementById('offerCurrent');
-    const cards = document.querySelectorAll('#offerSteps .card');
+    const titleEl = document.getElementById('offerTitle');
+    const descEl  = document.getElementById('offerDesc');
+    const cards   = Array.from(document.querySelectorAll('.topics .card'));
+
+    // Anker-Klick (optional): klick auf Karte -> smooth in die Karte scrollen
+    cards.forEach(c=>{
+      c.addEventListener('click', ()=>{
+        c.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
 
     const io = new IntersectionObserver((entries)=>{
-      // wähle die Karte, deren Mitte am sichtbarsten ist
+      // höchste Sichtbarkeit wählen
       let best = null, bestRatio = 0;
       entries.forEach(e=>{
         if(e.isIntersecting && e.intersectionRatio > bestRatio){
           bestRatio = e.intersectionRatio; best = e;
         }
       });
-      if(best){
-        const title = best.target.getAttribute('data-title') || best.target.querySelector('h4')?.textContent || 'Leistungen';
-        current.textContent = title;
-      }
-    }, { root:null, threshold:[0,.25,.5,.75,1] });
+      if(!best) return;
+      cards.forEach(c=>c.classList.toggle('is-active', c===best.target));
 
-    cards.forEach(c=>io.observe(c));
+      // Inhalt links aktualisieren
+      const t = best.target.getAttribute('data-title') || best.target.querySelector('h4')?.textContent || '';
+      const d = best.target.getAttribute('data-desc')  || '';
+      if(t) titleEl.textContent = t;
+      if(d) descEl.textContent  = d;
+    }, { threshold:[0,.25,.5,.75,1] });
+
+    cards.forEach(c=> io.observe(c));
   })();
   </script>
 </body>
