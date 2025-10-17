@@ -9,51 +9,22 @@
 
   <style>
   :root{
-    --fg:#121212; --muted:#666; --line:#e8e8e8;
-    --accent:#B8915A; --scroll-ink:#A88BFF;
-    --tint1:#f8f8f8; --tint2:#f4f4f4; --tint3:#f1f1f1;
+    /* Dark Theme Basis */
+    --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a7a7a7; --line:#1e1e1e;
+    --accent:#C09B6B; --scroll-ink:#BFA4FF;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --radius:14px;
   }
 
-  /* Reset & Layout */
   *{box-sizing:border-box}
   html,body{margin:0; padding:0; overflow-x:hidden}
-  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--fg); background:transparent}
-  a{color:inherit; text-decoration:none}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--fg); background:var(--bg)}
+  a{color:inherit; text-decoration:none; text-underline-offset:.22em}
   .wrap{max-width:1180px; margin:auto; padding:0 clamp(16px,3vw,24px)}
   section{padding:48px 0; border-bottom:1px solid var(--line); background:transparent}
 
-  /* Fixed Background Gradient (scroll-abhängig) */
-  .bgfx{
-    position:fixed; inset:0; z-index:-1; pointer-events:none;
-    --cx:50%; --cy:40%;
-    background:
-      radial-gradient(1200px 800px at var(--cx) var(--cy),
-        color-mix(in oklab, #cfe6ff 92%, transparent) 0%,
-        color-mix(in oklab, #ffffff 85%, transparent) 55%,
-        color-mix(in oklab, #0c0f18 90%, transparent) 100%),
-      radial-gradient(800px 600px at calc(var(--cx) + 20%) calc(var(--cy) + 15%),
-        color-mix(in oklab, #cfe6ff 22%, transparent) 0%,
-        transparent 70%),
-      linear-gradient(180deg,
-        color-mix(in oklab, #cfe6ff 20%, #ffffff) 0%,
-        #ffffff 60%,
-        color-mix(in oklab, #0c0f18 40%, #ffffff) 100%);
-    transition: background 900ms ease, filter 900ms ease, opacity 300ms ease;
-  }
-  .bgfx::after{
-    content:""; position:absolute; inset:0; pointer-events:none; opacity:.08; mix-blend-mode:overlay;
-    background-image:
-      url("data:image/svg+xml;utf8,\
-      <svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'>\
-      <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/></filter>\
-      <rect width='100%%' height='100%%' filter='url(#n)' opacity='0.25'/></svg>");
-    background-size:160px 160px;
-  }
-  body.theme-dark  { --fg:#f2f2f2; --muted:#bdbdbd; --line:#1b1b1b; }
-  body.theme-light { --fg:#121212; --muted:#666;   --line:#e8e8e8; }
-
   /* Header */
-  header{position:sticky; top:0; z-index:20; background:transparent; backdrop-filter:blur(6px); border-bottom:1px solid var(--line)}
+  header{position:sticky; top:0; z-index:20; background:rgba(11,11,11,.7); backdrop-filter:blur(6px); border-bottom:1px solid var(--line)}
   .row{display:flex; justify-content:space-between; align-items:center; padding:12px 0}
   .brand{font-family:Fraunces,serif; font-weight:700; font-size:20px}
   .nav-toggle{border:2px solid var(--fg); background:transparent; border-radius:12px; width:42px; height:42px; font-size:22px; cursor:pointer}
@@ -61,13 +32,10 @@
   .nav-panel.open{display:block}
   .nav-menu{display:flex; gap:8px; padding:8px 0; flex-wrap:wrap}
   .nav-menu a{padding:8px 12px; border-radius:8px}
-  .nav-menu a:hover{background:rgba(0,0,0,.06)}
-  @media (prefers-color-scheme: dark){
-    .nav-menu a:hover{background:rgba(255,255,255,.08)}
-  }
+  .nav-menu a:hover{background:rgba(255,255,255,.06)}
 
   /* Hero */
-  .hero{padding:80px 0 56px}
+  .hero{padding:84px 0 56px}
   .eyebrow{text-transform:uppercase; letter-spacing:.12em; color:var(--muted); font-size:12px}
   h1.display{font-family:Fraunces,serif; font-size:clamp(48px,8vw,100px); line-height:1.05; margin:.2em 0}
   .display .char{transition:color .15s ease}
@@ -75,10 +43,10 @@
   .lead{color:var(--muted); max-width:60ch}
   .cta-inline{display:flex; align-items:center; gap:12px; margin-top:20px; flex-wrap:wrap}
   .label{font-weight:600; font-size:18px}
-  .fire-icon{width:44px; cursor:pointer; animation:wobble 2.2s ease-in-out infinite}
+  .fire-icon{width:44px; cursor:pointer; animation:wobble 2.2s ease-in-out infinite; filter:drop-shadow(0 6px 18px rgba(191,164,255,.28))}
   @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-  /* Laufbanner */
+  /* Laufbanner (auf dunkel) */
   .marquee-wrap{background:transparent; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
   .marquee{white-space:nowrap; overflow:hidden; position:relative}
   .track{
@@ -91,23 +59,65 @@
   .marquee:hover .track, .marquee.paused .track{animation-play-state:paused}
   @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* Content */
+  /* Standard-Kästen */
   .kicker{text-transform:uppercase; letter-spacing:.12em; font-size:14px; color:var(--muted); margin-bottom:8px}
   .section{font-family:Fraunces,serif; font-size:clamp(22px,2.5vw,32px); margin-top:0}
   .cols{display:grid; gap:24px}
   @media(min-width:900px){.cols{grid-template-columns:1.3fr 1fr}}
-  .box{border:1px solid var(--line); border-radius:12px; padding:20px; transition:border-color .3s, box-shadow .3s}
-  .box:hover{border-color:var(--accent); box-shadow:0 4px 20px rgba(0,0,0,.06)}
+  .box{border:1px solid var(--line); border-radius:var(--radius); padding:20px; transition:border-color .3s, box-shadow .3s}
+  .box:hover{border-color:var(--accent); box-shadow:var(--shadow)}
   .list{list-style:none; padding:0; margin:0}
   .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
 
-  /* Sticky section */
+  /* === NEUES LEISTUNGEN-MODUL (scrollbasiert, überlappend, mit BG-Bild) === */
+  .offer{position:relative; padding:0; border:none}
+  .offer .inner{position:relative; padding: clamp(28px,4vw,48px); overflow:visible}
+  .offer::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,.50), rgba(0,0,0,.40) 30%, rgba(0,0,0,.55) 100%),
+               url('hintergrund1.png') center/cover no-repeat;
+    filter:saturate(1.05) contrast(1.02);
+    z-index:0;
+  }
+  .offer .grid{position:relative; z-index:1; display:grid; gap:24px}
+  @media(min-width:980px){ .offer .grid{grid-template-columns:0.7fr 1.3fr; align-items:start} }
+
+  /* Linke, sticky Headline-Spalte */
+  .offer .sticky-col{position:sticky; top:96px; align-self:start}
+  .offer .sticky-card{
+    border:1px solid rgba(255,255,255,.18); background:rgba(12,12,14,.45); backdrop-filter:blur(6px);
+    border-radius:var(--radius); padding:20px 18px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  .offer .label{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px}
+  .offer .current{font-family:Fraunces,serif; font-size:clamp(22px,3vw,34px); margin:0}
+
+  /* Rechte Scroll-Spalte */
+  .offer .steps{position:relative}
+  .offer .step{
+    position:relative;
+    margin-top:-42px; /* Überlappung */
+  }
+  .offer .step:first-child{margin-top:0}
+  .offer .card{
+    border:1px solid rgba(255,255,255,.18);
+    background:linear-gradient(180deg, rgba(20,20,24,.75), rgba(20,20,24,.60));
+    backdrop-filter:blur(4px);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    box-shadow:0 20px 40px rgba(0,0,0,.45);
+    transition:transform .35s ease, border-color .35s ease, background .35s ease, box-shadow .35s ease;
+  }
+  .offer .card:hover{ transform:translateY(-2px); border-color:rgba(255,255,255,.28); box-shadow:0 24px 46px rgba(0,0,0,.5); }
+  .offer .card h4{margin:0 0 8px; font-family:Fraunces,serif; font-weight:600; font-size:20px}
+  .offer .card p{margin:0; color:var(--fg); opacity:.92}
+
+  /* Sticky „Wie ich arbeite“ (wie gehabt) */
   .sticky-section{position:relative}
   .sticky-grid{display:grid; gap:24px}
   @media(min-width:900px){.sticky-grid{grid-template-columns:0.6fr 1.4fr; gap:32px}}
   .sticky-col{position:sticky; top:90px; align-self:start}
-  .scroll-block{background:var(--tint1); border-radius:12px; padding:24px; transition:background .4s, transform .4s; margin-bottom:24px}
-  .scroll-block.is-active{background:color-mix(in oklab,var(--accent)20%,transparent); transform:translateY(-4px)}
+  .scroll-block{background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:var(--radius); padding:24px; transition:background .4s, transform .4s; margin-bottom:24px}
+  .scroll-block.is-active{background:rgba(255,255,255,.08); transform:translateY(-4px)}
 
   /* CTAs */
   .cta{display:inline-block; border:2px solid var(--fg); padding:12px 18px; border-radius:12px; text-decoration:none; transition:.3s}
@@ -116,20 +126,17 @@
   button.prank{border:2px solid var(--fg); background:transparent; border-radius:12px; padding:12px 18px; cursor:pointer}
   .funny.is-flying button.prank{position:absolute; left:50%; top:0; transform:translateX(-50%)}
 
-  footer{padding:24px 0; text-align:center; color:var(--muted); font-size:14px; background:transparent}
+  footer{padding:24px 0; text-align:center; color:var(--muted); font-size:14px}
 
   /* Feuerball */
-  .fireball-flying{position:fixed; width:44px; z-index:50; pointer-events:none; animation:spin 1s linear infinite; filter:drop-shadow(0 4px 12px rgba(168,139,255,.4))}
+  .fireball-flying{position:fixed; width:44px; z-index:50; pointer-events:none; animation:spin 1s linear infinite; filter:drop-shadow(0 6px 18px rgba(191,164,255,.38))}
   @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
   .fb-spark{position:fixed; width:10px; height:10px; border-radius:50%; background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0)); pointer-events:none; z-index:49; animation:fbSpark .6s ease-out forwards}
   @keyframes fbSpark{0%{opacity:.9; transform:scale(1)}100%{opacity:0; transform:scale(.3)}}
   </style>
 </head>
 
-<body class="theme-light">
-  <!-- Fixed Gradient Layer -->
-  <div class="bgfx" aria-hidden="true"></div>
-
+<body>
   <header>
     <div class="wrap row">
       <a class="brand" href="#">Denice-Su Cronauer</a>
@@ -148,7 +155,7 @@
 
   <main>
     <!-- HERO -->
-    <section class="hero" id="hero" data-theme="dawn">
+    <section class="hero" id="hero">
       <div class="wrap">
         <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
         <h1 class="display" id="headline">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
@@ -161,7 +168,7 @@
     </section>
 
     <!-- LAUFBANNER -->
-    <section class="marquee-wrap" aria-label="Kompetenzen" data-theme="paper">
+    <section class="marquee-wrap" aria-label="Kompetenzen">
       <div class="marquee" id="marquee" tabindex="0">
         <div class="track" aria-hidden="true">
           <span>Content & UX-Writing</span> ·
@@ -186,31 +193,54 @@
       </div>
     </section>
 
-    <!-- LEISTUNGEN -->
-    <section id="leistungen" data-theme="paper">
-      <div class="wrap cols">
-        <div class="box">
-          <h2 class="kicker">Leistungen</h2>
-          <h3 class="section">Was ich anbiete</h3>
-          <ul class="list">
-            <li><strong>Content & Redaktion:</strong> Themenplanung, UX-Writing, SEO-Texte, Content-Strategie.</li>
-            <li><strong>Website-Gestaltung & Aufbau:</strong> Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite.</li>
-            <li><strong>CMS-Pflege & Betreuung:</strong> sicherer Umgang mit WordPress, TYPO3, Magnolia u.v.m.</li>
-          </ul>
+    <!-- NEUES LEISTUNGEN-MODUL -->
+    <section id="leistungen" class="offer">
+      <div class="inner">
+        <div class="wrap grid">
+          <!-- sticky Headline -->
+          <div class="sticky-col">
+            <div class="sticky-card">
+              <div class="label">Leistungen</div>
+              <h3 class="current" id="offerCurrent">Was ich anbiete</h3>
+            </div>
+          </div>
+
+          <!-- Steps rechts (überlappend) -->
+          <div class="steps" id="offerSteps">
+            <div class="step">
+              <article class="card" data-title="Was ich anbiete">
+                <h4>Was ich anbiete</h4>
+                <p>Ich verbinde redaktionelle Klarheit mit strukturierter Gestaltung – von der Idee bis zur fertigen Seite.</p>
+              </article>
+            </div>
+
+            <div class="step">
+              <article class="card" data-title="Content & Redaktion">
+                <h4>Content & Redaktion</h4>
+                <p>Th­­emenplanung, UX-Writing, SEO-Texte, Content-Strategie. Texte, die führen – Tonalität, Struktur und Wirkung im Blick.</p>
+              </article>
+            </div>
+
+            <div class="step">
+              <article class="card" data-title="Website-Gestaltung & Aufbau">
+                <h4>Website-Gestaltung & Aufbau</h4>
+                <p>Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.</p>
+              </article>
+            </div>
+
+            <div class="step">
+              <article class="card" data-title="CMS-Pflege & Betreuung">
+                <h4>CMS-Pflege & Betreuung</h4>
+                <p>Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – inklusive Redaktionsprozessen und Qualitätssicherung.</p>
+              </article>
+            </div>
+          </div>
         </div>
-        <aside class="box">
-          <h2 class="kicker">Einblicke</h2>
-          <h3 class="section">Artikel</h3>
-          <ul class="list">
-            <li><a href="https://www.moccu.com/insights/digital-design/ux-writing-audit/" target="_blank" rel="noopener">UX-Writing-Audit – warum gute Texte genauso wichtig sind wie gutes Design</a></li>
-            <li><a href="https://www.moccu.com/insights/content-marketing/copybook/" target="_blank" rel="noopener">Copybook – wie Content-Teams konsistente Texte schreiben</a></li>
-          </ul>
-        </aside>
       </div>
     </section>
 
-    <!-- STICKY -->
-    <section id="ansatz" class="sticky-section" data-theme="dusk">
+    <!-- STICKY „Wie ich arbeite“ -->
+    <section id="ansatz" class="sticky-section">
       <div class="wrap sticky-grid">
         <div class="sticky-col">
           <h2 class="kicker">Ansatz</h2>
@@ -226,7 +256,7 @@
     </section>
 
     <!-- KONTAKT -->
-    <section id="kontakt" data-theme="night">
+    <section id="kontakt">
       <div class="wrap">
         <h2 class="kicker">Kontakt</h2>
         <h3 class="section">Kontaktformular</h3>
@@ -259,7 +289,7 @@
     navToggle.textContent=open?'+':'×';
   });
 
-  // H1 Buchstaben färben (früherer Start)
+  // H1 Buchstaben färben (früher Start)
   (function(){
     const h1=document.getElementById('headline');
     const hero=document.getElementById('hero');
@@ -278,26 +308,13 @@
     update(); window.addEventListener('scroll',update,{passive:true}); window.addEventListener('resize',update);
   })();
 
-  // Marquee pausierbar per Klick/Space
+  // Marquee pausierbar
   (function(){
     const mq=document.getElementById('marquee');
     mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
     mq?.addEventListener('keydown',e=>{
       if(e.key===' '||e.key==='Enter'){e.preventDefault();mq.classList.toggle('paused');}
     });
-  })();
-
-  // Sticky Aktiv-Highlight (optisch)
-  (function(){
-    const blocks=document.querySelectorAll('.scroll-block');
-    function mark(){
-      const mid=window.innerHeight*0.45;
-      blocks.forEach(b=>{
-        const r=b.getBoundingClientRect();
-        b.classList.toggle('is-active', r.top<mid && r.bottom>mid);
-      });
-    }
-    mark(); window.addEventListener('scroll',mark,{passive:true}); window.addEventListener('resize',mark);
   })();
 
   // Fliehender Button
@@ -380,61 +397,26 @@
     img?.addEventListener('click',e=>{e.preventDefault();flyOnce();});
   })();
 
-  // Scroll-Gradient Theme Switch (like knut.studio softness)
+  // === Logik für das Leistungen-Modul: Headline links aktualisieren ===
   (function(){
-    const THEMES = {
-      dawn:  { c1:"#cfe6ff", c2:"#ffffff", c3:"#e9f0ff",  dark:false },
-      paper: { c1:"#ffffff", c2:"#ffffff", c3:"#ffffff",  dark:false },
-      dusk:  { c1:"#97a7ff", c2:"#ebedff", c3:"#0f1422",  dark:false },
-      night: { c1:"#232738", c2:"#111319", c3:"#07090f",  dark:true  }
-    };
-    const bg = document.querySelector('.bgfx');
-    const sections = [...document.querySelectorAll('section[data-theme], .marquee-wrap[data-theme]')];
+    const current = document.getElementById('offerCurrent');
+    const cards = document.querySelectorAll('#offerSteps .card');
 
     const io = new IntersectionObserver((entries)=>{
-      let best=null;
-      entries.forEach(e=>{ if(!best || e.intersectionRatio>best.intersectionRatio) best=e; });
-      if(!best) return;
-      const themeName=best.target.getAttribute('data-theme')||'paper';
-      const t=THEMES[themeName]||THEMES.paper;
+      // wähle die Karte, deren Mitte am sichtbarsten ist
+      let best = null, bestRatio = 0;
+      entries.forEach(e=>{
+        if(e.isIntersecting && e.intersectionRatio > bestRatio){
+          bestRatio = e.intersectionRatio; best = e;
+        }
+      });
+      if(best){
+        const title = best.target.getAttribute('data-title') || best.target.querySelector('h4')?.textContent || 'Leistungen';
+        current.textContent = title;
+      }
+    }, { root:null, threshold:[0,.25,.5,.75,1] });
 
-      bg.style.background = `
-        radial-gradient(1200px 800px at var(--cx) var(--cy),
-          color-mix(in oklab, ${t.c1} 92%, transparent) 0%,
-          color-mix(in oklab, ${t.c2} 85%, transparent) 55%,
-          color-mix(in oklab, ${t.c3} 90%, transparent) 100%),
-        radial-gradient(800px 600px at calc(var(--cx) + 20%) calc(var(--cy) + 15%),
-          color-mix(in oklab, ${t.c1} 22%, transparent) 0%,
-          transparent 70%),
-        linear-gradient(180deg,
-          color-mix(in oklab, ${t.c1} 20%, ${t.c2}) 0%,
-          ${t.c2} 60%,
-          color-mix(in oklab, ${t.c3} 40%, ${t.c2}) 100%)`;
-
-      document.body.classList.toggle('theme-dark', !!t.dark);
-      document.body.classList.toggle('theme-light', !t.dark);
-    }, { threshold:[0,.25,.5,.75,1] });
-    sections.forEach(s=>io.observe(s));
-
-    // dezente Parallax-Reaktion
-    let raf=null, cx=50, cy=40, targetCx=50, targetCy=40;
-    function animate(){
-      cx += (targetCx - cx) * 0.08;
-      cy += (targetCy - cy) * 0.08;
-      bg.style.setProperty('--cx', cx+'%');
-      bg.style.setProperty('--cy', cy+'%');
-      raf=null;
-    }
-    function onPointer(x,y){
-      const ww=window.innerWidth, wh=window.innerHeight;
-      targetCx = 35 + (x/ww)*30; // 35..65 %
-      targetCy = 30 + (y/wh)*30; // 30..60 %
-      if(!raf) raf=requestAnimationFrame(animate);
-    }
-    window.addEventListener('mousemove', e=>onPointer(e.clientX,e.clientY), {passive:true});
-    window.addEventListener('touchmove', e=>{
-      const t=e.touches[0]; if(t) onPointer(t.clientX,t.clientY);
-    }, {passive:true});
+    cards.forEach(c=>io.observe(c));
   })();
   </script>
 </body>
