@@ -7,13 +7,14 @@
   <meta name="description" content="Online-Redakteurin & Content Managerin. Gestaltung und Aufbau moderner, strukturierter Websites. Redaktion trifft Design." />
   <meta name="color-scheme" content="light dark" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fraunces (Display) + Archivo Black (Banner) -->
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
   :root{
     --bg:#ffffff; --fg:#121212; --muted:#666; --line:#e8e8e8;
     --accent:#B8915A; --accent-ink:#5a422a;
-    --scroll-ink:#A88BFF;                 /* gut sichtbares, aber nicht-neon Lila */
+    --scroll-ink:#A88BFF;                 /* sichtbares, sanftes Lila */
     --max:1180px; --radius:16px;
     --shadow:0 10px 30px rgba(0,0,0,.06);
     --speed:220ms;
@@ -68,9 +69,10 @@
     font-size:clamp(48px, 8.5vw, 104px); letter-spacing:-.018em; margin:.25em 0 .1em;
   }
 
-  /* Scroll-Färbung: pro Buchstabe sichtbar */
+  /* Scroll-Färbung: pro Buchstabe – deutlich sichtbar, startet früher */
   .display .char{ transition: color 160ms ease; will-change: color; }
   .display .char.is-colored{ color: var(--scroll-ink); }
+
   .lead{max-width:60ch; color:var(--muted); font-size:clamp(16px,2.2vw,18px)}
   .jump{display:inline-block; margin-top:22px; text-decoration:none; border-bottom:2px solid var(--fg); padding-bottom:4px}
   .jump:hover{ color:var(--accent-ink); border-color:var(--accent-ink); }
@@ -87,16 +89,15 @@
   .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
   footer{padding:20px 0; color:var(--muted); font-size:14px}
 
-  /* Sticky-Sektion – robust (CSS-only), mobil & desktop */
+  /* Sticky-Sektion – linke Spalte sticky, rechts docken Steps an */
   .sticky-section{position:relative; border-bottom:1px solid var(--line);}
   .sticky-grid{display:grid; grid-template-columns:1fr; gap:24px;}
   @media(min-width:900px){.sticky-grid{grid-template-columns:0.6fr 1.4fr; align-items:start; gap:32px;}}
   .sticky-col{position:sticky; top:var(--stick-top); align-self:start;}
   .sticky-col .intro{color:var(--muted); max-width:36ch;}
 
-  /* Andocken: jedes Step hat viel Höhe, innen klebt ein Wrapper */
   .scroll-col{position:relative}
-  .step{ height: 110vh; display:flex; align-items:flex-start; }
+  .step{ height: 120vh; display:flex; align-items:flex-start; }
   .sticky-wrap{ position: sticky; top: var(--stick-top); width: min(780px, 100%); }
   .scroll-block{
     border-radius:16px; padding:24px; background:var(--tint1);
@@ -107,17 +108,18 @@
   .scroll-block.is-active{background:color-mix(in oklab,var(--accent)20%,var(--bg));
     transform:translateY(-4px); box-shadow:0 10px 26px rgba(0,0,0,.08);}
 
-  /* Laufbanner – gleiche Schriftgröße, aber weniger Weißraum */
+  /* Laufbanner – weniger Höhe, Schrift bleibt groß */
   .marquee-wrap{ background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
   .marquee{ white-space:nowrap; overflow:hidden; position:relative; }
   .track{
     display:inline-block;
-    padding-block: clamp(8px,2.2vw,18px);         /* << Weniger Weißraum */
+    padding-block: clamp(0px,0.6vw,6px);           /* << minimaler Weißraum */
+    line-height: 1.04;                              /* Text bestimmt Höhe */
     font-family:"Archivo Black", system-ui, sans-serif;
     font-weight:400; text-transform:uppercase;
-    font-size: clamp(32px, 9vw, 96px);            /* Schrift bleibt groß */
+    font-size: clamp(32px, 9vw, 96px);              /* groß lassen */
     letter-spacing:.04em; color:#000;
-    animation: scroll-left 32s linear infinite;   /* eher langsam */
+    animation: scroll-left 32s linear infinite;     /* langsam */
   }
   .track span{ margin: 0 1.2em; }
   .marquee:hover .track, .marquee.paused .track{ animation-play-state: paused; }
@@ -144,34 +146,48 @@
   button.prank:hover{border-color:var(--accent); box-shadow:var(--shadow);}
   .funny.is-flying button.prank{ position:absolute; left:50%; top:0; transform:translateX(-50%); }
 
-  /* Reveal (nur Opacity) – damit Sticky sicher bleibt */
+  /* Reveal (nur Opacity) */
   .reveal{opacity:0; transition:opacity 700ms cubic-bezier(.2,.6,.2,1);}
   .reveal.in{opacity:1;}
 
-  /* Maus-/Finger-Follower Grafik (Inline-SVG) */
+  /* Maus-/Finger-Follower: größerer Punkt + „Feuer-Linie“ (Sparks) */
   .follower{
-    position:fixed; left:0; top:0; width:22px; height:22px; transform:translate(-50%,-50%);
-    pointer-events:none; z-index:9999; opacity:.9;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
+    position:fixed; left:0; top:0; width:32px; height:32px; transform:translate(-50%,-50%);
+    pointer-events:none; z-index:9999; opacity:.95;
+    filter: drop-shadow(0 3px 10px rgba(0,0,0,.18));
   }
   @media (hover:none), (pointer:coarse){
-    .follower{ width:26px; height:26px; } /* etwas größer am Finger */
+    .follower{ width:36px; height:36px; } /* etwas größer am Finger */
+  }
+  #trailLayer{ position:fixed; left:0; top:0; width:100vw; height:100vh; pointer-events:none; z-index:9998; }
+  .spark{
+    position:fixed; left:0; top:0; transform:translate(-50%,-50%);
+    width:12px; height:12px; border-radius:50%;
+    background: radial-gradient(circle at 35% 35%, #d3c3ff, #b99ff6 60%, rgba(168,139,255,.0) 100%);
+    mix-blend-mode:multiply;
+    filter: blur(.2px);
+    animation: spark 700ms ease-out forwards;
+  }
+  @keyframes spark{
+    0%{ opacity:.9; transform:translate(-50%,-50%) scale(1); }
+    100%{ opacity:0; transform:translate(-50%,-50%) scale(.4); }
   }
   </style>
 </head>
 
 <body>
-  <!-- Maus-/Finger-Follower Grafik (Lavendel-Blob als Inline-SVG, keine Datei nötig) -->
+  <!-- Maus-/Finger-Follower (größer) -->
   <svg class="follower" id="follower" viewBox="0 0 64 64" aria-hidden="true">
     <defs>
       <radialGradient id="g" cx="30%" cy="30%" r="70%">
-        <stop offset="0%" stop-color="#cdb8ff"/>
-        <stop offset="60%" stop-color="#b9a0ff"/>
+        <stop offset="0%" stop-color="#d6c7ff"/>
+        <stop offset="60%" stop-color="#bda6ff"/>
         <stop offset="100%" stop-color="#a88bff"/>
       </radialGradient>
     </defs>
-    <path d="M32 6c9 0 14 4 18 9s7 11 4 18-9 14-18 17-20 1-25-7-4-18 3-26S23 6 32 6Z" fill="url(#g)"/>
+    <circle cx="32" cy="32" r="16" fill="url(#g)"/>
   </svg>
+  <div id="trailLayer"></div>
 
   <header>
     <div class="wrap row">
@@ -203,7 +219,7 @@
       </div>
     </section>
 
-    <!-- LAUFBANNER (weniger Weißraum, gleiche Schriftgröße) -->
+    <!-- LAUFBANNER (minimale Höhe, Schrift bleibt groß) -->
     <section class="marquee-wrap" aria-label="Kompetenzen">
       <div class="marquee" id="marquee" tabindex="0">
         <div class="track" aria-hidden="true">
@@ -252,7 +268,7 @@
       </div>
     </section>
 
-    <!-- STICKY HEADLINE SECTION – zuverlässiges Andocken -->
+    <!-- STICKY HEADLINE SECTION – linke Spalte sticky, rechts docken Steps an -->
     <section id="ansatz" class="sticky-section reveal">
       <div class="wrap sticky-grid">
         <div class="sticky-col">
@@ -344,10 +360,12 @@
     els.forEach(el=>io.observe(el));
   })();
 
-  // (1) Sichtbare Buchstabenfärbung beim Scrollen (nur H1)
+  // (1) Sichtbare Buchstabenfärbung beim Scrollen (H1) – startet früher
   (function(){
     const h1   = document.getElementById('headline');
-    // Inhalt in Zeichen-Spans aufteilen (Brüche berücksichtigen)
+    const hero = document.getElementById('hero');
+
+    // Split in Zeichen-Spans (br berücksichtigen)
     const raw = h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
     const out = [];
     raw.split('').forEach(ch=>{
@@ -357,13 +375,14 @@
     });
     h1.innerHTML = out.join('');
     const chars = h1.querySelectorAll('.char');
-    const hero  = document.getElementById('hero');
 
     function update(){
       const r = hero.getBoundingClientRect();
       const total = Math.max(r.height, 1);
-      const passed = Math.min(Math.max(-r.top, 0), total);
-      const progress = passed / total; // 0..1
+      // Frühstart: als ob 25% bereits "vorgespult" wären
+      const bias  = total * 0.25;
+      const passed = Math.min(Math.max(-r.top + bias, 0), total + bias);
+      const progress = passed / (total + bias); // 0..1 (mit Bias)
       const count = Math.floor(chars.length * progress);
       for(let i=0;i<chars.length;i++){
         if(i < count) chars[i].classList.add('is-colored');
@@ -375,7 +394,7 @@
     window.addEventListener('resize', update);
   })();
 
-  // Marquee pausierbar
+  // Marquee pausierbar (Hover/Click/Keyboard)
   (function(){
     const mq = document.getElementById('marquee');
     mq?.addEventListener('click', ()=> mq.classList.toggle('paused'));
@@ -384,7 +403,7 @@
     });
   })();
 
-  // Sticky Aktiv-Highlight (nur für Stil, Sticky selbst ist CSS)
+  // Sticky Aktiv-Highlight (für visuellen "Dock"-Hinweis)
   (function(){
     const blocks=document.querySelectorAll('.scroll-block');
     function mark(){
@@ -423,15 +442,39 @@
     });
   })();
 
-  // Maus-/Finger-Follower: folgt Cursor und Touch
+  // Maus-/Finger-Follower + „Feuer-Linie“ (Sparks)
   (function(){
-    const f = document.getElementById('follower');
-    function move(x,y){ f.style.left = x+'px'; f.style.top = y+'px'; }
-    window.addEventListener('mousemove', (e)=> move(e.clientX, e.clientY), {passive:true});
+    const follower = document.getElementById('follower');
+    const layer = document.getElementById('trailLayer');
+
+    let ticking = false;
+    function place(x,y){
+      follower.style.left = x+'px';
+      follower.style.top  = y+'px';
+      // spark erzeugen (gedrosselt via rAF)
+      if(!ticking){
+        window.requestAnimationFrame(()=>{
+          const s = document.createElement('span');
+          s.className = 'spark';
+          // leichte Varianz in Größe
+          const size = 9 + Math.random()*7;
+          s.style.width = size+'px';
+          s.style.height = size+'px';
+          s.style.left = x+'px';
+          s.style.top  = y+'px';
+          layer.appendChild(s);
+          s.addEventListener('animationend', ()=> s.remove());
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('mousemove', (e)=> place(e.clientX, e.clientY), {passive:true});
     // Touch
     window.addEventListener('touchmove', (e)=>{
       const t = e.touches[0]; if(!t) return;
-      move(t.clientX, t.clientY);
+      place(t.clientX, t.clientY);
     }, {passive:true});
   })();
   </script>
