@@ -80,7 +80,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* LEISTUNGEN: Variante B – Sticky Headline + 3 Kacheln kleben darunter */
 .offerB{
-  margin-top:-38vh;  /* weiter nach oben gezogen */
+  margin-top:-42vh;  /* weiter nach oben gezogen */
   border-top:1px solid var(--line);
   border-bottom:1px solid var(--line);
   padding-top:16px;
@@ -176,6 +176,29 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .submit-btn:hover{transform:translateY(-2px)}
 
 footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#fff}
+  /* Feuerball-Flight + Sparks */
+.fireball-flying{
+  position:fixed;
+  width:44px;
+  z-index:50;
+  pointer-events:none;
+  animation:spin 1s linear infinite;
+  filter:drop-shadow(0 6px 18px rgba(191,164,255,.38));
+}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.fb-spark{
+  position:fixed;
+  width:10px; height:10px; border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0));
+  pointer-events:none; z-index:49;
+  animation:fbSpark .6s ease-out forwards;
+}
+@keyframes fbSpark{
+  0%{opacity:.9; transform:scale(1)}
+  100%{opacity:0; transform:scale(.3)}
+}
+
 </style>
 </head>
 <body>
@@ -382,16 +405,78 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   setActive(); addEventListener('scroll', setActive, {passive:true});
 })();
 
-/* Feuerball Smooth-Scroll zum Kontakt */
+/* Feuerball: fliegen + sanfter Scroll */
 (function(){
-  const img=document.getElementById('fireBtn'), target=document.getElementById('kontakt');
-  if(!img||!target) return;
-  function smoothScrollTo(y,d){const sy=scrollY,dy=y-sy,st=performance.now(),E=t=>t<.5?2*t*t:-1+(4-2*t)*t;function T(n){const p=Math.min((n-st)/d,1);scrollTo(0,sy+dy*E(p));if(p<1)requestAnimationFrame(T);}requestAnimationFrame(T)}
-  img.addEventListener('click',e=>{
-    e.preventDefault();
-    const rect=target.getBoundingClientRect();
-    smoothScrollTo(scrollY+rect.top+10,1600);
-  });
+  const img = document.getElementById('fireBtn');
+  const target = document.getElementById('kontakt');
+  if(!img || !target) return;
+
+  function smoothScrollTo(targetY, duration){
+    const startY = window.scrollY;
+    const delta  = targetY - startY;
+    const startT = performance.now();
+    const ease   = t => t<.5 ? 2*t*t : -1+(4-2*t)*t;
+    function tick(now){
+      const p = Math.min((now-startT)/duration,1);
+      window.scrollTo(0, startY + delta*ease(p));
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function flyOnce(){
+    const r = img.getBoundingClientRect();
+    const sx = r.left + r.width/2;
+    const sy = r.top  + r.height/2;
+
+    const tr = target.getBoundingClientRect();
+    const ex = window.innerWidth/2;
+    const ey = tr.top + window.scrollY + 20; // Ziel knapp über Kontakt
+
+    // fliegende Kopie
+    const clone = img.cloneNode(true);
+    clone.classList.add('fireball-flying');
+    document.body.appendChild(clone);
+
+    const duration = 2200;
+    let start = null, lastSpark = 0;
+
+    function spark(x,y){
+      const s = document.createElement('span');
+      s.className = 'fb-spark';
+      const size = 8 + Math.random()*10;
+      s.style.width = size+'px';
+      s.style.height = size+'px';
+      s.style.left = x+'px';
+      s.style.top  = y+'px';
+      document.body.appendChild(s);
+      s.addEventListener('animationend', ()=> s.remove());
+    }
+
+    function step(ts){
+      if(!start) start = ts;
+      const p = Math.min((ts-start)/duration, 1);
+      const ease = p<.5 ? 2*p*p : -1+(4-2*p)*p;
+      const arc = Math.sin(p*Math.PI)*80; // Bogenflug
+      const x = sx + (ex - sx)*ease;
+      const y = sy + (ey - sy)*ease + arc;
+
+      clone.style.left = x+'px';
+      clone.style.top  = (y - window.scrollY)+'px';
+
+      if(ts - lastSpark > 45){ lastSpark = ts; spark(x, y - window.scrollY); }
+
+      if(p<1) requestAnimationFrame(step);
+      else clone.remove();
+    }
+
+    requestAnimationFrame(step);
+    smoothScrollTo(ey, duration);
+  }
+
+  img.addEventListener('click', e => { e.preventDefault(); flyOnce(); });
+})();
+
 })();
 </script>
 </body>
