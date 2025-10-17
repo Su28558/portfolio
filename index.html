@@ -1,364 +1,376 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Denice-Su Cronauer – Online-Redaktion & Webgestaltung</title>
-  <meta name="description" content="Online-Redakteurin & Content Managerin. Gestaltung und Aufbau moderner, strukturierter Websites. Redaktion trifft Design." />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-  :root{
-    --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a7a7a7; --line:#1e1e1e;
-    --accent:#C09B6B; --scroll-ink:#BFA4FF;
-    --radius:0;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;overflow-x:hidden}
-  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
-  a{color:inherit;text-decoration:none;text-underline-offset:.22em}
-  .wrap{max-width:1180px;margin:auto;padding:0 clamp(16px,3vw,24px)}
-  section{padding:48px 0;border-bottom:1px solid var(--line);background:transparent}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Denice-Su Cronauer – Online-Redaktion & Webgestaltung</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  /* Header */
-  header{position:sticky;top:0;z-index:20;background:rgba(11,11,11,.7);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
-  .brand{font-family:Fraunces,serif;font-weight:700;font-size:20px}
-  .nav-toggle-img{width:40px;height:auto;cursor:pointer;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-  .nav-panel{display:none;border-bottom:1px solid var(--line)}
-  .nav-panel.open{display:block}
-  .nav-menu{display:flex;gap:8px;padding:8px 0;flex-wrap:wrap}
-  .nav-menu a{padding:8px 12px;border-radius:6px}
-  .nav-menu a:hover{background:rgba(255,255,255,.06)}
+<style>
+:root{
+  --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a7a7a7; --line:#1e1e1e;
+  --accent:#C09B6B; --scroll-ink:#BFA4FF;
+  --headerH:96px;          /* sticky Header-Höhe */
+  --headGap:16px;          /* Abstand unter Headline */
+  --stickTop: calc(var(--headerH) + 24px); /* wird per JS feinjustiert */
+  --tileGapVH: 58vh;       /* Abstand, bis nächste Kachel „anheftet“ */
+  --radius:0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:hidden}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+a{color:inherit;text-decoration:none;text-underline-offset:.22em}
+.wrap{max-width:1180px;margin:auto;padding:0 clamp(16px,3vw,24px)}
+section{padding:48px 0;border-bottom:1px solid var(--line);background:transparent}
 
-  /* Hero */
-  .hero{padding:84px 0 56px}
-  .eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-size:12px}
-  h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-height:1.05;margin:.2em 0}
-  .display .char{transition:color .15s ease}
-  .display .char.is-colored{color:var(--scroll-ink)}
-  .lead{color:var(--muted);max-width:60ch}
-  .cta-inline{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
-  .label{font-weight:600;font-size:18px}
-  .fire-icon{width:44px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite;filter:drop-shadow(0 6px 18px rgba(191,164,255,.28))}
-  @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
+/* Header */
+header{position:sticky;top:0;z-index:20;background:rgba(11,11,11,.7);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
+.brand{font-family:Fraunces,serif;font-weight:700;font-size:20px}
+.nav-toggle-img{width:40px;height:auto;cursor:pointer;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+.nav-panel{display:none;border-bottom:1px solid var(--line)}
+.nav-panel.open{display:block}
+.nav-menu{display:flex;gap:8px;padding:8px 0;flex-wrap:wrap}
+.nav-menu a{padding:8px 12px;border-radius:6px}
+.nav-menu a:hover{background:rgba(255,255,255,.06)}
 
-  /* Laufbanner – weiß/schwarz */
-  .marquee-wrap{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .marquee{white-space:nowrap;overflow:hidden;position:relative}
-  .track{
-    display:inline-block;padding-block:clamp(0px,0.5vw,4px);line-height:1.02;
-    font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(32px,9vw,96px);
-    letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite
-  }
-  .track span{margin:0 1.2em}
-  .marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
-  @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* Hero */
+.hero{padding:84px 0 56px}
+.eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-size:12px}
+h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-height:1.05;margin:.2em 0}
+.display .char{transition:color .15s ease}
+.display .char.is-colored{color:var(--scroll-ink)}
+.lead{color:var(--muted);max-width:60ch}
+.cta-inline{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+.label{font-weight:600;font-size:18px}
+.fire-icon{width:44px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite;filter:drop-shadow(0 6px 18px rgba(191,164,255,.28))}
+@keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-  /* Leistungen: PNG-Header */
-  #leistungen{padding-top:0;border-bottom:none}
-  .leistungen-hero{position:relative;background:url('leistungen.png') center/cover no-repeat;min-height:56vh}
-  .leistungen-hero .wrap{position:relative;z-index:1;padding-top:clamp(28px,6vw,56px)}
-  .leistungen-hero::after{
-    content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(11,11,11,0) 60%,rgba(11,11,11,.65) 82%,rgba(11,11,11,1) 100%)
-  }
-  .bigcaps{letter-spacing:.16em;font-size:14px;color:var(--muted);text-transform:uppercase;margin:0 0 8px}
-  .headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0 0 10px}
+/* Laufbanner – weiß/schwarz */
+.marquee-wrap{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.marquee{white-space:nowrap;overflow:hidden;position:relative}
+.track{
+  display:inline-block;padding-block:clamp(0px,0.5vw,4px);line-height:1.02;
+  font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(32px,9vw,96px);
+  letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite
+}
+.track span{margin:0 1.2em}
+.marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
+@keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* Leistungen: Sticky „Was ich anbiete“ + Stack-Kacheln (3 Stück) */
-  .offer{position:relative;margin-top:calc(-0.25 * var(--heroH, 50vh));padding-top: clamp(16px,2vw,24px);padding-bottom:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .offer .grid{display:grid;gap:36px;align-items:start}
-  @media(min-width:980px){.offer .grid{grid-template-columns:0.9fr 1.1fr}}
-  .sticky-col{position:sticky;top:96px;align-self:start}
-  .sticky-box{border:2px solid #fff;border-radius:0;background:#000;color:#fff;padding:20px;box-shadow:0 18px 40px rgba(0,0,0,.4)}
-  .sticky-box .label{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#ccc;margin-bottom:6px}
-  .sticky-box h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:.2em 0 .4em}
-  .sticky-box p{margin:0;opacity:.95}
-  /* Stack-Kacheln – pinnen nacheinander */
-  .stack{position:relative}
-  .tile{
-    position:sticky; top:110px; z-index:1;
-    border:2px solid #000; border-radius:0; background:#fff; color:#000;
-    padding:26px 22px; box-shadow:0 22px 46px rgba(0,0,0,.5);
-    margin-bottom:40vh; /* Platz, damit die nächste sich drunterschiebt */
-    outline:2px solid transparent; transition:outline-color .2s ease, transform .25s ease
-  }
-  .tile h4{font-family:Fraunces,serif;font-size:clamp(22px,2.4vw,32px);margin:0 0 10px}
-  .tile p{margin:0;max-width:62ch}
-  .tile.alt{background:#000;color:#fff;border-color:#fff}
-  .tile.is-active{outline-color:#fff}
-  .tile:last-child{margin-bottom:10vh}
+/* Leistungen: PNG-Header */
+#leistungen{padding-top:0;border-bottom:none}
+.leistungen-hero{position:relative;background:url('leistungen.png') center/cover no-repeat;min-height:56vh}
+.leistungen-hero .wrap{position:relative;z-index:1;padding-top:clamp(28px,6vw,56px)}
+.leistungen-hero::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(11,11,11,0) 60%,rgba(11,11,11,.65) 82%,rgba(11,11,11,1) 100%)
+}
+.bigcaps{letter-spacing:.16em;font-size:14px;color:var(--muted);text-transform:uppercase;margin:0 0 8px}
+.headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0 0 10px}
 
-  /* ANSATZ */
-  #ansatz .box{border:1px solid var(--line);border-radius:8px;padding:20px;transition:border-color .3s,box-shadow .3s}
-  #ansatz .box:hover{border-color:var(--accent);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+/* Leistungen: Variante B – einspaltiger Sticky-Stack
+   Headline sticky, Kacheln kleben darunter; erst danach geht's weiter */
+.offerB{position:relative;margin-top:calc(-0.25 * var(--heroH, 50vh));padding-top: clamp(16px,2vw,24px);padding-bottom:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sticky-head{
+  position:sticky; top:var(--headerH);
+  background:linear-gradient(180deg, rgba(11,11,11,1), rgba(11,11,11,.98));
+  padding:12px 0 8px; z-index:5;
+}
+.sticky-head .label{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#ccc;margin-bottom:6px}
+.sticky-head h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:.2em 0}
+.sticky-head p{margin:.2em 0 0; color:#d6d6d6; max-width:64ch}
 
-  /* Flawless Übergang zu weißem Kontaktbereich */
-  #ansatz{position:relative}
-  #ansatz::after{
-    content:"";position:absolute;left:0;right:0;bottom:-72px;height:72px;
-    background:linear-gradient(to bottom, rgba(11,11,11,1), #fff);
-    pointer-events:none
-  }
+/* Kacheln (kantig, s/w) */
+.stack-rail{position:relative}
+.tile{
+  position:sticky; top:calc(var(--stickTop) + var(--headH, 64px) + var(--headGap));
+  z-index:1;
+  border:2px solid #000;border-radius:0;background:#fff;color:#000;
+  padding:26px 22px; box-shadow:0 22px 46px rgba(0,0,0,.5);
+  margin:0 0 var(--tileGapVH);  /* Abstand bis nächste Kachel „drunter kommt“ */
+  outline:2px solid transparent; transition:outline-color .2s ease, transform .25s ease
+}
+.tile.alt{background:#000;color:#fff;border-color:#fff}
+.tile h4{font-family:Fraunces,serif;font-size:clamp(22px,2.4vw,32px);margin:0 0 10px}
+.tile p{margin:0;max-width:62ch}
+.tile.is-active{outline-color:#fff}
+.stack-release{height:12vh} /* Auslauf nach der letzten Kachel */
 
-  /* KONTAKT: Weiß + Video links, Formular überlagert */
-  #kontakt{background:#fff;color:#121212;margin-top:-72px;padding-top:72px;border-bottom:none}
-  .contact-hero{position:relative;min-height:540px;display:grid;align-items:center}
-  .contact-media{
-    position:absolute; inset:0; overflow:hidden; z-index:0;
-    /* Video linksbündig, nur links „angeschnitten“ = wir schieben minimal nach links */
-    clip-path:inset(0 0 0 0); /* Browser-sicherer Clip */
-  }
-  .contact-media video{
-    position:absolute; left:-8vw; top:50%; transform:translateY(-50%); /* links leicht abgeschnitten */
-    min-width:120%; min-height:100%;
-    object-fit:cover; object-position:left center;
-    filter:contrast(1.05) saturate(1.05) brightness(0.96);
-  }
-  .contact-card{
-    position:relative; z-index:1; background:rgba(255,255,255,.96);
-    border:2px solid #121212; border-radius:0; padding:28px 24px; box-shadow:0 20px 46px rgba(0,0,0,.18);
-    max-width:560px; margin-left:auto; margin-right:clamp(16px,4vw,40px);
-  }
-  .contact-card h3{font-family:Fraunces,serif;font-size:clamp(22px,2.6vw,34px);margin:0 0 14px}
-  .form{display:grid;gap:12px}
-  .field{display:grid;gap:6px}
-  .field label{font-size:14px;color:#333}
-  .field input,.field textarea{
-    border:2px solid #121212;border-radius:0;background:#fff;color:#121212;padding:12px 10px;font:inherit
-  }
-  .field textarea{min-height:130px;resize:vertical}
-  .submit-btn{
-    border:2px solid #121212;background:#121212;color:#fff;border-radius:0;padding:12px 16px;
-    cursor:pointer;font-weight:600;transition:transform .15s ease
-  }
-  .submit-btn:hover{transform:translateY(-2px)}
+/* Ansatz */
+#ansatz .box{border:1px solid var(--line);border-radius:8px;padding:20px;transition:border-color .3s,box-shadow .3s}
+#ansatz .box:hover{border-color:#C09B6B;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 
-  footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#fff}
-  </style>
+/* Flawless Übergang zu weißem Kontaktbereich */
+#ansatz{position:relative}
+#ansatz::after{
+  content:"";position:absolute;left:0;right:0;bottom:-72px;height:72px;
+  background:linear-gradient(to bottom, rgba(11,11,11,1), #fff); pointer-events:none
+}
+
+/* KONTAKT: Weiß + kleineres Video links, Formular drüber */
+#kontakt{background:#fff;color:#121212;margin-top:-72px;padding-top:72px;border-bottom:none}
+.contact-hero{position:relative;min-height:380px;display:grid;align-items:center}
+@media(min-width:900px){ .contact-hero{min-height:420px} }
+.contact-media{position:absolute; inset:0; overflow:hidden; z-index:0}
+.contact-media video{
+  position:absolute; left:-4vw; top:50%; transform:translateY(-50%);
+  width:1200px; max-width:110%; min-width:100%;
+  height:auto; max-height:520px; /* Deckel drauf -> kleiner */
+  object-fit:cover; object-position:left center;
+  filter:contrast(1.05) saturate(1.05) brightness(0.96);
+}
+.contact-card{
+  position:relative; z-index:1; background:rgba(255,255,255,.96);
+  border:2px solid #121212; border-radius:0; padding:24px 20px; box-shadow:0 20px 46px rgba(0,0,0,.18);
+  max-width:560px; margin-left:auto; margin-right:clamp(16px,4vw,40px);
+}
+.contact-card h3{font-family:Fraunces,serif;font-size:clamp(22px,2.6vw,34px);margin:0 0 14px}
+.form{display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field label{font-size:14px;color:#333}
+.field input,.field textarea{border:2px solid #121212;border-radius:0;background:#fff;color:#121212;padding:12px 10px;font:inherit}
+.field textarea{min-height:120px;resize:vertical}
+.submit-btn{border:2px solid #121212;background:#121212;color:#fff;border-radius:0;padding:12px 16px;cursor:pointer;font-weight:600;transition:transform .15s ease}
+.submit-btn:hover{transform:translateY(-2px)}
+
+footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#fff}
+</style>
 </head>
-
 <body>
-  <header>
-    <div class="wrap row">
-      <a class="brand" href="#">Denice-Su Cronauer</a>
-      <img id="navToggleImg" class="nav-toggle-img" src="menue.png" alt="Menü">
+<header>
+  <div class="wrap row">
+    <a class="brand" href="#">Denice-Su Cronauer</a>
+    <img id="navToggleImg" class="nav-toggle-img" src="menue.png" alt="Menü">
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="wrap">
+      <nav class="nav-menu">
+        <a href="#leistungen">Leistungen</a>
+        <a href="#ansatz">Ansatz</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
     </div>
-    <div class="nav-panel" id="navPanel">
-      <div class="wrap">
-        <nav class="nav-menu">
-          <a href="#leistungen">Leistungen</a>
-          <a href="#ansatz">Ansatz</a>
-          <a href="#kontakt">Kontakt</a>
-        </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="wrap">
+      <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
+      <h1 class="display" id="headline">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
+      <p class="lead">Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen. Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.</p>
+      <div class="cta-inline">
+        <span class="label">Zum Kontaktformular</span>
+        <img id="fireBtn" class="fire-icon" src="feuer.png" alt="Feuerball">
       </div>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero" id="hero">
+  <!-- LAUFBANNER -->
+  <section class="marquee-wrap" aria-label="Kompetenzen">
+    <div class="marquee" id="marquee" tabindex="0">
+      <div class="track" aria-hidden="true">
+        <span>Content & UX-Writing</span> ·
+        <span>CMS & Redaktionssysteme</span> ·
+        <span>Design & Struktur</span> ·
+        <span>WordPress & Co.</span> ·
+        <span>Content & UX-Writing</span> ·
+        <span>CMS & Redaktionssysteme</span> ·
+        <span>Design & Struktur</span> ·
+        <span>WordPress & Co.</span>
+      </div>
+      <div class="track" aria-hidden="true">
+        <span>Content & UX-Writing</span> ·
+        <span>CMS & Redaktionssysteme</span> ·
+        <span>Design & Struktur</span> ·
+        <span>WordPress & Co.</span> ·
+        <span>Content & UX-Writing</span> ·
+        <span>CMS & Redaktionssysteme</span> ·
+        <span>Design & Struktur</span> ·
+        <span>WordPress & Co.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEISTUNGEN -->
+  <section id="leistungen">
+    <div class="leistungen-hero" id="leistungenHero">
       <div class="wrap">
-        <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
-        <h1 class="display" id="headline">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
-        <p class="lead">Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen. Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.</p>
-        <div class="cta-inline">
-          <span class="label">Zum Kontaktformular</span>
-          <img id="fireBtn" class="fire-icon" src="feuer.png" alt="Feuerball">
+        <div class="bigcaps">LEISTUNGEN</div>
+        <h2 class="headline-large">Was ich anbiete</h2>
+      </div>
+    </div>
+
+    <!-- Sticky-Stack (einspaltig) – erst nach allen Kacheln weiter -->
+    <div class="offerB" id="offerB">
+      <div class="wrap">
+        <div class="sticky-head" id="stickyHead">
+          <div class="label">Leistungen</div>
+          <h3>Was ich anbiete</h3>
+          <p id="headDesc">Klare Inhalte, starke Struktur und saubere Umsetzung – gezielt für deine Ziele und Nutzer:innen.</p>
+        </div>
+
+        <div class="stack-rail" id="stackRail">
+          <article class="tile is-active" data-title="Content & Redaktion" data-desc="Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.">
+            <h4>Content & Redaktion</h4>
+            <p>Themenplanung, UX-Writing, SEO-Texte, Content-Strategie – redaktionelles Fundament mit klarer Tonalität.</p>
+          </article>
+
+          <article class="tile alt" data-title="Website-Gestaltung & Aufbau" data-desc="Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.">
+            <h4>Website-Gestaltung & Aufbau</h4>
+            <p>Wireframes, Textsysteme, visuelle Grammatik – alles greift ineinander und führt sauber durchs Thema.</p>
+          </article>
+
+          <article class="tile" data-title="CMS-Pflege & Betreuung" data-desc="Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – redaktionelle Workflows, Qualitätssicherung, modulare Inhalte.">
+            <h4>CMS-Pflege & Betreuung</h4>
+            <p>Strukturierte Inhalte, klare Prozesse und saubere Pflege – damit dein System langfristig leicht bleibt.</p>
+          </article>
+
+          <div class="stack-release"></div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- LAUFBANNER -->
-    <section class="marquee-wrap" aria-label="Kompetenzen">
-      <div class="marquee" id="marquee" tabindex="0">
-        <div class="track" aria-hidden="true">
-          <span>Content & UX-Writing</span> ·
-          <span>CMS & Redaktionssysteme</span> ·
-          <span>Design & Struktur</span> ·
-          <span>WordPress & Co.</span> ·
-          <span>Content & UX-Writing</span> ·
-          <span>CMS & Redaktionssysteme</span> ·
-          <span>Design & Struktur</span> ·
-          <span>WordPress & Co.</span>
-        </div>
-        <div class="track" aria-hidden="true">
-          <span>Content & UX-Writing</span> ·
-          <span>CMS & Redaktionssysteme</span> ·
-          <span>Design & Struktur</span> ·
-          <span>WordPress & Co.</span> ·
-          <span>Content & UX-Writing</span> ·
-          <span>CMS & Redaktionssysteme</span> ·
-          <span>Design & Struktur</span> ·
-          <span>WordPress & Co.</span>
-        </div>
+  <!-- ANSATZ -->
+  <section id="ansatz">
+    <div class="wrap">
+      <h2 class="kicker">Ansatz</h2>
+      <h3 class="section">Wie ich arbeite</h3>
+      <div class="box"><h4>01 · Denken in Inhalt</h4><p>Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.</p></div>
+      <div class="box"><h4>02 · Gestaltung als Sprache</h4><p>Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus.</p></div>
+      <div class="box"><h4>03 · Technik als Werkzeug</h4><p>Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen.</p></div>
+    </div>
+  </section>
+
+  <!-- KONTAKT (weiß + kleineres Video) -->
+  <section id="kontakt">
+    <div class="contact-hero">
+      <div class="contact-media" aria-hidden="true">
+        <video src="kontakt.mp4" autoplay muted loop playsinline></video>
       </div>
-    </section>
-
-    <!-- LEISTUNGEN HEADER -->
-    <section id="leistungen">
-      <div class="leistungen-hero" id="leistungenHero">
-        <div class="wrap">
-          <div class="bigcaps">LEISTUNGEN</div>
-          <h2 class="headline-large">Was ich anbiete</h2>
-        </div>
-      </div>
-
-      <!-- Sticky + Stack (3 Kacheln) -->
-      <div class="offer" id="offer">
-        <div class="wrap grid">
-          <div class="sticky-col">
-            <div class="sticky-box">
-              <div class="label">Leistungen</div>
-              <h3 id="offerTitle">Was ich anbiete</h3>
-              <p id="offerDesc">Klare Inhalte, starke Struktur und saubere Umsetzung – gezielt für deine Ziele und Nutzer:innen.</p>
+      <div class="wrap">
+        <div class="contact-card">
+          <h3>Kontaktformular</h3>
+          <form class="form" onsubmit="event.preventDefault(); window.location='mailto:denice@mailadresse.de?subject=Anfrage%20Website&body='+encodeURIComponent(document.getElementById('msg').value);">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" required />
             </div>
-          </div>
-          <div class="stack" id="stack">
-            <article class="tile is-active" data-title="Content & Redaktion" data-desc="Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.">
-              <h4>Content & Redaktion</h4>
-              <p>Themenplanung, UX-Writing, SEO-Texte, Content-Strategie – redaktionelles Fundament mit klarer Tonalität.</p>
-            </article>
-
-            <article class="tile alt" data-title="Website-Gestaltung & Aufbau" data-desc="Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.">
-              <h4>Website-Gestaltung & Aufbau</h4>
-              <p>Wireframes, Textsysteme, visuelle Grammatik – alles greift ineinander und führt sauber durchs Thema.</p>
-            </article>
-
-            <article class="tile" data-title="CMS-Pflege & Betreuung" data-desc="Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – redaktionelle Workflows, Qualitätssicherung, modulare Inhalte.">
-              <h4>CMS-Pflege & Betreuung</h4>
-              <p>Strukturierte Inhalte, klare Prozesse und saubere Pflege – damit dein System langfristig leicht bleibt.</p>
-            </article>
-          </div>
+            <div class="field">
+              <label for="email">E-Mail</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="msg">Nachricht</label>
+              <textarea id="msg" name="message" placeholder="Kurz: Ziele, Umfang, Timing …"></textarea>
+            </div>
+            <button class="submit-btn" type="submit">Senden</button>
+          </form>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
+</main>
 
-    <!-- ANSATZ -->
-    <section id="ansatz">
-      <div class="wrap">
-        <h2 class="kicker">Ansatz</h2>
-        <h3 class="section">Wie ich arbeite</h3>
-        <div class="box"><h4>01 · Denken in Inhalt</h4><p>Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.</p></div>
-        <div class="box"><h4>02 · Gestaltung als Sprache</h4><p>Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus.</p></div>
-        <div class="box"><h4>03 · Technik als Werkzeug</h4><p>Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen.</p></div>
-      </div>
-    </section>
+<footer><div class="wrap">© <span id="y"></span> Denice-Su Cronauer</div></footer>
 
-    <!-- KONTAKT: weiß + Video-Hintergrund + Formular -->
-    <section id="kontakt">
-      <div class="contact-hero">
-        <div class="contact-media" aria-hidden="true">
-          <video src="kontakt.mp4" autoplay muted loop playsinline></video>
-        </div>
-        <div class="wrap">
-          <div class="contact-card">
-            <h3>Kontaktformular</h3>
-            <form class="form" onsubmit="event.preventDefault(); window.location='mailto:denice@mailadresse.de?subject=Anfrage%20Website&body='+encodeURIComponent(document.getElementById('msg').value);">
-              <div class="field">
-                <label for="name">Name</label>
-                <input id="name" name="name" autocomplete="name" required />
-              </div>
-              <div class="field">
-                <label for="email">E-Mail</label>
-                <input id="email" name="email" type="email" autocomplete="email" required />
-              </div>
-              <div class="field">
-                <label for="msg">Nachricht</label>
-                <textarea id="msg" name="message" placeholder="Kurz: Ziele, Umfang, Timing …"></textarea>
-              </div>
-              <button class="submit-btn" type="submit">Senden</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+<script>
+document.getElementById('y').textContent=new Date().getFullYear();
 
-  <footer><div class="wrap">© <span id="y"></span> Denice-Su Cronauer</div></footer>
+/* Menü via PNG */
+const navToggleImg=document.getElementById('navToggleImg');
+const navPanel=document.getElementById('navPanel');
+navToggleImg.addEventListener('click',()=>navPanel.classList.toggle('open'));
 
-  <script>
-  document.getElementById('y').textContent=new Date().getFullYear();
+/* H1 Buchstaben färben (früher Start) */
+(function(){
+  const h1=document.getElementById('headline');
+  const hero=document.getElementById('hero');
+  const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
+  h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
+  const chars=h1.querySelectorAll('.char');
+  function update(){
+    const r=hero.getBoundingClientRect(), total=Math.max(r.height,1), bias=total*0.75;
+    const passed=Math.min(Math.max(-r.top+bias,0),total+bias);
+    const progress=passed/(total+bias), count=Math.floor(chars.length*progress);
+    chars.forEach((c,i)=>c.classList.toggle('is-colored',i<count));
+  }
+  update(); addEventListener('scroll',update,{passive:true}); addEventListener('resize',update);
+})();
 
-  // Menü via PNG
-  const navToggleImg=document.getElementById('navToggleImg');
-  const navPanel=document.getElementById('navPanel');
-  navToggleImg.addEventListener('click',()=>navPanel.classList.toggle('open'));
+/* Marquee pausierbar */
+(function(){
+  const mq=document.getElementById('marquee');
+  mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
+  mq?.addEventListener('keydown',e=>{
+    if(e.key===' '||e.key==='Enter'){e.preventDefault();mq.classList.toggle('paused');}
+  });
+})();
 
-  // H1 Buchstaben färben (früher Start)
-  (function(){
-    const h1=document.getElementById('headline');
-    const hero=document.getElementById('hero');
-    const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
-    h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
-    const chars=h1.querySelectorAll('.char');
-    function update(){
-      const r=hero.getBoundingClientRect(), total=Math.max(r.height,1), bias=total*0.75;
-      const passed=Math.min(Math.max(-r.top+bias,0),total+bias);
-      const progress=passed/(total+bias), count=Math.floor(chars.length*progress);
-      chars.forEach((c,i)=>c.classList.toggle('is-colored',i<count));
-    }
-    update(); addEventListener('scroll',update,{passive:true}); addEventListener('resize',update);
-  })();
+/* Sticky-Stack Offsets & Active-State */
+(function(){
+  const hero=document.getElementById('leistungenHero');
+  const stickyHead=document.getElementById('stickyHead');
+  const headDesc=document.getElementById('headDesc');
+  const tiles=[...document.querySelectorAll('.tile')];
 
-  // Marquee pausierbar
-  (function(){
-    const mq=document.getElementById('marquee');
-    mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
-    mq?.addEventListener('keydown',e=>{
-      if(e.key===' '||e.key==='Enter'){e.preventDefault();mq.classList.toggle('paused');}
+  // 1) Hero-Höhe -> Überlappung
+  function setHeroH(){
+    const h=hero.getBoundingClientRect().height || hero.offsetHeight;
+    document.documentElement.style.setProperty('--heroH', h+'px');
+  }
+  // 2) Sticky-Top so berechnen, dass Kacheln direkt UNTER der Headline kleben
+  function setStickTop(){
+    const headH=stickyHead.getBoundingClientRect().height;
+    document.documentElement.style.setProperty('--headH', headH+'px');
+    const headerH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--headerH'))||96;
+    const stickTop=headerH; // Headline selber ist sticky bei headerH; Kacheln sollen darunter beginnen
+    document.documentElement.style.setProperty('--stickTop', stickTop+'px');
+  }
+
+  setHeroH(); setStickTop();
+  addEventListener('resize', ()=>{ setHeroH(); setStickTop(); });
+
+  // 3) Active-State: die Kachel, deren Oberkante dem Klebepunkt am nächsten ist
+  function updateActive(){
+    const stickY = (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stickTop'))||96) + (stickyHead.getBoundingClientRect().height) + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--headGap'))||16);
+    let best=null, bestDist=Infinity;
+    tiles.forEach(t=>{
+      const r=t.getBoundingClientRect();
+      const d=Math.abs(r.top - stickY);
+      if(d<bestDist){bestDist=d; best=t;}
     });
-  })();
-
-  // „Was ich anbiete“: aktive Kachel steuert Text links
-  (function(){
-    const hero=document.getElementById('leistungenHero');
-    function setHeroH(){
-      const h=hero.getBoundingClientRect().height || hero.offsetHeight;
-      document.documentElement.style.setProperty('--heroH', h+'px');
+    if(best){
+      tiles.forEach(t=>t.classList.toggle('is-active',t===best));
+      const ttxt=best.getAttribute('data-title'); const dtxt=best.getAttribute('data-desc');
+      if(ttxt) stickyHead.querySelector('h3').textContent='Was ich anbiete';
+      if(dtxt) headDesc.textContent=dtxt;
     }
-    setHeroH(); addEventListener('resize', setHeroH);
+  }
+  updateActive();
+  addEventListener('scroll',updateActive,{passive:true});
+})();
 
-    const titleEl=document.getElementById('offerTitle');
-    const descEl=document.getElementById('offerDesc');
-    const tiles=[...document.querySelectorAll('.tile')];
-
-    function updateActive(){
-      let best=null, bestDist=Infinity;
-      const mid=innerHeight*0.35; // Bezugshöhe für Sticky-Stack
-      tiles.forEach(t=>{
-        const r=t.getBoundingClientRect();
-        const cy=r.top + Math.min(r.height, innerHeight*0.7)/2;
-        const d=Math.abs(cy - (mid+110)); // 110px sticky top
-        if(d<bestDist){bestDist=d; best=t;}
-      });
-      if(best){
-        tiles.forEach(t=>t.classList.toggle('is-active',t===best));
-        const ttxt=best.getAttribute('data-title'); const dtxt=best.getAttribute('data-desc');
-        if(ttxt) titleEl.textContent=ttxt;
-        if(dtxt) descEl.textContent=dtxt;
-      }
+/* Feuerball + langsamer Smooth-Scroll (bleibt) */
+(function(){
+  const img=document.getElementById('fireBtn'), target=document.getElementById('kontakt');
+  function smoothScrollTo(y,d){const sy=scrollY,dy=y-sy,st=performance.now(),E=t=>t<.5?2*t*t:-1+(4-2*t)*t;function T(n){const p=Math.min((n-st)/d,1);scrollTo(0,sy+dy*E(p));if(p<1)requestAnimationFrame(T);}requestAnimationFrame(T)}
+  function flyOnce(){
+    const r=img.getBoundingClientRect(), sx=r.left+r.width/2, sy=r.top+r.height/2, tr=target.getBoundingClientRect(), ex=innerWidth/2, ey=tr.top+scrollY+20;
+    const clone=img.cloneNode(true); clone.classList.add('fireball-flying'); document.body.appendChild(clone);
+    const dur=2200; let s=null,last=0;
+    function spark(x,y){const m=document.createElement('span');m.className='fb-spark';const z=8+Math.random()*10;m.style.width=z+'px';m.style.height=z+'px';m.style.left=x+'px';m.style.top=y+'px';document.body.appendChild(m);m.addEventListener('animationend',()=>m.remove());}
+    function step(t){ if(!s)s=t; const p=Math.min((t-s)/dur,1), e=p<.5?2*p*p:-1+(4-2*p)*p, arc=Math.sin(p*Math.PI)*80;
+      const x=sx+(ex-sx)*e, y=sy+(ey-sy)*e+arc; clone.style.left=x+'px'; clone.style.top=(y-scrollY)+'px';
+      if(t-last>45){last=t;spark(x,y-scrollY);} if(p<1)requestAnimationFrame(step); else clone.remove();
     }
-    updateActive(); addEventListener('scroll',updateActive,{passive:true}); addEventListener('resize',updateActive);
-  })();
-
-  // Feuerball + langsamer Smooth-Scroll (bleibt)
-  (function(){
-    const img=document.getElementById('fireBtn'), target=document.getElementById('kontakt');
-    function smoothScrollTo(y,d){const sy=scrollY,dy=y-sy,st=performance.now(),E=t=>t<.5?2*t*t:-1+(4-2*t)*t;function T(n){const p=Math.min((n-st)/d,1);scrollTo(0,sy+dy*E(p));if(p<1)requestAnimationFrame(T);}requestAnimationFrame(T)}
-    function flyOnce(){
-      const r=img.getBoundingClientRect(), sx=r.left+r.width/2, sy=r.top+r.height/2, tr=target.getBoundingClientRect(), ex=innerWidth/2, ey=tr.top+scrollY+20;
-      const clone=img.cloneNode(true); clone.classList.add('fireball-flying'); document.body.appendChild(clone);
-      const dur=2200; let s=null,last=0;
-      function spark(x,y){const m=document.createElement('span');m.className='fb-spark';const z=8+Math.random()*10;m.style.width=z+'px';m.style.height=z+'px';m.style.left=x+'px';m.style.top=y+'px';document.body.appendChild(m);m.addEventListener('animationend',()=>m.remove());}
-      function step(t){ if(!s)s=t; const p=Math.min((t-s)/dur,1), e=p<.5?2*p*p:-1+(4-2*p)*p, arc=Math.sin(p*Math.PI)*80;
-        const x=sx+(ex-sx)*e, y=sy+(ey-sy)*e+arc; clone.style.left=x+'px'; clone.style.top=(y-scrollY)+'px';
-        if(t-last>45){last=t;spark(x,y-scrollY);} if(p<1)requestAnimationFrame(step); else clone.remove();
-      }
-      requestAnimationFrame(step); smoothScrollTo(ey,dur);
-    }
-    img?.addEventListener('click',e=>{e.preventDefault();flyOnce();});
-  })();
-  </script>
+    requestAnimationFrame(step); smoothScrollTo(ey,dur);
+  }
+  img?.addEventListener('click',e=>{e.preventDefault();flyOnce();});
+})();
+</script>
 </body>
 </html>
