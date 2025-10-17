@@ -64,6 +64,17 @@
     .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
     /* FOOTER */
     footer{padding:20px 0; color:var(--muted); font-size:14px}
+    /* --- Fake Call Button --- */
+.funny { position: relative; height: 60px; margin-top: 14px; }
+button.prank {
+  cursor: pointer;
+  transition: transform .15s ease;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
   </style>
 </head>
 <body>
@@ -179,6 +190,10 @@
         <div class="box">
           <p>Schreib mir kurz Ziele, Umfang, Timing. Ich melde mich mit einer klaren Empfehlung.</p>
           <p><a class="cta" href="mailto:deine@mailadresse.de?subject=Projektanfrage%20Website">E-Mail senden</a></p>
+          <div class="funny">
+  <button id="callBtn" class="cta prank">Ruf mich an</button>
+</div>
+
           <p style="color:var(--muted); font-size:14px">Impressum & Datenschutz kannst du als eigene Seiten ergänzen.</p>
         </div>
       </div>
@@ -192,6 +207,19 @@
       <a href="/datenschutz.html">Datenschutz</a>
     </div>
   </footer>
+<script>
+  const prankBtn = document.getElementById('callBtn');
+  if (prankBtn) {
+    prankBtn.addEventListener('mouseenter', () => {
+      const x = Math.random() * 80 - 40;  // ±40 px horizontal
+      const y = Math.random() * 30 - 15;  // ±15 px vertikal
+      prankBtn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    prankBtn.addEventListener('mouseleave', () => {
+      prankBtn.style.transform = 'translateX(-50%)';
+    });
+  }
+</script>
 
   <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
