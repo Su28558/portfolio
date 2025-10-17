@@ -13,14 +13,16 @@
     --accent:#B8915A; --scroll-ink:#A88BFF;
     --tint1:#f8f8f8; --tint2:#f4f4f4; --tint3:#f1f1f1;
   }
-  body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;scroll-behavior:smooth}
+  /* Base */
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1180px;margin:auto;padding:0 24px}
+  section{padding:48px 0;border-bottom:1px solid var(--line)}
 
+  /* Header */
   header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.8);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
   .row{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
-  .brand{font-family:Fraunces,serif;font-weight:700;font-size:20px;text-decoration:none}
-
+  .brand{font-family:Fraunces,serif;font-weight:700;font-size:20px}
   .nav-toggle{border:2px solid var(--fg);background:transparent;border-radius:12px;width:42px;height:42px;font-size:22px;cursor:pointer}
   .nav-panel{display:none}
   .nav-panel.open{display:block}
@@ -28,7 +30,8 @@
   .nav-menu a{padding:8px 12px;border-radius:8px}
   .nav-menu a:hover{background:rgba(0,0,0,.05)}
 
-  .hero{padding:80px 0;border-bottom:1px solid var(--line)}
+  /* Hero */
+  .hero{padding:80px 0 64px;border-bottom:1px solid var(--line)}
   .eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-size:12px}
   h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-height:1.05;margin:.2em 0}
   .display .char{transition:color .15s ease}
@@ -39,10 +42,25 @@
   .fire-icon{width:40px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite}
   @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-  section{padding:48px 0;border-bottom:1px solid var(--line)}
+  /* Laufbanner (zurück, minimaler Weißraum) */
+  .marquee-wrap{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .marquee{white-space:nowrap;overflow:hidden;position:relative}
+  .track{
+    display:inline-block;
+    padding-block: clamp(0px,0.5vw,4px); /* minimal */
+    line-height:1.02;
+    font-family:"Archivo Black",system-ui,sans-serif;
+    font-size:clamp(32px,9vw,96px);
+    letter-spacing:.04em;color:#000;
+    animation:scroll-left 32s linear infinite;
+  }
+  .track span{margin:0 1.2em}
+  .marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
+  @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* Content sections */
   .kicker{text-transform:uppercase;letter-spacing:.12em;font-size:14px;color:var(--muted);margin-bottom:8px}
   .section{font-family:Fraunces,serif;font-size:clamp(22px,2.5vw,32px);margin-top:0}
-
   .cols{display:grid;gap:24px}
   @media(min-width:900px){.cols{grid-template-columns:1.3fr 1fr}}
   .box{border:1px solid var(--line);border-radius:12px;padding:20px;transition:border-color .3s,box-shadow .3s}
@@ -50,29 +68,28 @@
   .list{list-style:none;padding:0;margin:0}
   .list li{padding:10px 0;border-bottom:1px dashed var(--line)}
 
-  footer{padding:24px 0;text-align:center;color:var(--muted);font-size:14px}
-
   /* Sticky section */
   .sticky-section{position:relative}
   .sticky-grid{display:grid;gap:24px}
   @media(min-width:900px){.sticky-grid{grid-template-columns:0.6fr 1.4fr;gap:32px}}
   .sticky-col{position:sticky;top:90px;align-self:start}
-  .scroll-block{background:var(--tint1);border-radius:12px;padding:24px;transition:background .4s,transform .4s}
+  .scroll-block{background:var(--tint1);border-radius:12px;padding:24px;transition:background .4s,transform .4s;margin-bottom:24px}
   .scroll-block.is-active{background:color-mix(in oklab,var(--accent)20%,var(--bg));transform:translateY(-4px)}
 
+  /* CTAs */
   .cta{display:inline-block;border:2px solid var(--fg);padding:12px 18px;border-radius:12px;text-decoration:none;transition:.3s}
   .cta:hover{border-color:var(--accent);transform:translateY(-2px)}
-
   .funny{position:relative;height:60px}
   button.prank{border:2px solid var(--fg);background:transparent;border-radius:12px;padding:12px 18px;cursor:pointer}
   .funny.is-flying button.prank{position:absolute;left:50%;top:0;transform:translateX(-50%)}
+
+  footer{padding:24px 0;text-align:center;color:var(--muted);font-size:14px}
 
   /* Feuerball */
   .fireball-flying{position:fixed;width:40px;z-index:50;pointer-events:none;animation:spin 1s linear infinite;filter:drop-shadow(0 4px 12px rgba(168,139,255,.4))}
   @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
   .fb-spark{position:fixed;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0));pointer-events:none;z-index:49;animation:fbSpark .6s ease-out forwards}
   @keyframes fbSpark{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(.3)}}
-
   </style>
 </head>
 
@@ -102,7 +119,33 @@
         <p class="lead">Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen. Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.</p>
         <div class="cta-inline">
           <span class="label">Zum Kontaktformular</span>
-          <img id="fireBtn" class="fire-icon clickable" src="feuer.png" alt="Feuerball">
+          <img id="fireBtn" class="fire-icon" src="feuer.png" alt="Feuerball">
+        </div>
+      </div>
+    </section>
+
+    <!-- LAUFBANNER -->
+    <section class="marquee-wrap" aria-label="Kompetenzen">
+      <div class="marquee" id="marquee" tabindex="0">
+        <div class="track" aria-hidden="true">
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span> ·
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span>
+        </div>
+        <div class="track" aria-hidden="true">
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span> ·
+          <span>Content & UX-Writing</span> ·
+          <span>CMS & Redaktionssysteme</span> ·
+          <span>Design & Struktur</span> ·
+          <span>WordPress & Co.</span>
         </div>
       </div>
     </section>
@@ -180,7 +223,7 @@
     navToggle.textContent=open?'+':'×';
   });
 
-  // H1 Buchstaben färben
+  // H1 Buchstaben färben (früherer Start)
   (function(){
     const h1=document.getElementById('headline');
     const hero=document.getElementById('hero');
@@ -199,6 +242,37 @@
     update(); window.addEventListener('scroll',update,{passive:true});
   })();
 
+  // Marquee: pausierbar per Klick/Space
+  (function(){
+    const mq=document.getElementById('marquee');
+    mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
+    mq?.addEventListener('keydown',e=>{
+      if(e.key===' '||e.key==='Enter'){e.preventDefault();mq.classList.toggle('paused');}
+    });
+  })();
+
+  // Fliehender Button
+  (function(){
+    const wrap=document.getElementById('funnyWrap');
+    const btn=document.getElementById('callBtn');
+    if(!wrap||!btn)return;
+    wrap.addEventListener('mousemove',e=>{
+      wrap.classList.add('is-flying');
+      const rect=btn.getBoundingClientRect();
+      const distX=e.clientX-(rect.left+rect.width/2);
+      const distY=e.clientY-(rect.top+rect.height/2);
+      const distance=Math.hypot(distX,distY);
+      if(distance<140){
+        const offsetX=(Math.random()-0.5)*320;
+        const offsetY=(Math.random()-0.5)*140;
+        btn.style.transform=`translate(${offsetX}px,${offsetY}px)`;
+      }
+    });
+    wrap.addEventListener('mouseleave',()=>{
+      btn.style.transform='';wrap.classList.remove('is-flying');
+    });
+  })();
+
   // Feuerball + langsamer Scroll
   (function(){
     const img=document.getElementById('fireBtn');
@@ -208,17 +282,16 @@
       const startY=window.scrollY;
       const delta=targetY-startY;
       const startT=performance.now();
-      const easeInOut=t=>t<.5?2*t*t:-1+(4-2*t)*t;
+      const ease=t=>t<.5?2*t*t:-1+(4-2*t)*t;
       function tick(now){
         const p=Math.min((now-startT)/duration,1);
-        window.scrollTo(0,startY+delta*easeInOut(p));
+        window.scrollTo(0,startY+delta*ease(p));
         if(p<1)requestAnimationFrame(tick);
       }
       requestAnimationFrame(tick);
     }
 
     function flyOnce(){
-      if(!img||!target)return;
       const r=img.getBoundingClientRect();
       const startX=r.left+r.width/2;
       const startY=r.top+r.height/2;
@@ -254,8 +327,9 @@
         if(p<1)requestAnimationFrame(step);else clone.remove();
       }
       requestAnimationFrame(step);
-      smoothScrollTo(endY,duration);
+      smoothScrollTo(endY,2200);
     }
+
     img?.addEventListener('click',e=>{e.preventDefault();flyOnce();});
   })();
   </script>
