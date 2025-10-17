@@ -14,7 +14,7 @@
   :root{
     --bg:#ffffff; --fg:#121212; --muted:#666; --line:#e8e8e8;
     --accent:#B8915A; --accent-ink:#5a422a;
-    --scroll-ink:#A88BFF;                 /* sichtbares, sanftes Lila */
+    --scroll-ink:#A88BFF;                 /* Lila für H1-Färbung */
     --max:1180px; --radius:16px;
     --shadow:0 10px 30px rgba(0,0,0,.06);
     --speed:220ms;
@@ -69,13 +69,19 @@
     font-size:clamp(48px, 8.5vw, 104px); letter-spacing:-.018em; margin:.25em 0 .1em;
   }
 
-  /* Scroll-Färbung: pro Buchstabe – deutlich sichtbar, startet früher */
-  .display .char{ transition: color 160ms ease; will-change: color; }
+  /* Scroll-Färbung: pro Buchstabe – noch früher & sichtbarer */
+  .display .char{ transition: color 140ms ease; will-change: color; }
   .display .char.is-colored{ color: var(--scroll-ink); }
 
   .lead{max-width:60ch; color:var(--muted); font-size:clamp(16px,2.2vw,18px)}
-  .jump{display:inline-block; margin-top:22px; text-decoration:none; border-bottom:2px solid var(--fg); padding-bottom:4px}
+  .cta-inline{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .jump{display:inline-block; margin-top:22px; text-decoration:none; border-bottom:2px solid var(--fg); padding-bottom:4px; white-space:nowrap}
   .jump:hover{ color:var(--accent-ink); border-color:var(--accent-ink); }
+  .fire-icon{ width:34px; height:auto; display:inline-block; vertical-align:middle; transform-origin:center; animation:wobble 2.2s ease-in-out infinite; }
+  @keyframes wobble{
+    0%,100%{ transform:rotate(0deg) }
+    50%{ transform:rotate(6deg) }
+  }
 
   section{padding-block:44px; border-bottom:1px solid var(--line)}
   h2.kicker{font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 8px}
@@ -108,18 +114,18 @@
   .scroll-block.is-active{background:color-mix(in oklab,var(--accent)20%,var(--bg));
     transform:translateY(-4px); box-shadow:0 10px 26px rgba(0,0,0,.08);}
 
-  /* Laufbanner – weniger Höhe, Schrift bleibt groß */
+  /* Laufbanner – minimale Höhe; Schrift bleibt groß */
   .marquee-wrap{ background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
   .marquee{ white-space:nowrap; overflow:hidden; position:relative; }
   .track{
     display:inline-block;
-    padding-block: clamp(0px,0.6vw,6px);           /* << minimaler Weißraum */
-    line-height: 1.04;                              /* Text bestimmt Höhe */
+    padding-block: clamp(0px,0.4vw,4px);           /* << so wenig wie möglich */
+    line-height: 1.02;                              /* Text bestimmt Höhe */
     font-family:"Archivo Black", system-ui, sans-serif;
     font-weight:400; text-transform:uppercase;
-    font-size: clamp(32px, 9vw, 96px);              /* groß lassen */
+    font-size: clamp(32px, 9vw, 96px);
     letter-spacing:.04em; color:#000;
-    animation: scroll-left 32s linear infinite;     /* langsam */
+    animation: scroll-left 32s linear infinite;
   }
   .track span{ margin: 0 1.2em; }
   .marquee:hover .track, .marquee.paused .track{ animation-play-state: paused; }
@@ -150,45 +156,31 @@
   .reveal{opacity:0; transition:opacity 700ms cubic-bezier(.2,.6,.2,1);}
   .reveal.in{opacity:1;}
 
-  /* Maus-/Finger-Follower: größerer Punkt + „Feuer-Linie“ (Sparks) */
-  .follower{
-    position:fixed; left:0; top:0; width:32px; height:32px; transform:translate(-50%,-50%);
-    pointer-events:none; z-index:9999; opacity:.95;
-    filter: drop-shadow(0 3px 10px rgba(0,0,0,.18));
+  /* Feuerball-Flug (fliegender Clone) */
+  .fireball-flying{
+    position:fixed; width:40px; height:auto; z-index:50; pointer-events:none;
+    transform:translate(-50%,-50%) rotate(0deg) scale(1);
+    animation: spin 800ms linear infinite;
+    filter: drop-shadow(0 6px 18px rgba(168,139,255,.35));
   }
-  @media (hover:none), (pointer:coarse){
-    .follower{ width:36px; height:36px; } /* etwas größer am Finger */
+  @keyframes spin{
+    from{ transform:translate(-50%,-50%) rotate(0deg) scale(1); }
+    to  { transform:translate(-50%,-50%) rotate(360deg) scale(1); }
   }
-  #trailLayer{ position:fixed; left:0; top:0; width:100vw; height:100vh; pointer-events:none; z-index:9998; }
-  .spark{
-    position:fixed; left:0; top:0; transform:translate(-50%,-50%);
-    width:12px; height:12px; border-radius:50%;
-    background: radial-gradient(circle at 35% 35%, #d3c3ff, #b99ff6 60%, rgba(168,139,255,.0) 100%);
-    mix-blend-mode:multiply;
-    filter: blur(.2px);
-    animation: spark 700ms ease-out forwards;
+  .fb-spark{
+    position:fixed; width:12px; height:12px; border-radius:50%;
+    background: radial-gradient(circle at 35% 35%, #e5dcff, #c6b3ff 60%, rgba(168,139,255,0) 100%);
+    pointer-events:none; z-index:49; transform:translate(-50%,-50%);
+    animation: fbSpark 600ms ease-out forwards;
   }
-  @keyframes spark{
-    0%{ opacity:.9; transform:translate(-50%,-50%) scale(1); }
-    100%{ opacity:0; transform:translate(-50%,-50%) scale(.4); }
+  @keyframes fbSpark{
+    0%{ opacity:.95; transform:translate(-50%,-50%) scale(1); }
+    100%{ opacity:0;   transform:translate(-50%,-50%) scale(.4); }
   }
   </style>
 </head>
 
 <body>
-  <!-- Maus-/Finger-Follower (größer) -->
-  <svg class="follower" id="follower" viewBox="0 0 64 64" aria-hidden="true">
-    <defs>
-      <radialGradient id="g" cx="30%" cy="30%" r="70%">
-        <stop offset="0%" stop-color="#d6c7ff"/>
-        <stop offset="60%" stop-color="#bda6ff"/>
-        <stop offset="100%" stop-color="#a88bff"/>
-      </radialGradient>
-    </defs>
-    <circle cx="32" cy="32" r="16" fill="url(#g)"/>
-  </svg>
-  <div id="trailLayer"></div>
-
   <header>
     <div class="wrap row">
       <a class="brand" href="/">Denice-Su Cronauer</a>
@@ -215,7 +207,12 @@
           Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen.  
           Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.
         </p>
-        <a class="jump" href="#kontakt">Zum Kontaktformular ↓</a>
+
+        <div class="cta-inline">
+          <a class="jump" id="jumpContact" href="#kontakt">Zum Kontaktformular ↓</a>
+          <!-- Dein PNG daneben -->
+          <img id="fireImg" class="fire-icon" src="feuer.png" alt="Feuerball">
+        </div>
       </div>
     </section>
 
@@ -360,12 +357,12 @@
     els.forEach(el=>io.observe(el));
   })();
 
-  // (1) Sichtbare Buchstabenfärbung beim Scrollen (H1) – startet früher
+  // (1) H1 – Buchstabenfärbung startet noch früher (Bias 60%)
   (function(){
     const h1   = document.getElementById('headline');
     const hero = document.getElementById('hero');
 
-    // Split in Zeichen-Spans (br berücksichtigen)
+    // Split in Zeichen-Spans
     const raw = h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
     const out = [];
     raw.split('').forEach(ch=>{
@@ -379,10 +376,9 @@
     function update(){
       const r = hero.getBoundingClientRect();
       const total = Math.max(r.height, 1);
-      // Frühstart: als ob 25% bereits "vorgespult" wären
-      const bias  = total * 0.25;
+      const bias  = total * 0.60; // << noch früher loslegen
       const passed = Math.min(Math.max(-r.top + bias, 0), total + bias);
-      const progress = passed / (total + bias); // 0..1 (mit Bias)
+      const progress = passed / (total + bias);
       const count = Math.floor(chars.length * progress);
       for(let i=0;i<chars.length;i++){
         if(i < count) chars[i].classList.add('is-colored');
@@ -403,7 +399,7 @@
     });
   })();
 
-  // Sticky Aktiv-Highlight (für visuellen "Dock"-Hinweis)
+  // Sticky Aktiv-Highlight (nur optisch)
   (function(){
     const blocks=document.querySelectorAll('.scroll-block');
     function mark(){
@@ -442,40 +438,86 @@
     });
   })();
 
-  // Maus-/Finger-Follower + „Feuer-Linie“ (Sparks)
+  // Feuerball: beim Klick auf "Zum Kontaktformular" -> animierter Flug + Smooth-Scroll
   (function(){
-    const follower = document.getElementById('follower');
-    const layer = document.getElementById('trailLayer');
+    const link = document.getElementById('jumpContact');
+    const img  = document.getElementById('fireImg');
+    const target = document.getElementById('kontakt');
 
-    let ticking = false;
-    function place(x,y){
-      follower.style.left = x+'px';
-      follower.style.top  = y+'px';
-      // spark erzeugen (gedrosselt via rAF)
-      if(!ticking){
-        window.requestAnimationFrame(()=>{
-          const s = document.createElement('span');
-          s.className = 'spark';
-          // leichte Varianz in Größe
-          const size = 9 + Math.random()*7;
-          s.style.width = size+'px';
-          s.style.height = size+'px';
-          s.style.left = x+'px';
-          s.style.top  = y+'px';
-          layer.appendChild(s);
-          s.addEventListener('animationend', ()=> s.remove());
-          ticking = false;
-        });
-        ticking = true;
+    function flyOnce(){
+      if(!img || !target) return;
+
+      // Startposition (Viewport-Koordinaten)
+      const r = img.getBoundingClientRect();
+      const startX = r.left + r.width/2;
+      const startY = r.top  + r.height/2;
+
+      // Zielposition: oberer Rand vom Kontakt-Abschnitt
+      const tRect = target.getBoundingClientRect();
+      const endX = window.innerWidth/2; // zur Mitte des Screens
+      const endY = tRect.top + 20;      // kurz vor dem Kontakt
+
+      // Clone als fliegender Feuerball
+      const clone = img.cloneNode(true);
+      clone.removeAttribute('id');
+      clone.classList.add('fireball-flying');
+      document.body.appendChild(clone);
+
+      let start = null;
+      const duration = 1600; // ms
+      let lastSpark = 0;
+
+      function sparkAt(x,y){
+        const s = document.createElement('span');
+        s.className = 'fb-spark';
+        const size = 8 + Math.random()*10;
+        s.style.width = size+'px';
+        s.style.height = size+'px';
+        s.style.left = x+'px';
+        s.style.top  = y+'px';
+        document.body.appendChild(s);
+        s.addEventListener('animationend', ()=> s.remove());
       }
+
+      function step(ts){
+        if(!start) start = ts;
+        const p = Math.min((ts - start) / duration, 1); // 0..1
+        // leichte Kurve (easing + Bogen)
+        const ease = p<.5 ? 2*p*p : -1+(4-2*p)*p;
+        const curve = Math.sin(p*Math.PI) * 60; // Bogenhöhe
+
+        const x = startX + (endX - startX) * ease + (Math.random()-0.5)*4;
+        const y = startY + (endY - startY) * ease + curve;
+
+        clone.style.left = x + 'px';
+        clone.style.top  = y + 'px';
+
+        // Funken spur (alle ~40ms)
+        if(ts - lastSpark > 40){
+          lastSpark = ts;
+          sparkAt(x, y);
+        }
+
+        if(p < 1){
+          requestAnimationFrame(step);
+        } else {
+          clone.remove();
+        }
+      }
+      requestAnimationFrame(step);
+
+      // Smooth scroll parallel
+      target.scrollIntoView({behavior:'smooth', block:'start'});
     }
 
-    window.addEventListener('mousemove', (e)=> place(e.clientX, e.clientY), {passive:true});
-    // Touch
-    window.addEventListener('touchmove', (e)=>{
-      const t = e.touches[0]; if(!t) return;
-      place(t.clientX, t.clientY);
-    }, {passive:true});
+    link?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      flyOnce();
+    });
+    img?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      flyOnce();
+    });
   })();
   </script>
 </body>
