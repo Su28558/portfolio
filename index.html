@@ -11,127 +11,116 @@
   :root{
     --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a7a7a7; --line:#1e1e1e;
     --accent:#C09B6B; --scroll-ink:#BFA4FF;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --radius:8px;
   }
-
   *{box-sizing:border-box}
-  html,body{margin:0; padding:0; overflow-x:hidden}
-  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--fg); background:var(--bg)}
-  a{color:inherit; text-decoration:none; text-underline-offset:.22em}
-  .wrap{max-width:1180px; margin:auto; padding:0 clamp(16px,3vw,24px)}
-  section{padding:48px 0; border-bottom:1px solid var(--line); background:transparent}
+  html,body{margin:0;padding:0;overflow-x:hidden}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg)}
+  a{color:inherit;text-decoration:none;text-underline-offset:.22em}
+  .wrap{max-width:1180px;margin:auto;padding:0 clamp(16px,3vw,24px)}
+  section{padding:48px 0;border-bottom:1px solid var(--line);background:transparent}
 
   /* Header */
-  header{position:sticky; top:0; z-index:20; background:rgba(11,11,11,.7); backdrop-filter:blur(6px); border-bottom:1px solid var(--line)}
-  .row{display:flex; justify-content:space-between; align-items:center; padding:12px 0}
-  .brand{font-family:Fraunces,serif; font-weight:700; font-size:20px; text-decoration:none}
-  /* Menü-Icon als PNG */
-  .nav-toggle-img{width:40px; height:auto; cursor:pointer; display:block; filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-  .nav-panel{display:none; background:transparent; border-bottom:1px solid var(--line)}
+  header{position:sticky;top:0;z-index:20;background:rgba(11,11,11,.7);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
+  .brand{font-family:Fraunces,serif;font-weight:700;font-size:20px}
+  .nav-toggle-img{width:40px;height:auto;cursor:pointer;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+  .nav-panel{display:none;border-bottom:1px solid var(--line)}
   .nav-panel.open{display:block}
-  .nav-menu{display:flex; gap:8px; padding:8px 0; flex-wrap:wrap}
-  .nav-menu a{padding:8px 12px; border-radius:6px}
+  .nav-menu{display:flex;gap:8px;padding:8px 0;flex-wrap:wrap}
+  .nav-menu a{padding:8px 12px;border-radius:6px}
   .nav-menu a:hover{background:rgba(255,255,255,.06)}
 
   /* Hero */
   .hero{padding:84px 0 56px}
-  .eyebrow{text-transform:uppercase; letter-spacing:.12em; color:var(--muted); font-size:12px}
-  h1.display{font-family:Fraunces,serif; font-size:clamp(48px,8vw,100px); line-height:1.05; margin:.2em 0}
+  .eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-size:12px}
+  h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-height:1.05;margin:.2em 0}
   .display .char{transition:color .15s ease}
   .display .char.is-colored{color:var(--scroll-ink)}
-  .lead{color:var(--muted); max-width:60ch}
-  .cta-inline{display:flex; align-items:center; gap:12px; margin-top:20px; flex-wrap:wrap}
-  .label{font-weight:600; font-size:18px}
-  .fire-icon{width:44px; cursor:pointer; animation:wobble 2.2s ease-in-out infinite; filter:drop-shadow(0 6px 18px rgba(191,164,255,.28))}
+  .lead{color:var(--muted);max-width:60ch}
+  .cta-inline{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+  .label{font-weight:600;font-size:18px}
+  .fire-icon{width:44px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite;filter:drop-shadow(0 6px 18px rgba(191,164,255,.28))}
   @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-  /* Laufbanner – weißer Background, schwarze Schrift */
-  .marquee-wrap{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
-  .marquee{white-space:nowrap; overflow:hidden; position:relative}
+  /* Laufbanner – weiß/schwarz */
+  .marquee-wrap{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .marquee{white-space:nowrap;overflow:hidden;position:relative}
   .track{
-    display:inline-block; padding-block: clamp(0px,0.5vw,4px); line-height:1.02;
-    font-family:"Archivo Black",system-ui,sans-serif; font-size:clamp(32px,9vw,96px);
-    letter-spacing:.04em; color:#000;
-    animation:scroll-left 32s linear infinite;
+    display:inline-block;padding-block:clamp(0px,0.5vw,4px);line-height:1.02;
+    font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(32px,9vw,96px);
+    letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite
   }
   .track span{margin:0 1.2em}
-  .marquee:hover .track, .marquee.paused .track{animation-play-state:paused}
+  .marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
   @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* ===== Leistungen-Bereich (PNG-Header + überlappendes Modul) ===== */
-  #leistungen{padding-top:0; border-bottom:none}
+  /* ===== Leistungen: PNG-Header + horizontaler Scroll-Slider ===== */
+  #leistungen{padding-top:0;border-bottom:none}
   .leistungen-hero{
-    position:relative;
-    background:url('leistungen.png') center/cover no-repeat;
-    min-height:56vh; /* responsive Höhe; JS setzt var(--heroH) exakt */
+    position:relative;background:url('leistungen.png') center/cover no-repeat;min-height:56vh
   }
-  .leistungen-hero .wrap{
-    position:relative; z-index:1; padding-top: clamp(28px,6vw,56px);
-  }
+  .leistungen-hero .wrap{position:relative;z-index:1;padding-top:clamp(28px,6vw,56px)}
   .leistungen-hero::after{
-    content:""; position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(11,11,11,0.0) 60%, rgba(11,11,11,0.65) 82%, rgba(11,11,11,1) 100%);
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(11,11,11,0) 60%,rgba(11,11,11,.65) 82%,rgba(11,11,11,1) 100%)
   }
-  .bigcaps{letter-spacing:.16em; font-size:14px; color:var(--muted); text-transform:uppercase; margin:0 0 8px}
-  .headline-large{font-family:Fraunces,serif; font-size:clamp(28px,3.2vw,40px); margin:0 0 10px}
+  .bigcaps{letter-spacing:.16em;font-size:14px;color:var(--muted);text-transform:uppercase;margin:0 0 8px}
+  .headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0 0 10px}
 
-  /* Modul startet nach 3/4 PNG-Höhe (JS setzt --heroH dynamisch) */
-  .offer{position:relative; margin-top:calc(-0.25 * var(--heroH, 50vh)); padding-top: clamp(16px,2vw,24px); padding-bottom: 24px;
-         border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:transparent;}
+  /* Scrollytelling-Hülle: vertikales Scrollen -> horizontale Bewegung */
+  .offer-h{position:relative;margin-top:calc(-0.25 * var(--heroH, 50vh));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .pin{position:sticky;top:96px;height:calc(100vh - 96px);display:grid;grid-template-columns:minmax(320px,0.9fr) 1.1fr;gap:36px;align-items:start}
+  .pin .wrap{display:contents} /* damit Grid über volle Breite geht */
 
-  .offer .grid{display:grid; gap:24px; align-items:start}
-  @media(min-width:980px){ .offer .grid{grid-template-columns:0.9fr 1.1fr; gap:36px} }
+  /* Linke sticky Box (kantig, s/w) */
+  .sticky-box{border:2px solid #fff;border-radius:0;background:#000;color:#fff;padding:20px;box-shadow:0 18px 40px rgba(0,0,0,.4)}
+  .sticky-box .label{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#ccc;margin-bottom:6px}
+  .sticky-box h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:.2em 0 .4em}
+  .sticky-box p{margin:0;opacity:.95}
 
-  /* Linke sticky Erklärung – kantig, schwarz/weiß */
-  .sticky-col{position:sticky; top:96px; align-self:start}
-  .sticky-box{
-    border:2px solid #fff; border-radius:0; background:#000; color:#fff;
-    padding:20px; box-shadow:0 18px 40px rgba(0,0,0,.4);
+  /* Rechte horizontale Strecke */
+  .houter{position:relative;overflow:hidden;height:100%}
+  .htrack{
+    position:absolute;left:0;top:0;height:100%;display:flex;gap:28px;will-change:transform;
+    padding-right:24px
   }
-  .sticky-box .label{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:#ccc; margin-bottom:6px}
-  .sticky-box h3{font-family:Fraunces,serif; font-size:clamp(22px,3vw,34px); margin:.2em 0 .4em}
-  .sticky-box p{margin:0; opacity:.95}
-
-  /* Rechte Karten – kantig, satt schwarz/weiß, überlappend */
-  .topics{position:relative; max-width:750px; margin-left:auto}
-  .step{ position:relative; margin-top:-28px } /* Überlappung */
-  .step:first-child{ margin-top:0 }
-  .card{
-    border:2px solid #000; border-radius:0;
-    background:#fff; color:#000;
-    padding:22px 20px;
+  .hcard{
+    flex:0 0 min(78vw,720px);
+    height:100%;
+    border:2px solid #000;background:#fff;color:#000;border-radius:0;padding:28px 24px;
     box-shadow:0 20px 40px rgba(0,0,0,.45);
-    transition:transform .28s ease, box-shadow .28s ease, outline-color .2s ease, background-color .2s ease, color .2s ease;
-    scroll-margin-top:110px;
-    outline:2px solid transparent;
+    display:flex;flex-direction:column;justify-content:center;
+    outline:2px solid transparent;transition:outline-color .2s ease,transform .25s ease,box-shadow .25s ease
   }
-  .card:hover{ transform:translateY(-2px); box-shadow:0 26px 56px rgba(0,0,0,.55) }
-  .card.is-active{ outline-color:#fff }
-  /* Alternierend invertieren für mehr Kontrast */
-  .step:nth-child(even) .card{
-    background:#000; color:#fff; border-color:#fff;
-  }
+  .hcard h4{font-family:Fraunces,serif;font-size:clamp(22px,2.4vw,32px);margin:0 0 10px}
+  .hcard p{font-size:clamp(16px,1.2vw,18px);margin:0;max-width:60ch}
+  .hcard.is-active{outline-color:#fff}
+  /* alternierend invertieren */
+  .hcard.alt{background:#000;color:#fff;border-color:#fff}
+
+  /* Abstand unten, damit man sauber aus der Szene scrollt */
+  .offer-spacer{height:12vh}
 
   /* Standard-Blöcke darunter */
-  .kicker{text-transform:uppercase; letter-spacing:.12em; font-size:14px; color:var(--muted); margin-bottom:8px}
-  .section{font-family:Fraunces,serif; font-size:clamp(22px,2.5vw,32px); margin-top:0}
-  .box{border:1px solid var(--line); border-radius:8px; padding:20px; transition:border-color .3s, box-shadow .3s}
-  .box:hover{border-color:var(--accent); box-shadow:var(--shadow)}
+  .kicker{text-transform:uppercase;letter-spacing:.12em;font-size:14px;color:var(--muted);margin-bottom:8px}
+  .section{font-family:Fraunces,serif;font-size:clamp(22px,2.5vw,32px);margin-top:0}
+  .box{border:1px solid var(--line);border-radius:8px;padding:20px;transition:border-color .3s,box-shadow .3s}
+  .box:hover{border-color:var(--accent);box-shadow:0 10px 30px rgba(0,0,0,.35)}
 
   /* CTAs & Footer */
-  .cta{display:inline-block; border:2px solid var(--fg); padding:12px 18px; border-radius:8px; text-decoration:none; transition:.3s}
-  .cta:hover{border-color:var(--accent); transform:translateY(-2px)}
-  .funny{position:relative; height:60px}
-  button.prank{border:2px solid var(--fg); background:transparent; border-radius:8px; padding:12px 18px; cursor:pointer}
-  .funny.is-flying button.prank{position:absolute; left:50%; top:0; transform:translateX(-50%)}
-
-  footer{padding:24px 0; text-align:center; color:var(--muted); font-size:14px}
+  .cta{display:inline-block;border:2px solid var(--fg);padding:12px 18px;border-radius:8px}
+  .cta:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .funny{position:relative;height:60px}
+  button.prank{border:2px solid var(--fg);background:transparent;border-radius:8px;padding:12px 18px;cursor:pointer}
+  .funny.is-flying button.prank{position:absolute;left:50%;top:0;transform:translateX(-50%)}
+  footer{padding:24px 0;text-align:center;color:var(--muted);font-size:14px}
 
   /* Feuerball */
-  .fireball-flying{position:fixed; width:44px; z-index:50; pointer-events:none; animation:spin 1s linear infinite; filter:drop-shadow(0 6px 18px rgba(191,164,255,.38))}
+  .fireball-flying{position:fixed;width:44px;z-index:50;pointer-events:none;animation:spin 1s linear infinite;filter:drop-shadow(0 6px 18px rgba(191,164,255,.38))}
   @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-  .fb-spark{position:fixed; width:10px; height:10px; border-radius:50%; background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0)); pointer-events:none; z-index:49; animation:fbSpark .6s ease-out forwards}
-  @keyframes fbSpark{0%{opacity:.9; transform:scale(1)}100%{opacity:0; transform:scale(.3)}}
+  .fb-spark{position:fixed;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0));pointer-events:none;z-index:49;animation:fbSpark .6s ease-out forwards}
+  @keyframes fbSpark{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(.3)}}
   </style>
 </head>
 
@@ -139,12 +128,11 @@
   <header>
     <div class="wrap row">
       <a class="brand" href="#">Denice-Su Cronauer</a>
-      <!-- Menü-Button als PNG -->
-      <img id="navToggleImg" class="nav-toggle-img" src="menue1.png" alt="Menü öffnen/schließen">
+      <img id="navToggleImg" class="nav-toggle-img" src="menue.png" alt="Menü">
     </div>
     <div class="nav-panel" id="navPanel">
       <div class="wrap">
-        <nav class="nav-menu" role="navigation">
+        <nav class="nav-menu">
           <a href="#leistungen">Leistungen</a>
           <a href="#ansatz">Ansatz</a>
           <a href="#kontakt">Kontakt</a>
@@ -158,7 +146,7 @@
     <section class="hero" id="hero">
       <div class="wrap">
         <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
-        <h1 class="display" id="headline">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
+        <h1 class="display" id="headline">Inhalte<br>mit Struktur.<br>Websites<br>mit Haltung.</h1>
         <p class="lead">Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen. Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.</p>
         <div class="cta-inline">
           <span class="label">Zum Kontaktformular</span>
@@ -167,7 +155,7 @@
       </div>
     </section>
 
-    <!-- LAUFBANNER (weiß/schwarz) -->
+    <!-- LAUFBANNER -->
     <section class="marquee-wrap" aria-label="Kompetenzen">
       <div class="marquee" id="marquee" tabindex="0">
         <div class="track" aria-hidden="true">
@@ -202,57 +190,42 @@
         </div>
       </div>
 
-      <!-- Überlappendes Modul (startet nach 3/4 der PNG-Höhe) -->
-      <div class="offer" id="offer">
-        <div class="wrap grid">
-          <!-- links: sticky Erklärung -->
-          <div class="sticky-col">
-            <div class="sticky-box">
-              <div class="label">Leistungen</div>
-              <h3 id="offerTitle">Content & Redaktion</h3>
-              <p id="offerDesc">Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.</p>
-            </div>
+      <!-- Horizontaler Scroll-Slider (scrollytelling) -->
+      <div class="offer-h" id="offerH">
+        <div class="wrap pin">
+          <!-- linke Sticky-Box -->
+          <div class="sticky-box">
+            <div class="label">Leistungen</div>
+            <h3 id="offerTitle">Content & Redaktion</h3>
+            <p id="offerDesc">Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.</p>
           </div>
 
-          <!-- rechts: Themenkarten (kantig, schwarz/weiß) -->
-          <div class="topics" id="topics">
-            <div class="step">
-              <article class="card is-active"
-                data-title="Content & Redaktion"
-                data-desc="Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.">
+          <!-- rechte horizontale Strecke -->
+          <div class="houter">
+            <div class="htrack" id="htrack">
+              <article class="hcard is-active" data-title="Content & Redaktion" data-desc="Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.">
                 <h4>Content & Redaktion</h4>
-                <p>Redaktion ist das Fundament: klare Botschaft, starke Struktur, konsistente Tonalität.</p>
+                <p>Redaktion als Fundament: klare Botschaft, starke Struktur, konsistente Tonalität.</p>
               </article>
-            </div>
 
-            <div class="step">
-              <article class="card"
-                data-title="Website-Gestaltung & Aufbau"
-                data-desc="Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.">
+              <article class="hcard alt" data-title="Website-Gestaltung & Aufbau" data-desc="Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.">
                 <h4>Website-Gestaltung & Aufbau</h4>
                 <p>Wireframes, Textsysteme, visuelle Grammatik – alles greift ineinander und führt Nutzer:innen sauber durchs Thema.</p>
               </article>
-            </div>
 
-            <div class="step">
-              <article class="card"
-                data-title="CMS-Pflege & Betreuung"
-                data-desc="Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – redaktionelle Workflows, Qualitätssicherung, modulare Inhalte.">
+              <article class="hcard" data-title="CMS-Pflege & Betreuung" data-desc="Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – redaktionelle Workflows, Qualitätssicherung, modulare Inhalte.">
                 <h4>CMS-Pflege & Betreuung</h4>
                 <p>Strukturierte Inhalte, klare Prozesse und saubere Pflege – damit dein System langfristig leicht bleibt.</p>
               </article>
-            </div>
 
-            <div class="step">
-              <article class="card"
-                data-title="Workshops & Guidelines"
-                data-desc="UX-Writing-Audits, Copy-Guidelines, Content-Design-Workshops – damit Teams konsistent und effizient arbeiten.">
+              <article class="hcard alt" data-title="Workshops & Guidelines" data-desc="UX-Writing-Audits, Copy-Guidelines, Content-Design-Workshops – damit Teams konsistent und effizient arbeiten.">
                 <h4>Workshops & Guidelines</h4>
                 <p>Mit kleinen Formaten viel bewegen: Audits, Playbooks und kurze Trainings mit echtem Praxisbezug.</p>
               </article>
             </div>
           </div>
         </div>
+        <div class="offer-spacer"></div>
       </div>
     </section>
 
@@ -291,14 +264,12 @@
   <script>
   document.getElementById('y').textContent=new Date().getFullYear();
 
-  // Menü-Panel via PNG
+  // Menü via PNG
   const navToggleImg=document.getElementById('navToggleImg');
   const navPanel=document.getElementById('navPanel');
-  navToggleImg.addEventListener('click',()=>{
-    navPanel.classList.toggle('open');
-  });
+  navToggleImg.addEventListener('click',()=>navPanel.classList.toggle('open'));
 
-  // H1 Buchstaben färben (früher Start)
+  // H1 Buchstaben färben
   (function(){
     const h1=document.getElementById('headline');
     const hero=document.getElementById('hero');
@@ -306,15 +277,12 @@
     h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
     const chars=h1.querySelectorAll('.char');
     function update(){
-      const r=hero.getBoundingClientRect();
-      const total=Math.max(r.height,1);
-      const bias=total*0.75;
+      const r=hero.getBoundingClientRect(), total=Math.max(r.height,1), bias=total*0.75;
       const passed=Math.min(Math.max(-r.top+bias,0),total+bias);
-      const progress=passed/(total+bias);
-      const count=Math.floor(chars.length*progress);
+      const progress=passed/(total+bias), count=Math.floor(chars.length*progress);
       chars.forEach((c,i)=>c.classList.toggle('is-colored',i<count));
     }
-    update(); window.addEventListener('scroll',update,{passive:true}); window.addEventListener('resize',update);
+    update(); addEventListener('scroll',update,{passive:true}); addEventListener('resize',update);
   })();
 
   // Marquee pausierbar
@@ -328,122 +296,105 @@
 
   // Fliehender Button
   (function(){
-    const wrap=document.getElementById('funnyWrap');
-    const btn=document.getElementById('callBtn');
+    const wrap=document.getElementById('funnyWrap'), btn=document.getElementById('callBtn');
     if(!wrap||!btn)return;
     wrap.addEventListener('mousemove',e=>{
       wrap.classList.add('is-flying');
-      const rect=btn.getBoundingClientRect();
-      const distX=e.clientX-(rect.left+rect.width/2);
-      const distY=e.clientY-(rect.top+rect.height/2);
-      const distance=Math.hypot(distX,distY);
-      if(distance<140){
-        const offsetX=(Math.random()-0.5)*320;
-        const offsetY=(Math.random()-0.5)*140;
-        btn.style.transform=`translate(${offsetX}px,${offsetY}px)`;
-      }
+      const r=btn.getBoundingClientRect(), dx=e.clientX-(r.left+r.width/2), dy=e.clientY-(r.top+r.height/2);
+      const d=Math.hypot(dx,dy);
+      if(d<140){ btn.style.transform=`translate(${(Math.random()-0.5)*320}px,${(Math.random()-0.5)*140}px)`; }
     });
     wrap.addEventListener('mouseleave',()=>{ btn.style.transform=''; wrap.classList.remove('is-flying'); });
   })();
 
   // Feuerball + langsamer Smooth-Scroll
   (function(){
-    const img=document.getElementById('fireBtn');
-    const target=document.getElementById('kontakt');
-
-    function smoothScrollTo(targetY,duration){
-      const startY=window.scrollY;
-      const delta=targetY-startY;
-      const startT=performance.now();
-      const ease=t=>t<.5?2*t*t:-1+(4-2*t)*t;
-      function tick(now){
-        const p=Math.min((now-startT)/duration,1);
-        window.scrollTo(0,startY+delta*ease(p));
-        if(p<1)requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }
-
+    const img=document.getElementById('fireBtn'), target=document.getElementById('kontakt');
+    function smoothScrollTo(y,d){const sy=scrollY,dy=y-sy,st=performance.now(),E=t=>t<.5?2*t*t:-1+(4-2*t)*t;function T(n){const p=Math.min((n-st)/d,1);scrollTo(0,sy+dy*E(p));if(p<1)requestAnimationFrame(T);}requestAnimationFrame(T)}
     function flyOnce(){
-      if(!img||!target)return;
-      const r=img.getBoundingClientRect();
-      const startX=r.left+r.width/2;
-      const startY=r.top+r.height/2;
-      const tRect=target.getBoundingClientRect();
-      const endX=window.innerWidth/2;
-      const endY=tRect.top+window.scrollY+20;
-
-      const clone=img.cloneNode(true);
-      clone.classList.add('fireball-flying');
-      document.body.appendChild(clone);
-
-      const duration=2200;
-      let start=null,lastSpark=0;
-      function sparkAt(x,y){
-        const s=document.createElement('span');
-        s.className='fb-spark';
-        const size=8+Math.random()*10;
-        s.style.width=size+'px'; s.style.height=size+'px';
-        s.style.left=x+'px'; s.style.top=y+'px';
-        document.body.appendChild(s);
-        s.addEventListener('animationend',()=>s.remove());
+      const r=img.getBoundingClientRect(), sx=r.left+r.width/2, sy=r.top+r.height/2, tr=target.getBoundingClientRect(), ex=innerWidth/2, ey=tr.top+scrollY+20;
+      const clone=img.cloneNode(true); clone.classList.add('fireball-flying'); document.body.appendChild(clone);
+      const dur=2200; let s=null, last=0;
+      function spark(x,y){const m=document.createElement('span');m.className='fb-spark';const z=8+Math.random()*10;m.style.width=z+'px';m.style.height=z+'px';m.style.left=x+'px';m.style.top=y+'px';document.body.appendChild(m);m.addEventListener('animationend',()=>m.remove());}
+      function step(t){ if(!s)s=t; const p=Math.min((t-s)/dur,1), e=p<.5?2*p*p:-1+(4-2*p)*p, arc=Math.sin(p*Math.PI)*80;
+        const x=sx+(ex-sx)*e, y=sy+(ey-sy)*e+arc; clone.style.left=x+'px'; clone.style.top=(y-scrollY)+'px';
+        if(t-last>45){last=t;spark(x,y-scrollY);} if(p<1)requestAnimationFrame(step); else clone.remove();
       }
-      function step(ts){
-        if(!start)start=ts;
-        const p=Math.min((ts-start)/duration,1);
-        const ease=p<.5?2*p*p:-1+(4-2*p)*p;
-        const arc=Math.sin(p*Math.PI)*80;
-        const x=startX+(endX-startX)*ease;
-        const y=startY+(endY-startY)*ease+arc;
-        clone.style.left=x+'px';
-        clone.style.top=(y-window.scrollY)+'px';
-        if(ts-lastSpark>45){lastSpark=ts; sparkAt(x,y-window.scrollY); }
-        if(p<1)requestAnimationFrame(step); else clone.remove();
-      }
-      requestAnimationFrame(step);
-      smoothScrollTo(endY, duration);
+      requestAnimationFrame(step); smoothScrollTo(ey,dur);
     }
     img?.addEventListener('click',e=>{e.preventDefault();flyOnce();});
   })();
 
-  // Leistungen-Modul: rechte Karte -> linke Erklärung
+  // ===== Horizontaler Scroll per Vertikal-Scroll =====
   (function(){
-    const titleEl = document.getElementById('offerTitle');
-    const descEl  = document.getElementById('offerDesc');
-    const cards   = Array.from(document.querySelectorAll('.topics .card'));
-    const hero    = document.getElementById('leistungenHero');
-    const offerEl = document.getElementById('offer');
+    const hero=document.getElementById('leistungenHero');
+    const wrap=document.getElementById('offerH');
+    const track=document.getElementById('htrack');
+    const cards=[...track.querySelectorAll('.hcard')];
+    const titleEl=document.getElementById('offerTitle');
+    const descEl=document.getElementById('offerDesc');
 
-    // Setze dynamisch --heroH für 3/4-Startpunkt
-    function updateHeroHeight(){
-      const h = hero.getBoundingClientRect().height;
-      document.documentElement.style.setProperty('--heroH', h + 'px');
+    // 1) Hero-Höhe -> CSS-Var für Überlappung
+    function setHeroH(){
+      const h=hero.getBoundingClientRect().height || hero.offsetHeight;
+      document.documentElement.style.setProperty('--heroH', h+'px');
     }
-    updateHeroHeight();
-    window.addEventListener('resize', updateHeroHeight);
+    setHeroH(); addEventListener('resize', setHeroH);
 
-    // Kartenauswahl per Sichtbarkeit
-    const io = new IntersectionObserver((entries)=>{
-      let best = null, bestRatio = 0;
-      entries.forEach(e=>{
-        if(e.isIntersecting && e.intersectionRatio > bestRatio){
-          bestRatio = e.intersectionRatio; best = e;
-        }
+    // 2) Höhe der gesamten Szene berechnen: wie lang wir scrollen müssen,
+    //    um den Track komplett von links nach rechts zu bewegen.
+    function sceneLength(){
+      const trackW=track.scrollWidth, viewportW=window.innerWidth;
+      const pinH=(window.innerHeight-96); // sticky Höhe
+      const extra=Math.max(trackW - viewportW, 0);
+      // Gesamt-Höhe = sticky Höhe + benötigte Wegstrecke
+      return pinH + extra + 120; // + etwas Luft
+    }
+    function setSceneHeight(){
+      wrap.style.height = sceneLength()+'px';
+    }
+    setSceneHeight(); addEventListener('resize', setSceneHeight);
+
+    // 3) Scroll -> TranslateX
+    function onScroll(){
+      const rect=wrap.getBoundingClientRect();
+      const start=rect.top + scrollY;           // Start der Szene
+      const end=start + wrap.offsetHeight;      // Ende der Szene
+      const pinTop=96;                          // sticky Startoffset
+      // aktuelle Progress nur während die pin sichtbar ist
+      const t = Math.min(Math.max((scrollY + pinTop - start), 0), wrap.offsetHeight);
+      const distance = Math.max(track.scrollWidth - innerWidth, 0);
+      const x = - Math.min(Math.max(t - (innerHeight - pinTop), 0), distance);
+      track.style.transform = `translate3d(${x}px,0,0)`;
+
+      // aktive Karte bestimmen (nächste zur Mitte)
+      let best=null, bestDist=Infinity, mid=innerWidth*0.62; // etwas rechts der Mitte (links ist sticky)
+      cards.forEach(c=>{
+        const r=c.getBoundingClientRect();
+        const cx=r.left + r.width/2;
+        const d=Math.abs(cx - mid);
+        if(d<bestDist){bestDist=d; best=c;}
       });
-      if(!best) return;
-      cards.forEach(c=>c.classList.toggle('is-active', c===best.target));
-      const t = best.target.getAttribute('data-title') || best.target.querySelector('h4')?.textContent || '';
-      const d = best.target.getAttribute('data-desc')  || '';
-      if(t) titleEl.textContent = t;
-      if(d) descEl.textContent  = d;
-    }, { threshold:[0,.25,.5,.75,1] });
+      if(best){
+        cards.forEach(c=>c.classList.toggle('is-active', c===best));
+        const t2=best.getAttribute('data-title')||best.querySelector('h4')?.textContent||'';
+        const d2=best.getAttribute('data-desc')||'';
+        if(t2) titleEl.textContent=t2;
+        if(d2) descEl.textContent=d2;
+      }
+    }
+    onScroll(); addEventListener('scroll', onScroll, {passive:true});
 
-    cards.forEach(c=> io.observe(c));
-
-    // Optional: Klick auf Karte scrollt sanft zu ihr
-    cards.forEach(c=>{
-      c.addEventListener('click', ()=> c.scrollIntoView({behavior:'smooth', block:'start'}));
-    });
+    // 4) Maus-/Touchrad über der Szene -> nach rechts/links
+    //    (damit es sich auch ohne Gesamtscroll „sliderig“ anfühlt)
+    track.addEventListener('wheel', (e)=>{
+      // horizontales Scrollen priorisieren
+      if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+        e.preventDefault();
+        const newX = (track.style.transform.match(/-?\d+\.?\d*/g)?.[0] ?? '0') * 1 - e.deltaY;
+        track.style.transform = `translate3d(${newX}px,0,0)`;
+      }
+    }, {passive:false});
   })();
   </script>
 </body>
