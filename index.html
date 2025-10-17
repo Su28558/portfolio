@@ -4,69 +4,116 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Denice-Su Cronauer – Online-Redakteurin & Webgestaltung</title>
-  <meta name="description" content="Online-Redakteurin und Content Managerin mit Erfahrung in namhaften Agenturen. Gestaltung und Aufbau moderner, strukturierter Websites." />
+  <meta name="description" content="Online-Redakteurin & Content Managerin. Gestaltung und Aufbau moderner, strukturierter Websites. Redaktion trifft Design." />
   <meta name="color-scheme" content="light dark" />
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg:#fff; --fg:#121212; --muted:#5e5e5e; --line:#e9e9e9;
-      --accent:#0a0a0a;
-      --max:1180px; --col: min(3.5rem, 5vw);
+      --bg:#ffffff; --fg:#121212; --muted:#666; --line:#e9e9e9;
+      --accent:#1F5FFF;            /* Akzentfarbe hier ändern */
+      --max:1180px;
+      --radius:16px;
+      --shadow:0 10px 30px rgba(0,0,0,.06);
+      --speed:220ms;               /* Basis-Tempo */
     }
     @media (prefers-color-scheme: dark){
-      :root{ --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a6a6a6; --line:#1e1e1e; --accent:#f2f2f2; }
+      :root{ --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a7a7a7; --line:#1e1e1e; --shadow:0 10px 30px rgba(0,0,0,.35); }
     }
+    @media (prefers-reduced-motion: reduce){
+      :root{ --speed:0ms; }
+    }
+
     *{box-sizing:border-box}
     html,body{margin:0;background:var(--bg);color:var(--fg)}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.5}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.5; scroll-behavior:smooth}
     a{color:inherit; text-underline-offset:.22em}
-    .wrap{max-width:var(--max); margin-inline:auto; padding-inline: clamp(16px,3vw,28px)}
-    header{border-bottom:2px solid var(--fg); padding:14px 0; position:sticky; top:0; background:var(--bg); z-index:10}
-    .row{display:flex; align-items:center; justify-content:space-between; gap:16px}
+
+    .wrap{max-width:var(--max); margin:auto; padding:0 clamp(16px,3vw,28px)}
+
+    /* Header */
+    header{position:sticky; top:0; z-index:10; background:color-mix(in oklab, var(--bg) 85%, transparent); backdrop-filter:saturate(120%) blur(6px); border-bottom:1px solid var(--line)}
+    .row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0}
     .brand{font-family:Fraunces,serif; font-weight:700; letter-spacing:-.01em; text-decoration:none}
-    nav a{font-size:14px; text-decoration:none; border-bottom:2px solid transparent; margin-left:18px}
-    nav a:hover{border-color:var(--fg)}
+    nav a{
+      position:relative; text-decoration:none; margin-left:18px; font-size:14px; padding-bottom:6px;
+    }
+    nav a::after{
+      content:""; position:absolute; left:0; bottom:0; height:2px; width:0;
+      background:linear-gradient(90deg, var(--accent), transparent 80%);
+      transition:width var(--speed) ease;
+    }
+    nav a:hover::after{ width:100% }
+
+    /* Hero */
     .hero{padding-block: clamp(48px,8vw,120px); border-bottom:1px solid var(--line)}
     .eyebrow{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
-    h1.display{font-family:Fraunces,serif; font-weight:700; line-height:1.05;
-      font-size:clamp(36px,6.2vw,76px); letter-spacing:-.015em; margin:.25em 0 .1em}
-    .lead{max-width:54ch; color:var(--muted); font-size:clamp(16px,2.2vw,18px)}
-    .cta{display:inline-block; margin-top:24px; border:2px solid var(--fg); padding:12px 18px; border-radius:12px; text-decoration:none}
-    .strip{display:flex; flex-wrap:wrap; gap:18px; margin-top:22px; color:var(--muted); font-size:14px}
-    .dot::before{content:"•"; margin:0 .5em}
-    section{padding-block:42px; border-bottom:1px solid var(--line)}
+    h1.display{font-family:Fraunces,serif; font-weight:700; line-height:1.05; font-size:clamp(36px,6.2vw,76px); letter-spacing:-.015em; margin:.25em 0 .1em}
+    .lead{max-width:60ch; color:var(--muted); font-size:clamp(16px,2.2vw,18px)}
+
+    /* CTA with shine */
+    .cta{
+      display:inline-block; margin-top:24px; border:2px solid var(--fg); padding:12px 18px; border-radius:12px; text-decoration:none; position:relative; overflow:hidden;
+      transition:transform var(--speed) ease, box-shadow var(--speed) ease, border-color var(--speed) ease;
+    }
+    .cta:hover{ transform:translateY(-2px); box-shadow:var(--shadow); border-color:var(--accent) }
+    .cta::before{
+      content:""; position:absolute; inset:0; translate:-120% 0; background:linear-gradient(120deg, transparent 40%, color-mix(in oklab, var(--accent) 30%, white) 50%, transparent 60%);
+      transition:translate 600ms ease;
+    }
+    .cta:hover::before{ translate:120% 0 }
+
+    /* Sections */
+    section{padding-block:44px; border-bottom:1px solid var(--line)}
     h2.kicker{font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 8px}
     h3.section{font-family:Fraunces,serif; font-size:clamp(22px,2.8vw,32px); margin:0 0 18px}
+
+    /* Cards + Work grid */
     .grid{display:grid; gap:clamp(14px,2.4vw,18px)}
     .grid.work{grid-template-columns:1fr;}
-    @media (min-width:820px){.grid.work{grid-template-columns:1.2fr 1fr 1fr} .span-2{grid-column:span 2}}
-    .card{position:relative; border:2px solid var(--fg); border-radius:18px; overflow:hidden; background:linear-gradient(0deg,rgba(0,0,0,.03),rgba(0,0,0,0))}
-    .card img{width:100%; display:block; aspect-ratio:16/10; object-fit:cover}
-    .cap{position:absolute; left:0; bottom:0; width:100%; padding:12px 14px;
-      display:flex; justify-content:space-between; backdrop-filter:blur(6px);
-      background:color-mix(in oklab,var(--bg) 76%,transparent);
-      border-top:1px solid var(--line); font-size:14px}
-    .cap b{font-weight:600}
-    .pill{border:1.8px solid var(--fg); border-radius:999px; padding:2px 10px; font-size:12px}
+    @media (min-width:820px){ .grid.work{grid-template-columns:1.2fr 1fr 1fr} .span-2{grid-column:span 2} }
+
+    .card{
+      position:relative; border:1.6px solid color-mix(in oklab, var(--fg) 85%, transparent);
+      border-radius:var(--radius); overflow:hidden; background:linear-gradient(0deg, rgba(0,0,0,.02), rgba(0,0,0,0));
+      transform-style:preserve-3d; transition:transform var(--speed) ease, box-shadow var(--speed) ease, border-color var(--speed) ease;
+      will-change:transform;
+    }
+    .card:hover{ box-shadow:var(--shadow); border-color:var(--accent) }
+    .card img{width:100%; display:block; aspect-ratio:16/10; object-fit:cover; transition:scale 400ms ease}
+    .card:hover img{ scale:1.03 }
+    .cap{
+      position:absolute; left:0; bottom:0; width:100%; padding:12px 14px; display:flex; justify-content:space-between; gap:10px;
+      backdrop-filter: blur(6px);
+      background: color-mix(in oklab, var(--bg) 76%, transparent);
+      border-top:1px solid var(--line); font-size:14px
+    }
+    .pill{border:1.4px solid var(--fg); border-radius:999px; padding:2px 10px; font-size:12px}
+
+    /* Layout boxes */
     .cols{display:grid; gap:22px; grid-template-columns:1fr}
-    @media(min-width:980px){.cols{grid-template-columns:1.3fr .9fr}}
-    .box{border:2px solid var(--fg); border-radius:16px; padding:18px}
+    @media(min-width:980px){ .cols{grid-template-columns:1.3fr .9fr} }
+    .box{border:1.6px solid color-mix(in oklab, var(--fg) 85%, transparent); border-radius:var(--radius); padding:18px; transition:border-color var(--speed) ease, box-shadow var(--speed) ease}
+    .box:hover{ border-color:var(--accent); box-shadow:var(--shadow) }
+
     .list{margin:0; padding:0; list-style:none}
     .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
+
     footer{padding:20px 0; color:var(--muted); font-size:14px}
-    /* --- Fake Call Button --- */
-    .funny { position: relative; height: 60px; margin-top: 14px; overflow: visible; }
-    button.prank {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      cursor: pointer;
-      transition: transform 0.12s ease;
-      user-select: none;
+
+    /* Fake Call Button */
+    .funny{ position:relative; height:60px; margin-top:14px; overflow:visible }
+    button.prank{
+      position:absolute; left:50%; top:0; transform:translateX(-50%); cursor:pointer; user-select:none;
+      border:2px solid var(--fg); background:transparent; border-radius:12px; padding:12px 18px;
+      transition:transform var(--speed) ease, border-color var(--speed) ease, box-shadow var(--speed) ease;
     }
+    button.prank:hover{ border-color:var(--accent); box-shadow:var(--shadow) }
+
+    /* Reveal on scroll */
+    .reveal{ opacity:0; transform:translateY(18px); filter:blur(2px); transition:all 700ms cubic-bezier(.2,.6,.2,1) }
+    .reveal.in{ opacity:1; transform:none; filter:none }
   </style>
 </head>
 <body>
@@ -83,79 +130,92 @@
   </header>
 
   <main>
-    <section class="hero">
+    <!-- HERO -->
+    <section class="hero reveal">
       <div class="wrap">
         <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
         <h1 class="display">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
         <p class="lead">
-          Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen. 
-          Ich kombiniere redaktionelle Erfahrung mit einem Gespür für Gestaltung, Nutzerführung und digitale Sprache.
+          Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen.
+          Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.
         </p>
         <a class="cta" href="#kontakt">Projekt anfragen</a>
-        <div class="strip">
-          <span>Content & UX-Writing</span><span class="dot"></span>
-          <span>CMS & Redaktionssysteme</span><span class="dot"></span>
-          <span>Design & Struktur</span><span class="dot"></span>
-          <span>WordPress & Co.</span>
+        <div class="strip" style="margin-top:18px; color:var(--muted); font-size:14px">
+          <span>Content & UX-Writing</span> · <span>CMS & Redaktionssysteme</span> · <span>Design & Struktur</span> · <span>WordPress & Co.</span>
         </div>
       </div>
     </section>
 
-    <section id="arbeiten">
+    <!-- WORK -->
+    <section id="arbeiten" class="reveal">
       <div class="wrap">
         <h2 class="kicker">Erfahrung & Einblicke</h2>
         <h3 class="section">Ausgewählte Projekte & Artikel</h3>
+
         <div class="box">
           <p>
-            Ich habe mehrere Jahre in Agenturen gearbeitet und dort Content-Projekte für Kund:innen wie
-            <strong>L’Oréal Paris</strong>, <strong>Garnier</strong>, <strong>Mixa</strong> und <strong>STIHL</strong> betreut.
-            Dabei lag mein Fokus auf redaktioneller Struktur, Qualität und Nutzerfreundlichkeit – von UX-Copy bis SEO-optimiertem Content.
-          </p>
-          <p>
-            Hier zwei Artikel, die ich verfasst habe:
+            Mehrjährige Agenturerfahrung mit Kund:innen wie <strong>L’Oréal Paris</strong>, <strong>Garnier</strong>, <strong>Mixa</strong> und <strong>STIHL</strong>.
+            Fokus: redaktionelle Struktur, Qualität und Nutzerfreundlichkeit – von UX-Copy bis SEO-Content.
           </p>
           <ul class="list">
-            <li><a href="https://www.moccu.com/insights/digital-design/ux-writing-audit/" target="_blank" rel="noopener">UX-Writing-Audit: Warum gute Texte genauso wichtig sind wie gutes Design</a></li>
-            <li><a href="https://www.moccu.com/insights/content-marketing/copybook/" target="_blank" rel="noopener">Copybook: Wie Content-Teams konsistente Texte schreiben</a></li>
+            <li><a href="https://www.moccu.com/insights/digital-design/ux-writing-audit/" target="_blank" rel="noopener">UX-Writing-Audit – warum gute Texte genauso wichtig sind wie gutes Design</a></li>
+            <li><a href="https://www.moccu.com/insights/content-marketing/copybook/" target="_blank" rel="noopener">Copybook – wie Content-Teams konsistente Texte schreiben</a></li>
           </ul>
+        </div>
+
+        <div class="grid work" style="margin-top:18px">
+          <figure class="card span-2 tilt">
+            <img src="/assets/work-1.jpg" alt="Case A – Redesign Unternehmenswebsite" loading="lazy">
+            <figcaption class="cap"><b>Case A – Redesign</b><span class="pill">WordPress Block-Theme</span></figcaption>
+          </figure>
+          <figure class="card tilt">
+            <img src="/assets/work-2.jpg" alt="Case B – Portfolio einer Fotografin" loading="lazy">
+            <figcaption class="cap"><b>Case B – Portfolio</b><span class="pill">Reiner Code</span></figcaption>
+          </figure>
+          <figure class="card tilt">
+            <img src="/assets/work-3.jpg" alt="Case C – Onepager für Beratung" loading="lazy">
+            <figcaption class="cap"><b>Case C – Onepager</b><span class="pill">WP + Patterns</span></figcaption>
+          </figure>
         </div>
       </div>
     </section>
 
-    <section id="leistungen">
+    <!-- SERVICES + ABOUT -->
+    <section id="leistungen" class="reveal">
       <div class="wrap cols">
         <div class="box">
           <h2 class="kicker">Leistungen</h2>
           <h3 class="section">Was ich anbiete</h3>
           <ul class="list">
             <li><strong>Content & Redaktion:</strong> Themenplanung, UX-Writing, SEO-Texte, Content-Strategie.</li>
-            <li><strong>Website-Gestaltung:</strong> Struktur, Text, Aufbau – vom Wireframe bis zur fertigen Seite.</li>
-            <li><strong>CMS-Pflege & Betreuung:</strong> langjährige Erfahrung mit Systemen wie WordPress, TYPO3, Magnolia u.v.m.</li>
+            <li><strong>Website-Gestaltung & Aufbau:</strong> Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite.</li>
+            <li><strong>CMS-Pflege & Betreuung:</strong> sicherer Umgang mit WordPress, TYPO3, Magnolia u.v.m.</li>
           </ul>
         </div>
         <aside class="box" id="about">
           <h2 class="kicker">Über mich</h2>
           <h3 class="section">Redaktion trifft Gestaltung</h3>
           <p>
-            Ich habe schon immer ein großes Interesse an digitalen Themen – besonders daran, wie Inhalte verständlich, nutzbar und ästhetisch werden.
-            Mein Ansatz: Inhalte denken, gestalten und technisch sauber umsetzen.
+            Großes Interesse an digitalen Themen, seit jeher. Mich reizt, Inhalte verständlich, nutzbar und ästhetisch zu machen —
+            präzise Sprache, klare Hierarchie, ruhige Flächen. Technik setze ich gezielt ein, um genau das spürbar zu machen.
           </p>
-          <p style="color:var(--muted)">Tools & Systeme: WordPress, TYPO3, Figma, Google Workspace, GitHub</p>
+          <p style="color:var(--muted)">Tools & Systeme: WordPress, TYPO3, Magnolia, Figma, Google Workspace, GitHub</p>
         </aside>
       </div>
     </section>
 
-    <section id="kontakt">
+    <!-- CONTACT -->
+    <section id="kontakt" class="reveal">
       <div class="wrap">
         <h2 class="kicker">Kontakt</h2>
         <h3 class="section">Projekt anfragen</h3>
         <div class="box">
-          <p>Erzähl mir kurz, worum es geht – ich melde mich mit einer klaren Empfehlung oder Idee.</p>
+          <p>Schreib mir kurz Ziele, Umfang, Timing. Ich melde mich mit einer klaren Empfehlung.</p>
           <p><a class="cta" href="mailto:denice@mailadresse.de?subject=Projektanfrage%20Website">E-Mail senden</a></p>
 
-          <!-- Der „Ruf mich an“-Button -->
+          <!-- „Ruf mich an“ – unfangbar -->
           <div class="funny">
-            <button id="callBtn" class="cta prank">Ruf mich an</button>
+            <button id="callBtn" class="prank">Ruf mich an</button>
           </div>
 
           <p style="color:var(--muted); font-size:14px">Impressum & Datenschutz folgen.</p>
@@ -164,4 +224,67 @@
     </section>
   </main>
 
-  <
+  <footer>
+    <div class="wrap row" style="flex-wrap:wrap; gap:8px">
+      <span>© <span id="y"></span> Denice-Su Cronauer</span><span aria-hidden="true">·</span>
+      <a href="/impressum.html">Impressum</a><span aria-hidden="true">·</span>
+      <a href="/datenschutz.html">Datenschutz</a>
+    </div>
+  </footer>
+
+  <script>
+    // Jahr
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Reveal-on-Scroll (motion-aware)
+    (function(){
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+        return;
+      }
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+        })
+      },{ threshold:.12 });
+      document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+    })();
+
+    // Card tilt (subtil)
+    const tilts = document.querySelectorAll('.tilt');
+    tilts.forEach(card=>{
+      card.addEventListener('mousemove', (e)=>{
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - (r.left + r.width/2);
+        const y = e.clientY - (r.top + r.height/2);
+        const rx = (y / r.height) * -6;  // Neigung X
+        const ry = (x / r.width) * 6;    // Neigung Y
+        card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      card.addEventListener('mouseleave', ()=>{
+        card.style.transform = 'none';
+      });
+    });
+
+    // „Ruf mich an“ – flieht rechtzeitig
+    const prankBtn = document.getElementById('callBtn');
+    if (prankBtn) {
+      const funny = document.querySelector('.funny');
+      funny.addEventListener('mousemove', (e) => {
+        const rect = prankBtn.getBoundingClientRect();
+        const distX = e.clientX - (rect.left + rect.width / 2);
+        const distY = e.clientY - (rect.top + rect.height / 2);
+        const distance = Math.hypot(distX, distY);
+        if (distance < 140) {
+          const offsetX = (Math.random() - 0.5) * 320;
+          const offsetY = (Math.random() - 0.5) * 140;
+          prankBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        }
+      });
+      funny.addEventListener('mouseleave', () => {
+        prankBtn.style.transform = 'translateX(-50%)';
+      });
+    }
+  </script>
+</body>
+</html>
