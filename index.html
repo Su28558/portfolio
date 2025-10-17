@@ -7,17 +7,19 @@
   <meta name="description" content="Online-Redakteurin & Content Managerin. Gestaltung und Aufbau moderner, strukturierter Websites. Redaktion trifft Design." />
   <meta name="color-scheme" content="light dark" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Fonts: Fraunces (Display) + Archivo Black (kantig fürs Banner) -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
   :root{
     --bg:#ffffff; --fg:#121212; --muted:#666; --line:#e8e8e8;
-    --accent:#B8915A;           /* warmes Ocker-Sand */
+    --accent:#B8915A;             /* warmes Ocker-Sand */
     --accent-ink:#5a422a;
-    --scroll-ink:#C8B3E6;       /* hell-lila für Scroll-Färbung */
+    --scroll-ink:#C8B3E6;         /* Lila für Hover-Ink */
     --max:1180px; --radius:16px;
     --shadow:0 10px 30px rgba(0,0,0,.06);
     --speed:220ms;
+    --stick-top: 92px;            /* Abstand unter Header für sticky */
     --tint1: color-mix(in oklab, var(--accent) 8%, var(--bg));
     --tint2: color-mix(in oklab, var(--accent) 12%, var(--bg));
     --tint3: color-mix(in oklab, var(--accent) 16%, var(--bg));
@@ -31,8 +33,9 @@
     }
   }
 
+  /* Global / Layout */
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--fg)}
+  html,body{margin:0;background:var(--bg);color:var(--fg); overflow-x:hidden;}
   body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; line-height:1.5; scroll-behavior:smooth}
   a{color:inherit; text-underline-offset:.22em}
   .wrap{max-width:var(--max); margin:auto; padding:0 clamp(16px,3vw,28px)}
@@ -44,19 +47,15 @@
 
   .nav-toggle{
     appearance:none; border:2px solid var(--fg); background:transparent; color:var(--fg);
-    width:40px; height:40px; border-radius:12px; font-size:22px; line-height:1;
+    width:42px; height:42px; border-radius:12px; font-size:22px; line-height:1;
     display:grid; place-items:center; cursor:pointer; transition:border-color var(--speed), box-shadow var(--speed);
   }
   .nav-toggle:hover{ border-color:var(--accent); box-shadow:var(--shadow); }
   .nav-toggle[aria-expanded="true"]{ background:var(--fg); color:var(--bg); }
 
-  .nav-panel{
-    position:absolute; top:100%; left:0; right:0;
-    background:var(--bg); border-bottom:1px solid var(--line);
-    display:none;
-  }
+  .nav-panel{ position:absolute; top:100%; left:0; right:0; background:var(--bg); border-bottom:1px solid var(--line); display:none; }
   .nav-panel.open{ display:block; }
-  .nav-menu{display:flex; gap:18px; padding:12px 0;}
+  .nav-menu{display:flex; gap:6px; padding:10px 0; flex-wrap:wrap}
   .nav-menu a{ text-decoration:none; position:relative; padding:10px 14px; border-radius:10px; }
   .nav-menu a:hover{ background:color-mix(in oklab,var(--accent) 12%, var(--bg)); }
 
@@ -65,24 +64,14 @@
   .eyebrow{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
   h1.display{
     font-family:Fraunces,serif; font-weight:700; line-height:1.02;
-    font-size:clamp(44px, 8vw, 92px); letter-spacing:-.018em; margin:.25em 0 .1em;
+    font-size:clamp(44px, 8vw, 96px); letter-spacing:-.018em; margin:.25em 0 .1em;
   }
-
-  /* Scroll-Farbwechsel pro Buchstabe */
-  .display .char{ transition: color 260ms ease; will-change: color; }
-  .display .char.is-colored{ color: var(--scroll-ink); }
+  .hover-ink{ transition: color 200ms ease; }
+  .hover-ink:hover{ color: var(--scroll-ink); }
 
   .lead{max-width:60ch; color:var(--muted); font-size:clamp(16px,2.2vw,18px)}
-
-  /* CTA */
-  .cta{display:inline-block; border:2px solid var(--fg); padding:12px 18px;
-    border-radius:12px; text-decoration:none; position:relative; overflow:hidden;
-    transition:transform var(--speed), box-shadow var(--speed), border-color var(--speed);}
-  .cta:hover{transform:translateY(-2px); box-shadow:var(--shadow); border-color:var(--accent);}
-  .cta::before{content:""; position:absolute; inset:0; translate:-120% 0;
-    background:linear-gradient(120deg,transparent 40%,color-mix(in oklab,var(--accent)30%,white)50%,transparent 60%);
-    transition:translate 600ms ease;}
-  .cta:hover::before{translate:120% 0}
+  .jump{display:inline-block; margin-top:22px; text-decoration:none; border-bottom:2px solid var(--fg); padding-bottom:4px}
+  .jump:hover{ color:var(--accent-ink); border-color:var(--accent-ink); }
 
   section{padding-block:44px; border-bottom:1px solid var(--line)}
   h2.kicker{font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin:0 0 8px}
@@ -96,100 +85,128 @@
   .list li{padding:10px 0; border-bottom:1px dashed var(--line)}
   footer{padding:20px 0; color:var(--muted); font-size:14px}
 
-  /* Sticky Headline Section (fix: kein transform auf Section, kein overflow hidden) */
+  /* Sticky Headline Section (mit andockenden Steps, mobil & desktop) */
   .sticky-section{position:relative; border-bottom:1px solid var(--line);}
-  .sticky-grid{display:grid; grid-template-columns:1fr; gap:32px;}
-  @media(min-width:880px){.sticky-grid{grid-template-columns:0.6fr 1.4fr; align-items:start;}}
-  .sticky-col{position:sticky; top:96px; align-self:start;}
+  .sticky-grid{display:grid; grid-template-columns:1fr; gap:24px;}
+  @media(min-width:900px){.sticky-grid{grid-template-columns:0.6fr 1.4fr; align-items:start; gap:32px;}}
+
+  .sticky-col{position:sticky; top:var(--stick-top); align-self:start;}
   .sticky-col .intro{color:var(--muted); max-width:36ch;}
-  .scroll-col{display:flex; flex-direction:column; gap:48px; padding-bottom:8vh;}
-  .scroll-block{border-radius:16px; padding:28px; background:var(--tint1);
+
+  .scroll-col{position:relative}
+  .step{ position:relative; min-height:80vh; display:flex; align-items:flex-start; }
+  .scroll-block{
+    position:sticky; top:var(--stick-top);
+    border-radius:16px; padding:24px; background:var(--tint1);
     box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:background .35s ease, transform .35s ease, box-shadow .35s ease;}
+    transition:background .35s ease, transform .35s ease, box-shadow .35s ease;
+    width:min(780px, 100%);
+  }
   .scroll-block h4{margin-top:0; font-family:Fraunces,serif; font-weight:600; margin-bottom:6px;}
   .scroll-block.is-active{background:color-mix(in oklab,var(--accent)20%,var(--bg));
     transform:translateY(-4px); box-shadow:0 10px 26px rgba(0,0,0,.08);}
 
-  /* Laufbanner / Marquee – pausierbar */
+  /* Laufbanner / Marquee – groß, kantig, pausierbar */
   .marquee-wrap{border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:#fff;}
   .marquee{white-space:nowrap; overflow:hidden; position:relative;}
-  .marquee__track{
-    display:inline-block; padding-block: clamp(18px,4vw,34px);
-    font-family:Fraunces,serif; font-weight:700; text-transform:uppercase;
-    font-size: clamp(22px, 4vw, 40px); letter-spacing:.06em; color:#000;
+  .track{
+    display:inline-block; padding-block: clamp(22px,6vw,48px);
+    font-family:"Archivo Black", system-ui, sans-serif;
+    font-weight:400; text-transform:uppercase;
+    font-size: clamp(28px, 9vw, 88px); letter-spacing:.06em; color:#000;
     animation: scroll-left 18s linear infinite;
   }
-  .marquee__track span{ margin: 0 1.4em; }
-  .marquee:hover .marquee__track,
-  .marquee.paused .marquee__track{ animation-play-state: paused; }
+  .track span{ margin: 0 1.2em; }
+  .marquee:hover .track, .marquee.paused .track{ animation-play-state: paused; }
   @keyframes scroll-left{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
   @media (prefers-reduced-motion: reduce){
-    .marquee__track{ animation:none; }
+    .track{ animation:none; }
   }
 
-  /* Buttons nebeneinander gleich groß */
+  /* Buttons nebeneinander gleich groß (nur unten) */
+  .cta{display:inline-block; border:2px solid var(--fg); padding:12px 18px;
+    border-radius:12px; text-decoration:none; position:relative; overflow:hidden;
+    transition:transform var(--speed), box-shadow var(--speed), border-color var(--speed);}
+  .cta:hover{transform:translateY(-2px); box-shadow:var(--shadow); border-color:var(--accent);}
+  .cta::before{content:""; position:absolute; inset:0; translate:-120% 0;
+    background:linear-gradient(120deg,transparent 40%,color-mix(in oklab,var(--accent)30%,white)50%,transparent 60%);
+    transition:translate 600ms ease;}
+  .cta:hover::before{translate:120% 0}
   .cta-row{display:flex; gap:12px; flex-wrap:wrap}
   .cta-row .cta, .cta-row .prank{min-width:220px; text-align:center}
 
   /* Fake Call Button (fliehend) */
   .funny{ position:relative; height:60px; flex:1 0 auto; }
   button.prank{
-    position:relative; /* Startposition in Flow */
+    position:relative; /* Start im Flow */
     cursor:pointer; user-select:none; border:2px solid var(--fg); background:transparent;
     border-radius:12px; padding:12px 18px; transition:transform var(--speed), border-color var(--speed), box-shadow var(--speed);}
   button.prank:hover{border-color:var(--accent); box-shadow:var(--shadow);}
-  /* Beim Losfliegen auf absolute umstellen (per JS) */
   .funny.is-flying button.prank{ position:absolute; left:50%; top:0; transform:translateX(-50%); }
 
-  /* Reveal: nur Opacity (kein transform, damit sticky sicher funktioniert) */
+  /* Reveal (Opacity only, sticky-sicher) */
   .reveal{opacity:0; transition:opacity 700ms cubic-bezier(.2,.6,.2,1);}
   .reveal.in{opacity:1;}
+
+  /* Custom Cursor (lila Punkt mit Grain) – Desktop only */
+  body{cursor:none;}
+  .cursor-dot{
+    position:fixed; left:0; top:0; width:14px; height:14px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, var(--scroll-ink), #b99fe0 60%, #a587d8 100%);
+    mix-blend-mode:multiply; pointer-events:none; z-index:9999;
+    filter: contrast(1.05) saturate(1.05);
+    transition: transform 40ms linear;
+    transform: translate(-50%, -50%);
+  }
+  /* hoverbare Texte werden lila */
+  .inkable:hover{ color: var(--scroll-ink); }
+
+  /* Cursor auf Mobile ausblenden (Finger) */
+  @media (hover:none), (pointer:coarse){
+    body{cursor:auto;}
+    .cursor-dot{ display:none; }
+  }
   </style>
 </head>
 
 <body>
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursor"></div>
+
   <header>
     <div class="wrap row">
-      <a class="brand" href="/">Denice-Su Cronauer</a>
+      <a class="brand hover-ink inkable" href="/">Denice-Su Cronauer</a>
       <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel" aria-label="Menü öffnen">+</button>
     </div>
     <div class="nav-panel" id="navPanel">
       <div class="wrap">
         <nav class="nav-menu" role="navigation">
-          <a href="#arbeiten">Arbeiten</a>
-          <a href="#leistungen">Leistungen</a>
-          <a href="#ansatz">Ansatz</a>
-          <a href="#kontakt">Kontakt</a>
+          <a class="inkable" href="#leistungen">Leistungen</a>
+          <a class="inkable" href="#ansatz">Ansatz</a>
+          <a class="inkable" href="#kontakt">Kontaktformular</a>
         </nav>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- HERO -->
+    <!-- HERO (ohne Buttons; Sprunganker statt CTA-Buttons) -->
     <section class="hero reveal" id="hero">
       <div class="wrap">
-        <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
-        <h1 class="display" id="headline">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
-        <p class="lead">
+        <div class="eyebrow inkable">Online-Redaktion & Webgestaltung</div>
+        <h1 class="display inkable">Inhalte mit Struktur.<br>Websites mit Haltung.</h1>
+        <p class="lead inkable">
           Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen.  
           Redaktionelles Know-how trifft Gestaltung, Nutzerführung und digitale Sprache.
         </p>
-        <div class="cta-row" style="margin-top:20px">
-          <a class="cta" href="mailto:denice@mailadresse.de?subject=Projektanfrage%20Website">E-Mail senden</a>
-
-          <!-- „Ruf mich an“ – gleicher Look, fliehend -->
-          <div class="funny" id="funnyWrap">
-            <button id="callBtn" class="prank">Ruf mich an</button>
-          </div>
-        </div>
+        <a class="jump inkable" href="#kontakt">Zum Kontaktformular ↓</a>
       </div>
     </section>
 
-    <!-- LAUFBANNER (pausierbar) -->
+    <!-- LAUFBANNER (groß, kantig, pausierbar) -->
     <section class="marquee-wrap" aria-label="Kompetenzen">
-      <div class="marquee" id="marquee">
-        <div class="marquee__track" aria-hidden="true">
+      <div class="marquee" id="marquee" tabindex="0">
+        <div class="track" aria-hidden="true">
           <span>Content & UX-Writing</span> ·
           <span>CMS & Redaktionssysteme</span> ·
           <span>Design & Struktur</span> ·
@@ -199,7 +216,7 @@
           <span>Design & Struktur</span> ·
           <span>WordPress & Co.</span>
         </div>
-        <div class="marquee__track" aria-hidden="true">
+        <div class="track" aria-hidden="true">
           <span>Content & UX-Writing</span> ·
           <span>CMS & Redaktionssysteme</span> ·
           <span>Design & Struktur</span> ·
@@ -212,69 +229,75 @@
       </div>
     </section>
 
-    <!-- LEISTUNGEN + ÜBER/ARTIKEL (ohne Cases) -->
+    <!-- LEISTUNGEN + ARTIKEL -->
     <section id="leistungen" class="reveal">
       <div class="wrap cols">
         <div class="box">
           <h2 class="kicker">Leistungen</h2>
-          <h3 class="section">Was ich anbiete</h3>
+          <h3 class="section inkable">Was ich anbiete</h3>
           <ul class="list">
-            <li><strong>Content & Redaktion:</strong> Themenplanung, UX-Writing, SEO-Texte, Content-Strategie.</li>
-            <li><strong>Website-Gestaltung & Aufbau:</strong> Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite.</li>
-            <li><strong>CMS-Pflege & Betreuung:</strong> sicherer Umgang mit WordPress, TYPO3, Magnolia u.v.m.</li>
+            <li class="inkable"><strong>Content & Redaktion:</strong> Themenplanung, UX-Writing, SEO-Texte, Content-Strategie.</li>
+            <li class="inkable"><strong>Website-Gestaltung & Aufbau:</strong> Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite.</li>
+            <li class="inkable"><strong>CMS-Pflege & Betreuung:</strong> sicherer Umgang mit WordPress, TYPO3, Magnolia u.v.m.</li>
           </ul>
         </div>
-        <aside class="box" id="arbeiten">
+        <aside class="box" id="einblicke">
           <h2 class="kicker">Einblicke</h2>
-          <h3 class="section">Artikel</h3>
+          <h3 class="section inkable">Artikel</h3>
           <ul class="list">
-            <li><a href="https://www.moccu.com/insights/digital-design/ux-writing-audit/" target="_blank" rel="noopener">UX-Writing-Audit – warum gute Texte genauso wichtig sind wie gutes Design</a></li>
-            <li><a href="https://www.moccu.com/insights/content-marketing/copybook/" target="_blank" rel="noopener">Copybook – wie Content-Teams konsistente Texte schreiben</a></li>
+            <li><a class="inkable" href="https://www.moccu.com/insights/digital-design/ux-writing-audit/" target="_blank" rel="noopener">UX-Writing-Audit – warum gute Texte genauso wichtig sind wie gutes Design</a></li>
+            <li><a class="inkable" href="https://www.moccu.com/insights/content-marketing/copybook/" target="_blank" rel="noopener">Copybook – wie Content-Teams konsistente Texte schreiben</a></li>
           </ul>
         </aside>
       </div>
     </section>
 
-    <!-- STICKY HEADLINE SECTION (fix) -->
+    <!-- STICKY HEADLINE SECTION – Steps docken an (mobil & desktop) -->
     <section id="ansatz" class="sticky-section reveal">
       <div class="wrap sticky-grid">
         <div class="sticky-col">
           <h2 class="kicker">Ansatz</h2>
-          <h3 class="section">Wie ich arbeite</h3>
-          <p class="intro">
+          <h3 class="section inkable">Wie ich arbeite</h3>
+          <p class="intro inkable">
             Ich glaube an Reduktion, Klarheit und gute Übergänge – auch im digitalen Raum.  
             Jede Website ist eine Erzählung, die man führen und gestalten kann.
           </p>
         </div>
 
         <div class="scroll-col">
-          <article class="scroll-block" data-bg="var(--tint1)">
-            <h4>01 · Denken in Inhalt</h4>
-            <p>Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert. So entstehen Inhalte, die tragen.</p>
-          </article>
-          <article class="scroll-block" data-bg="var(--tint2)">
-            <h4>02 · Gestaltung als Sprache</h4>
-            <p>Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus. Jedes Element kommuniziert – bewusst oder unbewusst.</p>
-          </article>
-          <article class="scroll-block" data-bg="var(--tint3)">
-            <h4>03 · Technik als Werkzeug</h4>
-            <p>Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen – nicht um ihn zu zeigen.</p>
-          </article>
+          <div class="step">
+            <article class="scroll-block" data-bg="var(--tint1)">
+              <h4 class="inkable">01 · Denken in Inhalt</h4>
+              <p class="inkable">Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert. So entstehen Inhalte, die tragen.</p>
+            </article>
+          </div>
+          <div class="step">
+            <article class="scroll-block" data-bg="var(--tint2)">
+              <h4 class="inkable">02 · Gestaltung als Sprache</h4>
+              <p class="inkable">Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus. Jedes Element kommuniziert – bewusst oder unbewusst.</p>
+            </article>
+          </div>
+          <div class="step">
+            <article class="scroll-block" data-bg="var(--tint3)">
+              <h4 class="inkable">03 · Technik als Werkzeug</h4>
+              <p class="inkable">Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen – nicht um ihn zu zeigen.</p>
+            </article>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT -->
+    <!-- KONTAKT -->
     <section id="kontakt" class="reveal">
       <div class="wrap">
         <h2 class="kicker">Kontakt</h2>
-        <h3 class="section">Projekt anfragen</h3>
+        <h3 class="section inkable">Kontaktformular</h3>
         <div class="box">
-          <p>Schreib mir kurz Ziele, Umfang, Timing. Ich melde mich mit einer klaren Empfehlung.</p>
+          <p class="inkable">Schreib mir kurz Ziele, Umfang, Timing. Ich melde mich mit einer klaren Empfehlung.</p>
           <div class="cta-row">
-            <a class="cta" href="mailto:denice@mailadresse.de?subject=Projektanfrage%20Website">E-Mail senden</a>
-            <div class="funny" id="funnyWrap2">
-              <button id="callBtn2" class="prank">Ruf mich an</button>
+            <a class="cta inkable" href="mailto:denice@mailadresse.de?subject=Projektanfrage%20Website">E-Mail senden</a>
+            <div class="funny" id="funnyWrap">
+              <button id="callBtn" class="prank inkable">Ruf mich an</button>
             </div>
           </div>
           <p style="color:var(--muted); font-size:14px; margin-top:10px">Impressum & Datenschutz folgen.</p>
@@ -286,8 +309,8 @@
   <footer>
     <div class="wrap row" style="flex-wrap:wrap; gap:8px">
       <span>© <span id="y"></span> Denice-Su Cronauer</span><span aria-hidden="true">·</span>
-      <a href="/impressum.html">Impressum</a><span aria-hidden="true">·</span>
-      <a href="/datenschutz.html">Datenschutz</a>
+      <a class="inkable" href="/impressum.html">Impressum</a><span aria-hidden="true">·</span>
+      <a class="inkable" href="/datenschutz.html">Datenschutz</a>
     </div>
   </footer>
 
@@ -305,7 +328,7 @@
     navToggle.textContent = open ? '+' : '×';
   });
 
-  // Reveal (nur Opacity, Sticky-sicher)
+  // Reveal (Opacity only, sticky-sicher)
   (function(){
     const els = document.querySelectorAll('.reveal');
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){ els.forEach(el=>el.classList.add('in')); return; }
@@ -315,7 +338,7 @@
     els.forEach(el=>io.observe(el));
   })();
 
-  // Sticky Scroll Highlight
+  // Sticky Scroll Highlight (aktiviert den angeklebten Block)
   const blocks=document.querySelectorAll('.scroll-block');
   function updateActive(){
     const mid=window.innerHeight*0.45;
@@ -326,55 +349,23 @@
   }
   updateActive();
   window.addEventListener('scroll',updateActive,{passive:true});
+  window.addEventListener('resize',updateActive);
 
-  // H1: Buchstabe für Buchstabe einfärben beim Scrollen (hell-lila)
-  (function(){
-    const h1 = document.getElementById('headline');
-    const raw = h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
-    const chars = [];
-    raw.split('').forEach(ch=>{
-      if(ch === '\n'){ chars.push('<br>'); }
-      else if(ch === ' '){ chars.push('<span class="char">&nbsp;</span>'); }
-      else { chars.push('<span class="char">'+ch+'</span>'); }
-    });
-    h1.innerHTML = chars.join('');
-    const charEls = h1.querySelectorAll('.char');
-    const hero = document.getElementById('hero');
-
-    function colorByScroll(){
-      const rect = hero.getBoundingClientRect();
-      const total = Math.max(rect.height, 1);
-      const passed = Math.min(Math.max(-rect.top, 0), total);
-      const progress = passed / total; // 0..1
-      const count = Math.floor(charEls.length * progress);
-      for(let i=0;i<charEls.length;i++){
-        if(i < count) charEls[i].classList.add('is-colored');
-        else charEls[i].classList.remove('is-colored');
-      }
-    }
-    colorByScroll();
-    window.addEventListener('scroll', colorByScroll, {passive:true});
-    window.addEventListener('resize', colorByScroll);
-  })();
-
-  // Marquee pausierbar (Hover/Focus/Click)
+  // Marquee pausierbar (Hover/Click/Keyboard)
   (function(){
     const mq = document.getElementById('marquee');
     mq.addEventListener('click', ()=> mq.classList.toggle('paused'));
-    // Tastatur: per Enter/Space pausierbar, wenn fokusiert
-    mq.setAttribute('tabindex','0');
     mq.addEventListener('keydown', (e)=>{
       if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); mq.classList.toggle('paused'); }
     });
   })();
 
-  // Fliehender Button – beide Instanzen gleich behandeln
-  function attachPrank(wrapperId, btnId){
+  // Fliehender Button
+  (function attachPrank(wrapperId, btnId){
     const wrap = document.getElementById(wrapperId);
     const btn  = document.getElementById(btnId);
     if(!wrap || !btn) return;
     wrap.addEventListener('mousemove', e=>{
-      // beim ersten Nähern in "flying"-Modus wechseln (absolute Positionierung)
       wrap.classList.add('is-flying');
       const rect=btn.getBoundingClientRect();
       const distX=e.clientX-(rect.left+rect.width/2);
@@ -389,11 +380,17 @@
     wrap.addEventListener('mouseleave', ()=>{
       btn.style.transform='translateX(-50%)';
       wrap.classList.remove('is-flying');
-      btn.style.transform=''; // zurücksetzen
+      btn.style.transform='';
     });
-  }
-  attachPrank('funnyWrap','callBtn');
-  attachPrank('funnyWrap2','callBtn2');
+  })('funnyWrap','callBtn');
+
+  // Custom Cursor (lila Punkt folgt Maus) + Hover-Ink
+  (function(){
+    const c = document.getElementById('cursor');
+    window.addEventListener('mousemove', (e)=>{
+      c.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    }, {passive:true});
+  })();
   </script>
 </body>
 </html>
