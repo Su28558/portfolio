@@ -11,18 +11,16 @@
   --ink:#121212;
   --scroll-ink:#BFA4FF; --accent:#C09B6B;
   --headerH: 72px;
-  --headH: 120px;      /* wird per JS gesetzt (H1-Höhe) */
-  --gapUnderHead: 10px;
-  --tileGap: 58vh;
+  --LHeadH: 120px;         /* wird per JS auf Höhe der sticky Leistungen-Headline gesetzt */
+  --hstageH: 380px;        /* Höhe der „Bühne“ für die horizontalen Kacheln */
+  --tileW: 340px;          /* Basisbreite der Kachel – wird per CSS clamp begrenzt */
+  --tileGap: 20px;         /* Lücke zwischen Kacheln */
 }
 
 /* Reset / Base */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color:var(--fg); background:var(--bg); overflow-x:hidden
-}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg);overflow-x:hidden}
 a{color:inherit;text-decoration:none;text-underline-offset:.22em}
 .wrap{max-width:1180px;margin:auto;padding:0 clamp(16px,3vw,24px)}
 section{padding:48px 0;border-bottom:1px solid var(--line)}
@@ -34,6 +32,8 @@ header{
   border-bottom:1px solid rgba(255,255,255,.08)
 }
 .headrow{display:flex;justify-content:space-between;align-items:center;height:var(--headerH)}
+.brand-wrap{display:flex;align-items:center;gap:10px}
+.brand-badge{width:28px;height:28px;border-radius:50%;object-fit:cover;display:block}
 .brand{font-family:Fraunces,serif;font-weight:700;font-size:20px}
 .nav-toggle-img{width:40px;height:auto;cursor:pointer}
 .nav-panel{display:none;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -43,14 +43,8 @@ header{
 .nav-menu a:hover{background:rgba(255,255,255,.06)}
 
 /* ===== HERO: Sticky H1 + Scroll-Prozess ===== */
-.hero{
-  position:relative; height:180vh;
-  padding:0; border-bottom:none;
-}
-.hero-pin{
-  position:sticky; top:calc(var(--headerH) + 12px); z-index:4;
-  padding:84px 0 56px; background:var(--bg);
-}
+.hero{position:relative;height:180vh;padding:0;border-bottom:none}
+.hero-pin{position:sticky;top:calc(var(--headerH) + 12px);z-index:4;padding:84px 0 56px;background:var(--bg)}
 .eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-size:12px}
 h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-height:1.05;margin:.2em 0}
 .display .char{transition:color .12s ease}
@@ -61,16 +55,12 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
 /* ===== LAUFBANNER: klare Grenze (weiß) ===== */
-.marquee-wrap{
-  background:#fff; color:#000;
-  border-top:1px solid #ddd; border-bottom:1px solid #ddd
-}
+.marquee-wrap{background:#fff;color:#000;border-top:1px solid #ddd;border-bottom:1px solid #ddd}
 .marquee{white-space:nowrap;overflow:hidden}
 .track{
-  display:inline-block; padding-block:clamp(0px,0.5vw,4px); line-height:1.02;
-  font-family:"Archivo Black",system-ui,sans-serif; font-size:clamp(32px,9vw,96px);
-  letter-spacing:.04em; color:#000;
-  animation:scroll-left 32s linear infinite
+  display:inline-block;padding-block:clamp(0px,0.5vw,4px);line-height:1.02;
+  font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(32px,9vw,96px);
+  letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite
 }
 .track span{margin:0 1.2em}
 .marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
@@ -78,59 +68,57 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* ===== LEISTUNGEN (weiß) ===== */
 #leistungen{padding-top:0;border-bottom:none;background:#fff;color:var(--ink)}
-.leistungen-hero{position:relative;background:#fff}
-.leistungen-hero .wrap{position:relative;z-index:1;padding-top:clamp(28px,6vw,56px)}
-.bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 8px}
-.headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0 0 10px}
-
-.offerB{
-  margin-top:-24vh;
-  border-top:1px solid #eee; border-bottom:1px solid #eee;
-  padding-top:16px; background:#fff; color:var(--ink);
-}
-.offerB .wrap{position:relative}
-
-.hand-wrap{
-  position:sticky; top:calc(var(--headerH) - 20px);
-  display:flex; justify-content:flex-end; z-index:6; pointer-events:none; margin-bottom:8px;
-}
-.hand-hint{
-  width: clamp(160px, 20vw, 280px);
-  height:auto; filter:drop-shadow(0 6px 18px rgba(0,0,0,.2));
-  animation:handWiggle 2.4s ease-in-out infinite; pointer-events:none;
-}
-@keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
-
-.sticky-head{
+/* Sticky Headline (einmalig – die Kacheln heften sich darunter) */
+.leistungen-hero{
   position:sticky; top:var(--headerH); z-index:5;
-  background:#fff; padding:8px 0 6px; border-bottom:1px solid #eee;
+  background:#fff; border-bottom:1px solid #eee;
 }
-.sticky-head .label{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#666;margin-bottom:6px}
-.sticky-head h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:.2em 0}
-.sticky-head p{margin:.2em 0 0;color:#333;max-width:64ch}
+.leistungen-hero .wrap{padding-top:clamp(24px,4vw,36px);padding-bottom:12px}
+.bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 6px}
+.headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0}
 
-.stack-rail{position:relative; background:#fff}
-.tile{
+/* Horizontal-Pinning-Zone */
+.offerH{background:#fff;color:var(--ink)}
+.hstack{
+  position:relative;
+  /* genug Scroll-Strecke, damit alle drei Kacheln nacheinander „einrasten“ */
+  height: 240vh;
+  background:#fff;
+}
+.hstage{
   position:sticky;
-  top: calc(var(--headerH) + var(--headH) + var(--gapUnderHead));
-  z-index:1;
-  border:2px solid #000;border-radius:0;background:#fff;color:#000;
-  padding:26px 22px; box-shadow:0 22px 46px rgba(0,0,0,.08);
-  margin:0 0 var(--tileGap);
-  outline:2px solid transparent; transition:outline-color .15s ease
+  top: calc(var(--headerH) + var(--LHeadH));
+  height: var(--hstageH);
+  display:block;
+  background:#fff;
+  border-bottom:1px solid #eee;
 }
-.tile.alt{background:#000;color:#fff;border-color:#000}
-.tile h4{font-family:Fraunces,serif;font-size:clamp(22px,2.4vw,32px);margin:0 0 10px}
-.tile p{margin:0;max-width:62ch}
-.tile.is-active{outline-color:#000}
-.stack-release{height:12vh}
+.hstage-inner{
+  position:relative;
+  height:100%;
+  /* optischer Rahmen */
+  box-shadow:0 10px 30px rgba(0,0,0,.06) inset;
+}
 
-/* ===== ANSATZ (weiß) ===== */
+/* Kacheln (horizontal) */
+.htile{
+  position:absolute; top:0;
+  width: clamp(260px, 30vw, 360px);
+  height: calc(var(--hstageH) - 2px);
+  border:2px solid #000; border-radius:0; background:#fff; color:#000;
+  padding:22px 20px; box-shadow:0 18px 36px rgba(0,0,0,.08);
+  will-change: transform, left;
+}
+.htile.alt{background:#000;color:#fff;border-color:#000}
+.htile h4{font-family:Fraunces,serif;font-size:clamp(20px,2.2vw,28px);margin:0 0 8px}
+.htile p{margin:0;max-width:60ch;font-size:15px;line-height:1.5}
+
+/* ANSATZ (weiß) */
 #ansatz{background:#fff;color:var(--ink)}
 #ansatz .box{border:1px solid #eee;border-radius:8px;padding:20px}
 #ansatz .box:hover{border-color:#C09B6B;box-shadow:0 10px 30px rgba(0,0,0,.08)}
 
-/* ===== KONTAKT (weiß + telefon.png) ===== */
+/* KONTAKT (weiß + telefon.png) */
 #kontakt{background:#fff;color:var(--ink);margin-top:0;padding-top:56px;border-bottom:none}
 .contact-hero{position:relative;min-height:360px;display:grid;align-items:center}
 @media(min-width:900px){ .contact-hero{min-height:420px} }
@@ -156,7 +144,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#fff}
 
-/* === Feuerball nur für den Klick-Flug === */
+/* === Feuerball (Klick-Flug) === */
 .fireball-flying{
   position:fixed; width:56px; z-index:50; pointer-events:none;
   animation:spin 1.4s linear infinite;
@@ -175,7 +163,10 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
 <body>
 <header>
   <div class="wrap headrow">
-    <a class="brand" href="#">Denice-Su Cronauer</a>
+    <div class="brand-wrap">
+      <img class="brand-badge" src="ich.png" alt="Ich" />
+      <a class="brand" href="#">Denice-Su Cronauer</a>
+    </div>
     <img id="navToggleImg" class="nav-toggle-img" src="menue1.png" alt="Menü">
   </div>
   <div class="nav-panel" id="navPanel">
@@ -190,7 +181,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
 </header>
 
 <main>
-  <!-- HERO (sticky H1, scroll-progress) -->
+  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-pin">
       <div class="wrap">
@@ -205,7 +196,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
     </div>
   </section>
 
-  <!-- LAUFBANNER (weiß/schwarz als klare Grenze) -->
+  <!-- LAUFBANNER (weiße Grenze) -->
   <section class="marquee-wrap" aria-label="Kompetenzen">
     <div class="marquee" id="marquee" tabindex="0">
       <div class="track" aria-hidden="true">
@@ -233,46 +224,36 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
 
   <!-- LEISTUNGEN -->
   <section id="leistungen">
-    <div class="leistungs-wrapper">
-      <div class="leistungen-hero" id="leistungenHero">
-        <div class="wrap">
-          <div class="bigcaps">LEISTUNGEN</div>
-          <h2 class="headline-large">Was ich anbiete</h2>
-        </div>
+    <!-- Sticky Headline (einmalig) -->
+    <div class="leistungen-hero" id="leistungenHero">
+      <div class="wrap">
+        <div class="bigcaps">LEISTUNGEN</div>
+        <h2 class="headline-large">Was ich anbiete</h2>
       </div>
+    </div>
 
-      <div class="offerB">
-        <div class="wrap">
-          <!-- Wackelnde Hand rechts oben -->
-          <div class="hand-wrap">
-            <img class="hand-hint" src="hand.png" alt="Hinweis: Hier gibt’s was zu sehen">
-          </div>
+    <!-- Horizontales Anheften der Kacheln -->
+    <div class="offerH">
+      <div class="wrap">
+        <div class="hstack" id="hstack">
+          <div class="hstage" id="hstage">
+            <div class="hstage-inner">
+              <!-- Reihenfolge: CMS, UX-Writing, Website-Erstellung -->
+              <article class="htile" id="tile0">
+                <h4>CMS-Pflege & Betreuung</h4>
+                <p>WordPress, TYPO3, Magnolia u. v. m. – modulare Inhalte, saubere Workflows, Qualitätssicherung und langfristig wartbare Strukturen.</p>
+              </article>
 
-          <!-- Sticky Headline -->
-          <div class="sticky-head" id="stickyHead">
-            <div class="label">Leistungen</div>
-            <h3>Was ich anbiete</h3>
-            <p id="headDesc">Klare Inhalte, starke Struktur und saubere Umsetzung – gezielt für deine Ziele und Nutzer:innen.</p>
-          </div>
+              <article class="htile alt" id="tile1">
+                <h4>UX-Writing</h4>
+                <p>Mikrocopy, Fehlertexte, Onboarding & Navigationssprache – klare Nutzerführung mit Tonalität, die zu Marke und Ziel passt.</p>
+              </article>
 
-          <!-- Kachel-Stack -->
-          <div class="stack-rail" id="stackRail">
-            <article class="tile is-active" data-desc="Themenplanung, UX-Writing, SEO-Texte und Content-Strategie. Texte, die führen – mit Tonalität, Struktur und Wirkung im Blick.">
-              <h4>Content & Redaktion</h4>
-              <p>Themenplanung, UX-Writing, SEO-Texte, Content-Strategie – redaktionelles Fundament mit klarer Tonalität.</p>
-            </article>
-
-            <article class="tile alt" data-desc="Struktur, Text, visuelles System – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Hierarchie und klare Nutzerführung.">
-              <h4>Website-Gestaltung & Aufbau</h4>
-              <p>Wireframes, Textsysteme, visuelle Grammatik – alles greift ineinander und führt sauber durchs Thema.</p>
-            </article>
-
-            <article class="tile" data-desc="Sicherer Umgang mit WordPress, TYPO3, Magnolia u. v. m. – redaktionelle Workflows, Qualitätssicherung, modulare Inhalte.">
-              <h4>CMS-Pflege & Betreuung</h4>
-              <p>Strukturierte Inhalte, klare Prozesse und saubere Pflege – damit dein System langfristig leicht bleibt.</p>
-            </article>
-
-            <div class="stack-release"></div>
+              <article class="htile" id="tile2">
+                <h4>Website-Erstellung</h4>
+                <p>Struktur, Text, visuelles System: vom Wireframe bis zur fertigen Seite – lesbar, zugänglich, schnell.</p>
+              </article>
+            </div>
           </div>
         </div>
       </div>
@@ -290,7 +271,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
     </div>
   </section>
 
-  <!-- KONTAKT (weiß + telefon.png) -->
+  <!-- KONTAKT -->
   <section id="kontakt">
     <div class="contact-hero">
       <div class="contact-media" aria-hidden="true">
@@ -323,6 +304,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
 <footer><div class="wrap">© <span id="y"></span> Denice-Su Cronauer</div></footer>
 
 <script>
+/* Jahr im Footer */
 document.getElementById('y').textContent=new Date().getFullYear();
 
 /* Menü via PNG (menue1.png) */
@@ -330,23 +312,15 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   document.getElementById('navPanel').classList.toggle('open');
 });
 
-/* H1-Buchstaben färben + Sticky-Hero-Progress */
+/* H1-Buchstaben färben beim Hero-Scroll */
 (function(){
   const h1 = document.getElementById('headline');
   const hero = document.getElementById('hero');
   const pin  = document.querySelector('.hero-pin');
 
   const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
-  h1.innerHTML=raw.split('')
-    .map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`)
-    .join('');
+  h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
   const chars=[...h1.querySelectorAll('.char')];
-
-  function setHeadH(){
-    const headH = pin.getBoundingClientRect().height;
-    document.documentElement.style.setProperty('--headH', headH+'px');
-  }
-  setHeadH(); addEventListener('resize', setHeadH);
 
   function update(){
     const r=hero.getBoundingClientRect();
@@ -361,47 +335,77 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   addEventListener('resize', update);
 })();
 
-/* Marquee pausierbar */
+/* Laufbanner pausierbar */
 (function(){
   const mq=document.getElementById('marquee');
   mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
 })();
 
-/* Sticky-Stack: Headline-Höhe setzen + Active-Kachel-Highlight */
+/* Höhe der sticky Leistungen-Headline als CSS-Variable setzen */
 (function(){
-  const stickyHead=document.getElementById('stickyHead');
-  const headDesc=document.getElementById('headDesc');
-  const tiles=[...document.querySelectorAll('.tile')];
-
-  function setHeadH(){
-    document.documentElement.style.setProperty('--headH', stickyHead.offsetHeight+'px');
+  const head = document.getElementById('leistungenHero');
+  function setH(){
+    document.documentElement.style.setProperty('--LHeadH', head.offsetHeight+'px');
   }
-  setHeadH(); addEventListener('resize', setHeadH);
-
-  function setActive(){
-    const stickY = (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--headerH'))||72)
-                 + stickyHead.offsetHeight
-                 + (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gapUnderHead'))||10);
-    let best=null, bestDist=Infinity;
-    tiles.forEach(t=>{
-      const r=t.getBoundingClientRect(); const d=Math.abs(r.top - stickY);
-      if(d<bestDist){bestDist=d; best=t;}
-    });
-    if(best){
-      tiles.forEach(t=>t.classList.toggle('is-active', t===best));
-      const d=best.getAttribute('data-desc'); if(d) headDesc.textContent=d;
-    }
-  }
-  setActive(); addEventListener('scroll', setActive, {passive:true});
+  setH(); addEventListener('resize', setH);
 })();
 
-/* 🔥 Klick-Animation (Feuerball fliegt LANGSAM/FALLEND zum Kontakt) */
+/* Horizontales „Anheften“ der drei Kacheln unter der sticky Headline */
+(function(){
+  const hstack = document.getElementById('hstack');
+  const stage  = document.getElementById('hstage');
+  const tiles  = [document.getElementById('tile0'), document.getElementById('tile1'), document.getElementById('tile2')];
+
+  function layout(){
+    // Ziel-Positionen nebeneinander (linksbündig)
+    const tileW = tiles[0].getBoundingClientRect().width;
+    const gap   = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tileGap')) || 20;
+
+    tiles.forEach((t, i) => {
+      t.dataset.targetX = (i * (tileW + gap));
+      // Startposition: etwas links außerhalb
+      t.dataset.startX  = -(tileW + 60);
+    });
+  }
+
+  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+  function easeOut(t){ return 1 - Math.pow(1-t, 3); }
+
+  function onScroll(){
+    const rect = hstack.getBoundingClientRect();
+    const total = Math.max(hstack.offsetHeight - innerHeight, 1); // Scrollstrecke innerhalb der Zone
+    const passed = clamp(-rect.top, 0, total);
+    const p = passed / total; // 0..1
+
+    // Auf drei Segmente aufteilen – pro Kachel ein Drittel des Weges
+    tiles.forEach((t, i) => {
+      const segStart = i / tiles.length;
+      const segEnd   = (i+1) / tiles.length;
+      const local    = clamp((p - segStart) / (segEnd - segStart), 0, 1);
+      const e        = easeOut(local);
+
+      const startX = parseFloat(t.dataset.startX);
+      const targetX= parseFloat(t.dataset.targetX);
+
+      const x = startX + (targetX - startX) * e;
+      t.style.transform = `translateX(${x}px)`;
+    });
+  }
+
+  // initial
+  layout();
+  onScroll();
+
+  addEventListener('resize', () => { layout(); onScroll(); });
+  addEventListener('scroll', onScroll, {passive:true});
+})();
+
+/* 🔥 Klick-Animation (Feuerball fliegt langsam/fallend zum Kontakt) */
 (function(){
   const img = document.getElementById('fireBtn');
   const target = document.getElementById('kontakt');
   if(!img || !target) return;
 
-  // sanftes Scrollen synchron zur Fluganimation
   function smoothScrollTo(targetY, duration){
     const startY = window.scrollY, delta = targetY - startY, startT = performance.now();
     const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
@@ -417,19 +421,17 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
     const r = img.getBoundingClientRect();
     const sx = r.left + r.width/2, sy = r.top + r.height/2;
     const tr = target.getBoundingClientRect();
-    const ex = innerWidth * 0.5;                 // landet mittig
-    const ey = tr.top + scrollY + 24;            // knapp über dem Kontakt
+    const ex = innerWidth * 0.5;
+    const ey = tr.top + scrollY + 24;
 
-    // Quadratische Bézier-Kurve (leicht fallend, gut sichtbar)
-    const ctrlX = (sx + ex)/2 + innerWidth*0.12; // seitlicher Bogen
-    const ctrlY = sy + (ey - sy)*0.35 - 120;     // etwas hoch, dann „fallen“
+    const ctrlX = (sx + ex)/2 + innerWidth*0.12;
+    const ctrlY = sy + (ey - sy)*0.35 - 120;
 
     const clone = img.cloneNode(true);
     clone.classList.add('fireball-flying');
     document.body.appendChild(clone);
 
-    const duration = 3600; // langsamer & klar sichtbar
-    let start = null, lastSpark = 0;
+    const duration = 3600; let start = null, lastSpark = 0;
 
     function spark(x,y){
       const s = document.createElement('span'); s.className='fb-spark';
@@ -438,25 +440,17 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
       s.addEventListener('animationend',()=>s.remove());
     }
 
-    function quadraticBezier(t, p0, p1, p2){
-      const u = 1 - t;
-      return u*u*p0 + 2*u*t*p1 + t*t*p2;
-    }
+    function q(t,p0,p1,p2){ const u=1-t; return u*u*p0 + 2*u*t*p1 + t*t*p2; }
 
     function step(ts){
       if(!start) start = ts;
       const raw = Math.min((ts-start)/duration, 1);
-      // sanfter Start, dann fallen/gleiten
-      const t = raw < .6 ? (raw/.6)*.6 : .6 + (raw-.6)*.4;
-
-      const x = quadraticBezier(t, sx, ctrlX, ex);
-      const y = quadraticBezier(t, sy, ctrlY, ey);
-
+      const t = raw;
+      const x = q(t, sx, ctrlX, ex);
+      const y = q(t, sy, ctrlY, ey);
       clone.style.left = x+'px';
       clone.style.top  = (y - scrollY)+'px';
-
       if(ts - lastSpark > 70){ lastSpark = ts; spark(x, y - scrollY); }
-
       if(raw<1) requestAnimationFrame(step); else clone.remove();
     }
 
