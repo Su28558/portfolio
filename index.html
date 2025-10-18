@@ -54,18 +54,16 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .fire-icon{width:44px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite}
 @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-/* Krasser, längerer Übergang dunkel → weiß nach dem Hero */
+/* Spacer für die Misch-Strecke (kein fester Gradient mehr) */
 .fade-to-white{
-  padding:0; border:none; height:40vh;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(11,11,11,1)      0%,
-      rgba(30,30,30,1)     25%,
-      rgba(70,70,70,0.85)  45%,
-      rgba(180,180,180,0.35) 70%,
-      #ffffff              100%
-    );
+  padding:0; border:none; height:40vh; background:transparent;
+}
+
+/* Vollflächiger Seiten-Hintergrund, der per Scroll von dunkel → weiß mischt */
+.page-bg{
+  position:fixed; inset:0; z-index:-1;
+  background:#0b0b0b;
+  transition:background-color .15s linear; /* glättet kleine Sprünge */
 }
 
 /* Ab hier: helle Fläche (weiß) */
@@ -74,7 +72,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* Laufbanner – transparenter BG + dynamische Textfarbe via --bw (0..1) */
 .marquee-wrap{
-  background:transparent; /* wichtig: damit der Fade sichtbar „durchscheint“ */
+  background:transparent; /* wichtig: damit die gemischte Seite „durchscheint“ */
   border-top:1px solid rgba(0,0,0,.08);
   border-bottom:1px solid rgba(0,0,0,.08);
 }
@@ -191,6 +189,9 @@ footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#ff
 </head>
 
 <body>
+  <!-- dynamischer Seitenhintergrund -->
+  <div id="pageBg" class="page-bg"></div>
+
 <header>
   <div class="wrap headrow">
     <a class="brand" href="#">Denice-Su Cronauer</a>
@@ -223,7 +224,7 @@ footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#ff
     </div>
   </section>
 
-  <!-- krasser Übergang dunkel → weiß -->
+  <!-- Blend-Strecke (kein fixer Gradient, BG kommt vom #pageBg) -->
   <section class="fade-to-white" aria-hidden="true"></section>
 
   <div class="light">
@@ -391,26 +392,41 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
 })();
 
-/* Marquee-Farbe dynamisch an den Fade koppeln (0..1) */
+/* Seiten-Hintergrund & Marquee-Schrift an Scroll koppeln (dunkel → weiß) */
 (function(){
   const fade = document.querySelector('.fade-to-white');
-  const mq = document.getElementById('marquee');
-  if(!fade || !mq) return;
+  const mq   = document.getElementById('marquee');
+  const bg   = document.getElementById('pageBg');
+  if(!fade || !mq || !bg) return;
 
-  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+  const dark = {r:11,g:11,b:11};
+  const light= {r:255,g:255,b:255};
 
-  function updateInk(){
+  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+  const ease  = t => t<.5 ? 2*t*t : -1 + (4-2*t)*t; // easeInOutQuad
+
+  function updateBlend(){
     const fr = fade.getBoundingClientRect();
     const total = Math.max(fr.height, 1);
-    const t = clamp((window.innerHeight - fr.top)/(window.innerHeight + total), 0, 1);
-    const eased = t < .5 ? 2*t*t : -1+(4-2*t)*t;      // easeInOut
-    const bw = eased;                                  // 0=dunkel(weiße Schrift), 1=hell(schwarze Schrift)
+    // 0..1 : wie weit wir im Blend-Spacer sind
+    const tRaw = (window.innerHeight - fr.top) / (window.innerHeight + total);
+    const t    = clamp(tRaw, 0, 1);
+    const e    = ease(t);
+
+    // Hintergrundfarbe mischen
+    const r = Math.round(dark.r + (light.r - dark.r) * e);
+    const g = Math.round(dark.g + (light.g - dark.g) * e);
+    const b = Math.round(dark.b + (light.b - dark.b) * e);
+    bg.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+
+    // Laufbanner-Schrift: oben hell (auf dunkel) → unten dunkel (auf weiß)
+    const bw = e; // 0 = weiß, 1 = schwarz
     mq.style.setProperty('--bw', bw.toFixed(3));
   }
 
-  updateInk();
-  addEventListener('scroll', updateInk, {passive:true});
-  addEventListener('resize', updateInk);
+  updateBlend();
+  addEventListener('scroll', updateBlend, {passive:true});
+  addEventListener('resize', updateBlend);
 })();
 
 /* Sticky-Stack: Headline-Höhe setzen + Active-Kachel-Highlight */
