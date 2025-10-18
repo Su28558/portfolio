@@ -69,14 +69,29 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* ===== LEISTUNGEN (weiß) ===== */
 #leistungen{padding-top:0;border-bottom:none;background:#fff;color:var(--ink)}
-/* Sticky Headline */
+/* Sticky Headline – Leerraum reduziert */
 .leistungen-hero{
   position:sticky; top:var(--headerH); z-index:5;
   background:#fff; border-bottom:1px solid #eee;
 }
-.leistungen-hero .wrap{padding-top:clamp(24px,4vw,36px);padding-bottom:12px}
-.bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 6px}
+.leistungen-hero .wrap{
+  padding-top:12px;   /* vorher größer – reduziert */
+  padding-bottom:0;   /* Leerraum direkt darunter entfernt */
+}
+.bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 4px}
 .headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0}
+
+/* Hand (wieder da) */
+.hand-wrap{
+  position:sticky; top:calc(var(--headerH) - 20px);
+  display:flex; justify-content:flex-end; z-index:6; pointer-events:none; margin-bottom:8px;
+}
+.hand-hint{
+  width: clamp(160px, 20vw, 280px);
+  height:auto; filter:drop-shadow(0 6px 18px rgba(0,0,0,.2));
+  animation:handWiggle 2.4s ease-in-out infinite; pointer-events:none;
+}
+@keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
 
 /* Pin-Zone */
 .offerH{background:#fff;color:var(--ink)}
@@ -110,16 +125,10 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* ===== MOBILE BEHAVIOR ===== */
 @media (max-width: 899.98px){
-  /* Sticky headline bleibt */
   .hstack{height:auto}
   .hstage{position:relative; top:auto; height:auto; border:none}
   .hstage-inner{box-shadow:none}
-
-  /* Kacheln untereinander, ohne Pin-Animation */
-  .htile{
-    position:static; width:100%; height:auto;
-    transform:none; margin:0 0 16px; border-width:2px;
-  }
+  .htile{position:static; width:100%; height:auto; transform:none; margin:0 0 16px; border-width:2px}
 }
 
 /* ===== ANSATZ – ACCORDION ===== */
@@ -253,9 +262,13 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
       </div>
     </div>
 
-    <!-- Pin-Zone -->
+    <!-- Hand-Hinweis (wieder sichtbar) -->
     <div class="offerH">
       <div class="wrap">
+        <div class="hand-wrap">
+          <img class="hand-hint" src="hand.png" alt="Hinweis: Hier gibt’s was zu sehen">
+        </div>
+
         <div class="hstack" id="hstack">
           <div class="hstage" id="hstage">
             <div class="hstage-inner" id="hstageInner">
@@ -277,6 +290,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -384,35 +398,29 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   setH(); addEventListener('resize', setH);
 })();
 
-/* ===== LEISTUNGEN: Desktop – vertikales Einrasten (von unten hoch) ===== */
+/* LEISTUNGEN: Desktop – vertikales Einrasten (von unten hoch) */
 (function(){
   const mql = window.matchMedia('(min-width: 900px)');
   const hstack = document.getElementById('hstack');
-  const stage  = document.getElementById('hstage');
   const inner  = document.getElementById('hstageInner');
   const tiles  = [document.getElementById('tile0'), document.getElementById('tile1'), document.getElementById('tile2')];
 
   function layout(){
     if(!mql.matches){ 
-      // Mobile: nichts positionieren, alles natürlich fließen lassen
       tiles.forEach(t=>{ t.style.left=''; t.style.transform=''; });
       return;
     }
     const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tileGap')) || 20;
-    // Alle gleich breit gemessen am ersten Tile:
     const tileW = tiles[0].getBoundingClientRect().width;
 
     tiles.forEach((t, i) => {
       const left = i * (tileW + gap);
       t.style.left = left + 'px';
-      // Start-Offset: unter der Bühne reinfahren
-      t.dataset.startY  = inner.getBoundingClientRect().height * 0.9 + 80; // deutlich unten
-      t.dataset.targetY = 0; // Endzustand: sitzt im Raster
-      // initial unterhalb
+      t.dataset.startY  = inner.getBoundingClientRect().height * 0.9 + 80;
+      t.dataset.targetY = 0;
       t.style.transform = `translateY(${t.dataset.startY}px)`;
     });
 
-    // Bühne breit genug machen, damit alle Spalten Platz haben:
     inner.style.minWidth = (tileW*tiles.length + gap*(tiles.length-1)) + 'px';
   }
 
@@ -420,13 +428,12 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   function easeOut(t){ return 1 - Math.pow(1-t, 3); }
 
   function onScroll(){
-    if(!mql.matches) return; // nur Desktop/Tablet
+    if(!mql.matches) return;
     const rect = hstack.getBoundingClientRect();
-    const total = Math.max(hstack.offsetHeight - innerHeight, 1); // Scrollweg innerhalb der Zone
+    const total = Math.max(hstack.offsetHeight - innerHeight, 1);
     const passed = clamp(-rect.top, 0, total);
-    const p = passed / total; // 0..1
+    const p = passed / total;
 
-    // In drei Abschnitte teilen – je Abschnitt eine Kachel fährt hoch
     tiles.forEach((t, i) => {
       const segStart = i / tiles.length;
       const segEnd   = (i+1) / tiles.length;
@@ -441,7 +448,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
     });
   }
 
-  // init
   layout(); onScroll();
   addEventListener('resize', ()=>{ layout(); onScroll(); });
   addEventListener('scroll', onScroll, {passive:true});
