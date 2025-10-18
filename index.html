@@ -11,10 +11,11 @@
   --ink:#121212;
   --scroll-ink:#BFA4FF; --accent:#C09B6B;
   --headerH: 72px;
-  --LHeadH: 120px;         /* wird per JS auf Höhe der sticky Leistungen-Headline gesetzt */
-  --hstageH: 380px;        /* Höhe der „Bühne“ für die horizontalen Kacheln */
-  --tileW: 340px;          /* Basisbreite der Kachel – wird per CSS clamp begrenzt */
-  --tileGap: 20px;         /* Lücke zwischen Kacheln */
+
+  /* Leistungen */
+  --LHeadH: 120px;         /* Höhe der sticky Leistungen-Headline (per JS gesetzt) */
+  --hstageH: 380px;        /* Höhe der Bühne */
+  --tileGap: 20px;         /* Spaltabstand */
 }
 
 /* Reset / Base */
@@ -42,7 +43,7 @@ header{
 .nav-menu a{padding:8px 12px;border-radius:6px}
 .nav-menu a:hover{background:rgba(255,255,255,.06)}
 
-/* ===== HERO: Sticky H1 + Scroll-Prozess ===== */
+/* ===== HERO ===== */
 .hero{position:relative;height:180vh;padding:0;border-bottom:none}
 .hero-pin{position:sticky;top:calc(var(--headerH) + 12px);z-index:4;padding:84px 0 56px;background:var(--bg)}
 .eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-size:12px}
@@ -68,7 +69,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* ===== LEISTUNGEN (weiß) ===== */
 #leistungen{padding-top:0;border-bottom:none;background:#fff;color:var(--ink)}
-/* Sticky Headline (einmalig – die Kacheln heften sich darunter) */
+/* Sticky Headline */
 .leistungen-hero{
   position:sticky; top:var(--headerH); z-index:5;
   background:#fff; border-bottom:1px solid #eee;
@@ -77,48 +78,68 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 6px}
 .headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0}
 
-/* Horizontal-Pinning-Zone */
+/* Pin-Zone */
 .offerH{background:#fff;color:var(--ink)}
-.hstack{
-  position:relative;
-  /* genug Scroll-Strecke, damit alle drei Kacheln nacheinander „einrasten“ */
-  height: 240vh;
-  background:#fff;
-}
+.hstack{position:relative;height:240vh;background:#fff}
 .hstage{
   position:sticky;
   top: calc(var(--headerH) + var(--LHeadH));
   height: var(--hstageH);
-  display:block;
   background:#fff;
   border-bottom:1px solid #eee;
 }
 .hstage-inner{
-  position:relative;
-  height:100%;
-  /* optischer Rahmen */
+  position:relative; height:100%;
+  display:block; isolation:isolate;
   box-shadow:0 10px 30px rgba(0,0,0,.06) inset;
 }
 
-/* Kacheln (horizontal) */
+/* Kacheln – Spaltenlayout (Desktop) */
 .htile{
   position:absolute; top:0;
   width: clamp(260px, 30vw, 360px);
   height: calc(var(--hstageH) - 2px);
   border:2px solid #000; border-radius:0; background:#fff; color:#000;
   padding:22px 20px; box-shadow:0 18px 36px rgba(0,0,0,.08);
-  will-change: transform, left;
+  transform:translateY(120%); /* initial unten außerhalb */
+  will-change: transform;
 }
 .htile.alt{background:#000;color:#fff;border-color:#000}
 .htile h4{font-family:Fraunces,serif;font-size:clamp(20px,2.2vw,28px);margin:0 0 8px}
 .htile p{margin:0;max-width:60ch;font-size:15px;line-height:1.5}
 
-/* ANSATZ (weiß) */
-#ansatz{background:#fff;color:var(--ink)}
-#ansatz .box{border:1px solid #eee;border-radius:8px;padding:20px}
-#ansatz .box:hover{border-color:#C09B6B;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+/* ===== MOBILE BEHAVIOR ===== */
+@media (max-width: 899.98px){
+  /* Sticky headline bleibt */
+  .hstack{height:auto}
+  .hstage{position:relative; top:auto; height:auto; border:none}
+  .hstage-inner{box-shadow:none}
 
-/* KONTAKT (weiß + telefon.png) */
+  /* Kacheln untereinander, ohne Pin-Animation */
+  .htile{
+    position:static; width:100%; height:auto;
+    transform:none; margin:0 0 16px; border-width:2px;
+  }
+}
+
+/* ===== ANSATZ – ACCORDION ===== */
+#ansatz{background:#fff;color:var(--ink)}
+.accordion{display:grid;gap:10px}
+details.ac{border:1px solid #eee;border-radius:8px;background:#fff;overflow:hidden}
+details.ac[open]{box-shadow:0 8px 28px rgba(0,0,0,.06)}
+details.ac summary{
+  list-style:none; cursor:pointer; padding:16px 18px; position:relative;
+  font-family:Fraunces,serif; font-size:clamp(18px,1.6vw,22px);
+}
+details.ac summary::-webkit-details-marker{display:none}
+details.ac summary::after{
+  content:"＋"; position:absolute; right:16px; top:16px; font-family:Inter,system-ui;
+  transition:transform .2s ease;
+}
+details.ac[open] summary::after{content:"–"; transform:scale(1.05)}
+.ac-body{padding:0 18px 16px 18px; color:#333; line-height:1.6}
+
+/* KONTAKT */
 #kontakt{background:#fff;color:var(--ink);margin-top:0;padding-top:56px;border-bottom:none}
 .contact-hero{position:relative;min-height:360px;display:grid;align-items:center}
 @media(min-width:900px){ .contact-hero{min-height:420px} }
@@ -144,7 +165,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#fff}
 
-/* === Feuerball (Klick-Flug) === */
+/* Feuerball (Klick-Flug) */
 .fireball-flying{
   position:fixed; width:56px; z-index:50; pointer-events:none;
   animation:spin 1.4s linear infinite;
@@ -196,7 +217,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
     </div>
   </section>
 
-  <!-- LAUFBANNER (weiße Grenze) -->
+  <!-- LAUFBANNER -->
   <section class="marquee-wrap" aria-label="Kompetenzen">
     <div class="marquee" id="marquee" tabindex="0">
       <div class="track" aria-hidden="true">
@@ -224,7 +245,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
 
   <!-- LEISTUNGEN -->
   <section id="leistungen">
-    <!-- Sticky Headline (einmalig) -->
+    <!-- Sticky Headline -->
     <div class="leistungen-hero" id="leistungenHero">
       <div class="wrap">
         <div class="bigcaps">LEISTUNGEN</div>
@@ -232,12 +253,12 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
       </div>
     </div>
 
-    <!-- Horizontales Anheften der Kacheln -->
+    <!-- Pin-Zone -->
     <div class="offerH">
       <div class="wrap">
         <div class="hstack" id="hstack">
           <div class="hstage" id="hstage">
-            <div class="hstage-inner">
+            <div class="hstage-inner" id="hstageInner">
               <!-- Reihenfolge: CMS, UX-Writing, Website-Erstellung -->
               <article class="htile" id="tile0">
                 <h4>CMS-Pflege & Betreuung</h4>
@@ -260,14 +281,34 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
     </div>
   </section>
 
-  <!-- ANSATZ -->
+  <!-- ANSATZ – Accordion -->
   <section id="ansatz">
     <div class="wrap">
-      <h2 class="kicker">Ansatz</h2>
-      <h3 class="section">Wie ich arbeite</h3>
-      <div class="box"><h4>01 · Denken in Inhalt</h4><p>Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.</p></div>
-      <div class="box"><h4>02 · Gestaltung als Sprache</h4><p>Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus.</p></div>
-      <div class="box"><h4>03 · Technik als Werkzeug</h4><p>Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise und zugänglich umzusetzen.</p></div>
+      <h2 class="kicker" style="font-family:Fraunces,serif;margin:0 0 8px">Ansatz</h2>
+      <h3 class="section" style="font-family:Fraunces,serif;margin:0 0 16px">Wie ich arbeite</h3>
+
+      <div class="accordion">
+        <details class="ac" open>
+          <summary>01 · Denken in Inhalt</summary>
+          <div class="ac-body">
+            Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.
+          </div>
+        </details>
+
+        <details class="ac">
+          <summary>02 · Gestaltung als Sprache</summary>
+          <div class="ac-body">
+            Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus – alles führt durch die Inhalte.
+          </div>
+        </details>
+
+        <details class="ac">
+          <summary>03 · Technik als Werkzeug</summary>
+          <div class="ac-body">
+            Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise, zugänglich und performant umzusetzen.
+          </div>
+        </details>
+      </div>
     </div>
   </section>
 
@@ -316,7 +357,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
 (function(){
   const h1 = document.getElementById('headline');
   const hero = document.getElementById('hero');
-  const pin  = document.querySelector('.hero-pin');
 
   const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
   h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
@@ -335,12 +375,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   addEventListener('resize', update);
 })();
 
-/* Laufbanner pausierbar */
-(function(){
-  const mq=document.getElementById('marquee');
-  mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
-})();
-
 /* Höhe der sticky Leistungen-Headline als CSS-Variable setzen */
 (function(){
   const head = document.getElementById('leistungenHero');
@@ -350,53 +384,66 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   setH(); addEventListener('resize', setH);
 })();
 
-/* Horizontales „Anheften“ der drei Kacheln unter der sticky Headline */
+/* ===== LEISTUNGEN: Desktop – vertikales Einrasten (von unten hoch) ===== */
 (function(){
+  const mql = window.matchMedia('(min-width: 900px)');
   const hstack = document.getElementById('hstack');
   const stage  = document.getElementById('hstage');
+  const inner  = document.getElementById('hstageInner');
   const tiles  = [document.getElementById('tile0'), document.getElementById('tile1'), document.getElementById('tile2')];
 
   function layout(){
-    // Ziel-Positionen nebeneinander (linksbündig)
+    if(!mql.matches){ 
+      // Mobile: nichts positionieren, alles natürlich fließen lassen
+      tiles.forEach(t=>{ t.style.left=''; t.style.transform=''; });
+      return;
+    }
+    const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tileGap')) || 20;
+    // Alle gleich breit gemessen am ersten Tile:
     const tileW = tiles[0].getBoundingClientRect().width;
-    const gap   = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tileGap')) || 20;
 
     tiles.forEach((t, i) => {
-      t.dataset.targetX = (i * (tileW + gap));
-      // Startposition: etwas links außerhalb
-      t.dataset.startX  = -(tileW + 60);
+      const left = i * (tileW + gap);
+      t.style.left = left + 'px';
+      // Start-Offset: unter der Bühne reinfahren
+      t.dataset.startY  = inner.getBoundingClientRect().height * 0.9 + 80; // deutlich unten
+      t.dataset.targetY = 0; // Endzustand: sitzt im Raster
+      // initial unterhalb
+      t.style.transform = `translateY(${t.dataset.startY}px)`;
     });
+
+    // Bühne breit genug machen, damit alle Spalten Platz haben:
+    inner.style.minWidth = (tileW*tiles.length + gap*(tiles.length-1)) + 'px';
   }
 
   function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
   function easeOut(t){ return 1 - Math.pow(1-t, 3); }
 
   function onScroll(){
+    if(!mql.matches) return; // nur Desktop/Tablet
     const rect = hstack.getBoundingClientRect();
-    const total = Math.max(hstack.offsetHeight - innerHeight, 1); // Scrollstrecke innerhalb der Zone
+    const total = Math.max(hstack.offsetHeight - innerHeight, 1); // Scrollweg innerhalb der Zone
     const passed = clamp(-rect.top, 0, total);
     const p = passed / total; // 0..1
 
-    // Auf drei Segmente aufteilen – pro Kachel ein Drittel des Weges
+    // In drei Abschnitte teilen – je Abschnitt eine Kachel fährt hoch
     tiles.forEach((t, i) => {
       const segStart = i / tiles.length;
       const segEnd   = (i+1) / tiles.length;
       const local    = clamp((p - segStart) / (segEnd - segStart), 0, 1);
       const e        = easeOut(local);
 
-      const startX = parseFloat(t.dataset.startX);
-      const targetX= parseFloat(t.dataset.targetX);
+      const startY = parseFloat(t.dataset.startY || '0');
+      const targetY= parseFloat(t.dataset.targetY || '0');
+      const y = startY + (targetY - startY) * e;
 
-      const x = startX + (targetX - startX) * e;
-      t.style.transform = `translateX(${x}px)`;
+      t.style.transform = `translateY(${y}px)`;
     });
   }
 
-  // initial
-  layout();
-  onScroll();
-
-  addEventListener('resize', () => { layout(); onScroll(); });
+  // init
+  layout(); onScroll();
+  addEventListener('resize', ()=>{ layout(); onScroll(); });
   addEventListener('scroll', onScroll, {passive:true});
 })();
 
@@ -445,9 +492,8 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
     function step(ts){
       if(!start) start = ts;
       const raw = Math.min((ts-start)/duration, 1);
-      const t = raw;
-      const x = q(t, sx, ctrlX, ex);
-      const y = q(t, sy, ctrlY, ey);
+      const x = q(raw, sx, ctrlX, ex);
+      const y = q(raw, sy, ctrlY, ey);
       clone.style.left = x+'px';
       clone.style.top  = (y - scrollY)+'px';
       if(ts - lastSpark > 70){ lastSpark = ts; spark(x, y - scrollY); }
