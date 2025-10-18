@@ -54,29 +54,42 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .fire-icon{width:44px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite}
 @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-/* Sanfter Übergang dunkel → weiß nach dem Hero */
+/* Krasser, längerer Übergang dunkel → weiß nach dem Hero */
 .fade-to-white{
-  padding:0; border:none; height:18vh;
-  background:linear-gradient(180deg, rgba(11,11,11,1) 0%, #fff 100%);
+  padding:0; border:none; height:40vh;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(11,11,11,1)      0%,
+      rgba(30,30,30,1)     25%,
+      rgba(70,70,70,0.85)  45%,
+      rgba(180,180,180,0.35) 70%,
+      #ffffff              100%
+    );
 }
 
 /* Ab hier: helle Fläche (weiß) */
 .light section{ background:#fff; color:var(--ink); border-bottom:1px solid var(--line) }
 .light .wrap{ color:var(--ink) }
 
-/* Laufbanner (weiß/schwarz) */
-.marquee-wrap{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.marquee{white-space:nowrap;overflow:hidden}
+/* Laufbanner – transparenter BG + dynamische Textfarbe via --bw (0..1) */
+.marquee-wrap{
+  background:transparent; /* wichtig: damit der Fade sichtbar „durchscheint“ */
+  border-top:1px solid rgba(0,0,0,.08);
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.marquee{white-space:nowrap;overflow:hidden; --bw:1;}
 .track{
   display:inline-block;padding-block:clamp(0px,0.5vw,4px);line-height:1.02;
   font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(32px,9vw,96px);
-  letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite
+  letter-spacing:.04em;animation:scroll-left 32s linear infinite;
+  color: rgb(calc(255*var(--bw)), calc(255*var(--bw)), calc(255*var(--bw))); /* 0=schwarz, 1=weiß */
 }
 .track span{margin:0 1.2em}
 .marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
 @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* LEISTUNGEN Header (jetzt weiß) */
+/* LEISTUNGEN Header (weiß) */
 #leistungen{padding-top:0;border-bottom:none;background:#fff;color:var(--ink)}
 .leistungen-hero{position:relative;background:#fff}
 .leistungen-hero .wrap{position:relative;z-index:1;padding-top:clamp(28px,6vw,56px)}
@@ -158,12 +171,12 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#fff}
 
-/* Feuerball-Flight + Sparks (für Klick UND Scroll-Follower) */
+/* Feuerball – Follower & Flugpfad + Sparks */
 .fireball-follow{
-  position:fixed; right:18px; top:20vh; width:44px; z-index:60; pointer-events:none;
+  position:fixed; width:44px; z-index:60; pointer-events:none;
   filter:drop-shadow(0 6px 18px rgba(191,164,255,.38));
 }
-.fireball-flying{
+.fireball-flying{ /* für Klick-Animation zum Kontakt */
   position:fixed; width:44px; z-index:50; pointer-events:none; animation:spin 1s linear infinite;
   filter:drop-shadow(0 6px 18px rgba(191,164,255,.38));
 }
@@ -171,7 +184,7 @@ footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#ff
 .fb-spark{
   position:fixed; width:10px; height:10px; border-radius:50%;
   background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0));
-  pointer-events:none; z-index:49; animation:fbSpark .6s ease-out forwards;
+  pointer-events:none; z-index:59; animation:fbSpark .6s ease-out forwards;
 }
 @keyframes fbSpark{0%{opacity:.9; transform:scale(1)}100%{opacity:0; transform:scale(.3)}}
 </style>
@@ -210,11 +223,11 @@ footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#ff
     </div>
   </section>
 
-  <!-- sanfter Übergang dunkel → weiß -->
+  <!-- krasser Übergang dunkel → weiß -->
   <section class="fade-to-white" aria-hidden="true"></section>
 
   <div class="light">
-    <!-- LAUFBANNER -->
+    <!-- LAUFBANNER (transparent, dynamische Schriftfarbe) -->
     <section class="marquee-wrap" aria-label="Kompetenzen">
       <div class="marquee" id="marquee" tabindex="0">
         <div class="track" aria-hidden="true">
@@ -332,7 +345,7 @@ footer{padding:24px 0;text-align:center;color:#666;font-size:14px;background:#ff
 
 <footer><div class="wrap">© <span id="y"></span> Denice-Su Cronauer</div></footer>
 
-<!-- Scroll-begleitende Flamme (immer sichtbar) -->
+<!-- Scroll-begleitende Flamme (über die Seite mit Loopings) -->
 <img id="fireFollow" class="fireball-follow" src="feuer.png" alt="Flamme" />
 
 <script>
@@ -349,7 +362,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   const hero = document.getElementById('hero');
   const pin  = document.querySelector('.hero-pin');
 
-  // in Spans wrappen (Buchstaben)
   const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
   h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
   const chars=[...h1.querySelectorAll('.char')];
@@ -362,9 +374,9 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
 
   function update(){
     const r=hero.getBoundingClientRect();
-    const total = Math.max(r.height - innerHeight, 1); // Scrollstrecke innerhalb des Heros
+    const total = Math.max(r.height - innerHeight, 1);
     const scrolled = Math.min(Math.max(-r.top, 0), total);
-    const progress = scrolled / total; // 0..1
+    const progress = scrolled / total;
     const count = Math.floor(chars.length * progress);
     chars.forEach((c,i)=>c.classList.toggle('is-colored', i < count));
   }
@@ -377,6 +389,28 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
 (function(){
   const mq=document.getElementById('marquee');
   mq?.addEventListener('click',()=>mq.classList.toggle('paused'));
+})();
+
+/* Marquee-Farbe dynamisch an den Fade koppeln (0..1) */
+(function(){
+  const fade = document.querySelector('.fade-to-white');
+  const mq = document.getElementById('marquee');
+  if(!fade || !mq) return;
+
+  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+  function updateInk(){
+    const fr = fade.getBoundingClientRect();
+    const total = Math.max(fr.height, 1);
+    const t = clamp((window.innerHeight - fr.top)/(window.innerHeight + total), 0, 1);
+    const eased = t < .5 ? 2*t*t : -1+(4-2*t)*t;      // easeInOut
+    const bw = eased;                                  // 0=dunkel(weiße Schrift), 1=hell(schwarze Schrift)
+    mq.style.setProperty('--bw', bw.toFixed(3));
+  }
+
+  updateInk();
+  addEventListener('scroll', updateInk, {passive:true});
+  addEventListener('resize', updateInk);
 })();
 
 /* Sticky-Stack: Headline-Höhe setzen + Active-Kachel-Highlight */
@@ -405,7 +439,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   setActive(); addEventListener('scroll', setActive, {passive:true});
 })();
 
-/* 🔥 Flamme folgt dem Scroll (rechts schwebend) + Funken */
+/* 🔥 Flamme folgt dem Scroll: „Flugzeug“-Pfad mit Loopings (Lissajous) + Sparks */
 (function(){
   const follower = document.getElementById('fireFollow');
 
@@ -420,16 +454,21 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   }
 
   function onScroll(){
-    const docH = document.documentElement.scrollHeight - innerHeight;
-    const p = docH>0 ? scrollY / docH : 0; // 0..1
-    const topVH = 8 + p * 78;              // bewegt sich von 8vh → 86vh
-    follower.style.top = topVH + 'vh';
+    const docH = Math.max(document.documentElement.scrollHeight - innerHeight, 1);
+    const p = scrollY / docH;                    // 0..1 gesamt
+    const baseYvh = 8 + p * 82;                  // führt nach unten
+    const baseY = innerHeight * (baseYvh/100);
 
-    // gelegentliche Funken spur
-    if(Math.random()<0.25){
-      const rect = follower.getBoundingClientRect();
-      spark(rect.left+rect.width/2, rect.top+rect.height/2);
-    }
+    // Lissajous-ähnlicher Pfad (Loopings/Schlenker)
+    const ampX = innerWidth * 0.32;              // horizontale Amplitude
+    const ampY = innerHeight * 0.08;             // vertikale Schlenker
+    const x = innerWidth*0.5 + ampX * Math.sin(p * Math.PI * 4.5);   // ~2.25 Loopings
+    const y = baseY + ampY * Math.cos(p * Math.PI * 3);
+
+    follower.style.left = (x - follower.width/2) + 'px';
+    follower.style.top  = (y - follower.height/2) + 'px';
+
+    if(Math.random()<0.28){ spark(x, y); }
   }
   onScroll();
   addEventListener('scroll', onScroll, {passive:true});
