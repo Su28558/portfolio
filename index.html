@@ -57,7 +57,8 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .track{
   display:inline-block;padding-block:clamp(0px,0.5vw,4px);line-height:1.02;
   font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(32px,9vw,96px);
-  letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite
+  letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite;
+  text-transform:uppercase; /* NEU: Versalien */
 }
 .track span{margin:0 1.2em}
 .marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
@@ -437,18 +438,18 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   const movesEl = document.getElementById('memMoves');
   const resetBtn = document.getElementById('memReset');
 
-  // Drei Paare: 9↔12, 10↔13, 11↔14
-  // Feste Anordnung: Oben: 9,10,11 · Unten: 12,13,14
+  // Drei Paare: 15↔18, 16↔19, 17↔20
+  // Feste Anordnung: Oben: 15,16,17 · Unten: 18,19,20
   const DECK_FIXED = [
-    { uid:1, pairId:'p1', img:'9.svg',  alt:'Karte 9'  },
-    { uid:2, pairId:'p2', img:'10.svg', alt:'Karte 10' },
-    { uid:3, pairId:'p3', img:'11.svg', alt:'Karte 11' },
-    { uid:4, pairId:'p1', img:'12.svg', alt:'Karte 12' },
-    { uid:5, pairId:'p2', img:'13.svg', alt:'Karte 13' },
-    { uid:6, pairId:'p3', img:'14.svg', alt:'Karte 14' },
+    { uid:1, pairId:'p1', img:'15.svg', alt:'Karte 15' },
+    { uid:2, pairId:'p2', img:'16.svg', alt:'Karte 16' },
+    { uid:3, pairId:'p3', img:'17.svg', alt:'Karte 17' },
+    { uid:4, pairId:'p1', img:'18.svg', alt:'Karte 18' },
+    { uid:5, pairId:'p2', img:'19.svg', alt:'Karte 19' },
+    { uid:6, pairId:'p3', img:'20.svg', alt:'Karte 20' },
   ];
 
-  // ► NEU: Texte je Paar (Vorderseite)
+  // Texte je Paar (Vorderseite)
   const SERVICES_BY_PAIR = {
     p1: {
       title: 'CMS-Pflege & Betreuung',
@@ -466,7 +467,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
 
   let first = null, second = null, lock = false, moves = 0, matched = 0;
 
-  // ► ANGEPAST: Rückseite = SVG, Vorderseite = Text
   function cardTpl(c){
     const btn = document.createElement('button');
     btn.className = 'mem-btn';
@@ -483,7 +483,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
     inner.className = 'mem-inner';
     btn.appendChild(inner);
 
-    // Rückseite: zeigt die jeweilige SVG
+    // Rückseite: neue SVG (15–20.svg)
     const back = document.createElement('div');
     back.className = 'mem-face back';
     back.style.backgroundImage = `url('${c.img}')`;
@@ -528,7 +528,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
       lock = true;
 
       if(first.data.pairId === second.data.pairId){
-        // Treffer
         setTimeout(()=>{
           first.card.classList.add('is-matched');
           second.card.classList.add('is-matched');
@@ -543,7 +542,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
           }
         }, 300);
       }else{
-        // Kein Treffer
         setTimeout(()=>{
           first.card.classList.remove('is-flipped');
           second.card.classList.remove('is-flipped');
