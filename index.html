@@ -86,8 +86,13 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 }
 @keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
 
-/* ===== MEMORY (angepasst auf 1600 × 896, Karten 520 × 438) ===== */
-.memory-wrap{background:#fff; overflow:auto;}
+/* ===== MEMORY (max 1600 × 896; Karten 520 × 438; responsiv) ===== */
+.memory-wrap{
+  background:#fff;
+  overflow:auto;
+  /* skaliere das Board gleichmäßig runter, nie über 100% */
+  --m-scale: min(1, 100vw / 1600);
+}
 .memory-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 16px}
 .memory-title{font-family:Fraunces,serif;font-size:20px;margin:0}
 .memory-ctrls{display:flex;align-items:center;gap:10px}
@@ -97,19 +102,19 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 .memory-grid{
   display:grid;
-  grid-template-columns:repeat(3, 520px);
-  grid-auto-rows:438px;
-  column-gap:20px;
-  row-gap:20px;
-  width:1600px;
-  height:896px;
+  grid-template-columns: repeat(3, calc(520px * var(--m-scale)));
+  grid-auto-rows: calc(438px * var(--m-scale));
+  column-gap: calc(20px * var(--m-scale));
+  row-gap: calc(20px * var(--m-scale));
+  width: calc(1600px * var(--m-scale));
+  height: calc(896px * var(--m-scale));
   margin-inline:auto;
 }
 
 .mem-card{
   position:relative;
-  width:520px;
-  height:438px;
+  width: calc(520px * var(--m-scale));
+  height: calc(438px * var(--m-scale));
   perspective:900px;
 }
 .mem-btn{
@@ -129,13 +134,18 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .mem-face.front{
   background:#fff; transform:rotateY(180deg);
   text-align:left; color:#121212;
-  padding:20px 18px; display:flex; flex-direction:column; justify-content:center; gap:10px;
+  padding: calc(20px * var(--m-scale)) calc(18px * var(--m-scale));
+  display:flex; flex-direction:column; justify-content:center; gap: calc(10px * var(--m-scale));
 }
 .mem-face.front h5{
-  font-family:Fraunces,serif; font-size:clamp(16px,1.8vw,20px); margin:0;
+  font-family:Fraunces,serif;
+  font-size: clamp(14px, calc(18px * var(--m-scale)), 20px);
+  margin:0;
 }
 .mem-face.front p{
-  margin:0; font-size:14px; line-height:1.5; color:#333;
+  margin:0;
+  font-size: clamp(12px, calc(14px * var(--m-scale)), 14px);
+  line-height:1.5; color:#333;
 }
 .mem-card.is-matched .mem-face{
   box-shadow:0 0 0 2px var(--scroll-ink) inset, 0 10px 24px rgba(191,164,255,.25);
@@ -249,7 +259,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
   <section class="marquee-wrap" aria-label="Kompetenzen">
     <div class="marquee" id="marquee" tabindex="0">
       <div class="track" aria-hidden="true">
-        <span>Content & UX-WRITING</span> ·
+        <span>CONTENT & UX-WRITING</span> ·
         <span>CMS & REDAKTIONSSYSTEME</span> ·
         <span>DESIGN & STRUKTUR</span> ·
         <span>WORDPRESS & CO.</span> ·
@@ -259,7 +269,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
         <span>WORDPRESS & CO.</span>
       </div>
       <div class="track" aria-hidden="true">
-        <span>Content & UX-WRITING</span> ·
+        <span>CONTENT & UX-WRITING</span> ·
         <span>CMS & REDAKTIONSSYSTEME</span> ·
         <span>DESIGN & STRUKTUR</span> ·
         <span>WORDPRESS & CO.</span> ·
@@ -407,7 +417,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
 
   const raw = h1.innerHTML
     .replace(/\n/g,' ')
-    .replace(/<br\s*\/?>/gi,'\n');   // ← FIX
+    .replace(/<br\s*\/?>/gi,'\n');   // FIX
 
   h1.innerHTML = raw.split('')
     .map(ch => ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`)
