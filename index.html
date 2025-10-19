@@ -11,8 +11,6 @@
   --ink:#121212;
   --scroll-ink:#BFA4FF; --accent:#C09B6B;
   --headerH: 72px;
-
-  /* Leistungen */
   --LHeadH: 120px;
 }
 
@@ -53,7 +51,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .fire-icon{width:44px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite}
 @keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-/* ===== LAUFBANNER: klare Grenze (weiß) ===== */
+/* ===== LAUFBANNER ===== */
 .marquee-wrap{background:#fff;color:#000;border-top:1px solid #ddd;border-bottom:1px solid #ddd}
 .marquee{white-space:nowrap;overflow:hidden}
 .track{
@@ -67,15 +65,11 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* ===== LEISTUNGEN (weiß) ===== */
 #leistungen{padding-top:0;border-bottom:none;background:#fff;color:var(--ink)}
-/* Sticky Headline – Leerraum reduziert */
 .leistungen-hero{
   position:sticky; top:var(--headerH); z-index:5;
   background:#fff; border-bottom:1px solid #eee;
 }
-.leistungen-hero .wrap{
-  padding-top:12px;
-  padding-bottom:0;
-}
+.leistungen-hero .wrap{padding-top:12px;padding-bottom:0}
 .bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 4px}
 .headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0}
 
@@ -91,7 +85,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 }
 @keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
 
-/* ===== MEMORY ===== */
+/* ===== MEMORY (6 Karten: 3 Paare, feste Anordnung 3x2) ===== */
 .memory-wrap{background:#fff}
 .memory-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 16px}
 .memory-title{font-family:Fraunces,serif;font-size:20px;margin:0}
@@ -101,23 +95,14 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .mem-reset:hover{transform:translateY(-1px)}
 .memory-grid{
   display:grid; gap:12px;
-  grid-template-columns:repeat(4, minmax(120px,1fr));
+  grid-template-columns:repeat(3, minmax(120px,1fr)); /* immer 3 nebeneinander (auch mobil) */
 }
-@media (max-width: 900px){
-  .memory-grid{grid-template-columns:repeat(2, minmax(120px,1fr))}
-}
-.mem-card{
-  position:relative; aspect-ratio: 3/4; perspective: 900px;
-}
+.mem-card{ position:relative; aspect-ratio: 3/4; perspective: 900px; }
 .mem-btn{
-  appearance:none; -webkit-appearance:none;
-  border:none; padding:0; margin:0; width:100%; height:100%; cursor:pointer; background:transparent;
+  appearance:none; border:none; padding:0; margin:0; width:100%; height:100%; cursor:pointer; background:transparent;
   outline-offset:4px;
 }
-.mem-inner{
-  position:relative; width:100%; height:100%;
-  transform-style:preserve-3d; transition:transform .38s ease;
-}
+.mem-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .38s ease; }
 .mem-card.is-flipped .mem-inner{ transform:rotateY(180deg) }
 .mem-face{
   position:absolute; inset:0; backface-visibility:hidden; border:2px solid #000; border-radius:6px;
@@ -125,14 +110,10 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
   display:grid; place-items:center; padding:12px;
 }
 .mem-face.back{
-  background:#fff url('wimmelbild.svg') center/cover no-repeat;   /* <— dein Wimmelbild als Kartenrückseite */
+  background:#fff url('wimmelbild.svg') center/cover no-repeat;
 }
 .mem-face.front{
-  background:#fff; transform:rotateY(180deg);
-  color:#000; text-align:center;
-}
-.mem-face.front .label{
-  font-family:Inter,system-ui; font-weight:600; font-size:clamp(14px,1.6vw,18px); line-height:1.25;
+  background:#fff center/contain no-repeat; transform:rotateY(180deg);
 }
 .mem-card.is-matched .mem-face{
   border-color: var(--scroll-ink);
@@ -140,7 +121,25 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 }
 .mem-a11y{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 
-/* ===== ANSATZ – ACCORDION ===== */
+/* ===== LEISTUNGEN – klassische Darstellung darunter ===== */
+#leistungen-plain{background:#fff;color:var(--ink)}
+.lp-hero{
+  position:sticky; top:var(--headerH); z-index:4;
+  background:#fff; border-bottom:1px solid #eee;
+}
+.lp-hero .wrap{padding-top:16px;padding-bottom:10px}
+.lp-hero .kicker{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 6px}
+.lp-hero h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:0}
+.lp-rail{position:relative}
+.lp-tile{
+  position:sticky; top:calc(var(--headerH) + 72px);
+  background:#fff;color:#000;border:2px solid #000;border-radius:0;padding:22px 20px;
+  box-shadow:0 18px 36px rgba(0,0,0,.06); margin:0 0 26vh;
+}
+.lp-tile h4{font-family:Fraunces,serif;font-size:clamp(20px,2.2vw,28px);margin:0 0 8px}
+.lp-tile p{margin:0;max-width:62ch}
+
+/* ===== ANSATZ – Accordion ===== */
 #ansatz{background:#fff;color:var(--ink)}
 .accordion{display:grid;gap:10px}
 details.ac{border:1px solid #eee;border-radius:8px;background:#fff;overflow:hidden}
@@ -212,6 +211,7 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
     <div class="wrap">
       <nav class="nav-menu">
         <a href="#leistungen">Leistungen</a>
+        <a href="#leistungen-plain">Kurz erklärt</a>
         <a href="#ansatz">Ansatz</a>
         <a href="#kontakt">Kontakt</a>
       </nav>
@@ -261,9 +261,8 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
     </div>
   </section>
 
-  <!-- LEISTUNGEN -->
+  <!-- LEISTUNGEN (Memory) -->
   <section id="leistungen">
-    <!-- Sticky Headline -->
     <div class="leistungen-hero" id="leistungenHero">
       <div class="wrap">
         <div class="bigcaps">LEISTUNGEN</div>
@@ -271,7 +270,6 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
       </div>
     </div>
 
-    <!-- Hand & MEMORY -->
     <div class="offerH">
       <div class="wrap">
         <div class="hand-wrap">
@@ -283,13 +281,39 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
             <h3 class="memory-title">Finde die passenden Leistungen</h3>
             <div class="memory-ctrls">
               <span class="mem-stat"><strong>Züge:</strong> <span id="memMoves">0</span></span>
-              <button class="mem-reset" id="memReset" type="button">Neu mischen</button>
+              <button class="mem-reset" id="memReset" type="button">Zurücksetzen</button>
             </div>
           </div>
 
           <div class="memory-grid" id="memoryGrid" aria-label="Memory Spielbereich"></div>
           <div class="mem-a11y" aria-live="polite" id="memLive"></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEISTUNGEN – klassisch erklärt (sticky + stack) -->
+  <section id="leistungen-plain">
+    <div class="lp-hero">
+      <div class="wrap">
+        <div class="kicker">LEISTUNGEN</div>
+        <h3>Kurz erklärt (ohne Spiel)</h3>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="lp-rail">
+        <article class="lp-tile">
+          <h4>CMS-Pflege & Betreuung</h4>
+          <p>WordPress, TYPO3, Magnolia u. v. m. – modulare Inhalte, saubere Workflows, QA und langfristig wartbare Strukturen.</p>
+        </article>
+        <article class="lp-tile">
+          <h4>UX-Writing</h4>
+          <p>Mikrocopy, States, Onboarding, Navigationssprache – klare Nutzerführung mit Tonalität, die zu Marke und Ziel passt.</p>
+        </article>
+        <article class="lp-tile">
+          <h4>Website-Erstellung</h4>
+          <p>Struktur, Text, visuelle Grammatik – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Zugänglichkeit & Performance.</p>
+        </article>
       </div>
     </div>
   </section>
@@ -388,7 +412,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   addEventListener('resize', update);
 })();
 
-/* Höhe der sticky Leistungen-Headline als CSS-Variable setzen (falls benötigt) */
+/* Höhe der sticky Leistungen-Headline als CSS-Variable setzen */
 (function(){
   const head = document.getElementById('leistungenHero');
   function setH(){
@@ -397,41 +421,25 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   setH(); addEventListener('resize', setH);
 })();
 
-/* ===== MEMORY GAME (2x4) ===== */
+/* ===== MEMORY GAME (6 Karten, feste Anordnung 3x2) ===== */
 (function(){
   const grid = document.getElementById('memoryGrid');
   const live = document.getElementById('memLive');
   const movesEl = document.getElementById('memMoves');
   const resetBtn = document.getElementById('memReset');
 
-  // Platzhalter-Paare – Inhalte können wir später tauschen/erweitern
-  const PAIRS = [
-    {id:'cms', label:'CMS-Pflege'},
-    {id:'ux',  label:'UX-Writing'},
-    {id:'web', label:'Website'},
-    {id:'seo', label:'SEO'}
-  ]; // => 4 Paare → 8 Karten (2x4)
+  // Drei Paare: 9↔12, 10↔13, 11↔14
+  // Feste Anordnung: Oben: 9,10,11 · Unten: 12,13,14
+  const DECK_FIXED = [
+    { uid:1, pairId:'p1', img:'9.svg',  alt:'Karte 9'  },
+    { uid:2, pairId:'p2', img:'10.svg', alt:'Karte 10' },
+    { uid:3, pairId:'p3', img:'11.svg', alt:'Karte 11' },
+    { uid:4, pairId:'p1', img:'12.svg', alt:'Karte 12' },
+    { uid:5, pairId:'p2', img:'13.svg', alt:'Karte 13' },
+    { uid:6, pairId:'p3', img:'14.svg', alt:'Karte 14' },
+  ];
 
-  let deck = [];
   let first = null, second = null, lock = false, moves = 0, matched = 0;
-
-  function shuffle(arr){
-    for(let i=arr.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [arr[i],arr[j]] = [arr[j],arr[i]];
-    }
-    return arr;
-  }
-
-  function buildDeck(){
-    let idCounter = 0;
-    deck = shuffle(
-      PAIRS.flatMap(p => ([
-        { uid: ++idCounter, pairId: p.id, label: p.label },
-        { uid: ++idCounter, pairId: p.id, label: p.label },
-      ]))
-    );
-  }
 
   function cardTpl(c){
     const btn = document.createElement('button');
@@ -455,7 +463,8 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
 
     const front = document.createElement('div');
     front.className = 'mem-face front';
-    front.innerHTML = `<span class="label">${c.label}</span>`;
+    front.style.backgroundImage = `url('${c.img}')`;
+    front.setAttribute('aria-label', c.alt);
     inner.appendChild(front);
 
     btn.addEventListener('click', ()=> flip(card, btn, c));
@@ -468,11 +477,10 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
 
   function render(){
     grid.innerHTML = '';
-    buildDeck();
-    deck.forEach(c => grid.appendChild(cardTpl(c)));
+    DECK_FIXED.forEach(c => grid.appendChild(cardTpl(c)));
     moves = 0; matched = 0; first = second = null; lock = false;
     movesEl.textContent = '0';
-    live.textContent = 'Neues Spiel – 4 Paare.';
+    live.textContent = 'Neues Spiel – 3 Paare.';
   }
 
   function flip(card, btn, c){
@@ -497,14 +505,13 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
           first.btn.setAttribute('aria-disabled','true');
           second.btn.setAttribute('aria-disabled','true');
           matched++;
-          live.textContent = `Treffer: ${first.data.label}. ${matched===PAIRS.length ? 'Alle Paare gefunden!' : 'Weiter so.'}`;
+          live.textContent = `Treffer. ${matched===3 ? 'Alle Paare gefunden!' : 'Weiter so.'}`;
           first = second = null; lock = false;
 
-          if(matched === PAIRS.length){
-            // kleines Finish
+          if(matched === 3){
             grid.animate([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:500});
           }
-        }, 320);
+        }, 300);
       }else{
         // Kein Treffer
         setTimeout(()=>{
@@ -512,7 +519,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
           second.card.classList.remove('is-flipped');
           live.textContent = `Kein Treffer. Versuche es erneut.`;
           first = second = null; lock = false;
-        }, 700);
+        }, 650);
       }
     }
   }
