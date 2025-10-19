@@ -109,13 +109,21 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
   box-shadow:0 10px 24px rgba(0,0,0,.08);
   display:grid; place-items:center; padding:12px;
 }
-/* neutrale Rückseite – kein altes wimmelbild.svg */
+/* Rückseite: zeigt die neuen SVGs (je Karte individuell) */
 .mem-face.back{
-  background:
-    linear-gradient(45deg, #fff 25%, #f7f7f7 25%, #f7f7f7 50%, #fff 50%, #fff 75%, #f7f7f7 75%, #f7f7f7 100%) 0 0/16px 16px;
+  background:#fff center/contain no-repeat;
 }
+/* Vorderseite: Textseite (Leistungen) */
 .mem-face.front{
-  background:#fff center/contain no-repeat; transform:rotateY(180deg);
+  background:#fff; transform:rotateY(180deg);
+  text-align:left; color:#121212;
+  padding:16px 14px; display:flex; flex-direction:column; justify-content:center; gap:8px;
+}
+.mem-face.front h5{
+  font-family:Fraunces,serif; font-size:clamp(16px,1.8vw,20px); margin:0;
+}
+.mem-face.front p{
+  margin:0; font-size:14px; line-height:1.5; color:#333;
 }
 .mem-card.is-matched .mem-face{
   box-shadow:0 0 0 2px var(--scroll-ink) inset, 0 10px 24px rgba(191,164,255,.25);
@@ -440,8 +448,25 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
     { uid:6, pairId:'p3', img:'14.svg', alt:'Karte 14' },
   ];
 
+  // ► NEU: Texte je Paar (Vorderseite)
+  const SERVICES_BY_PAIR = {
+    p1: {
+      title: 'CMS-Pflege & Betreuung',
+      desc:  'WordPress, TYPO3, Magnolia u. v. m. – modulare Inhalte, saubere Workflows, QA und wartbare Strukturen.'
+    },
+    p2: {
+      title: 'UX-Writing',
+      desc:  'Mikrocopy, States, Onboarding, Navigationssprache – klare Nutzerführung in passender Tonalität.'
+    },
+    p3: {
+      title: 'Website-Erstellung',
+      desc:  'Struktur, Text, visuelle Grammatik – vom Wireframe bis zur Seite. Lesbarkeit, Zugänglichkeit & Performance.'
+    },
+  };
+
   let first = null, second = null, lock = false, moves = 0, matched = 0;
 
+  // ► ANGEPAST: Rückseite = SVG, Vorderseite = Text
   function cardTpl(c){
     const btn = document.createElement('button');
     btn.className = 'mem-btn';
@@ -458,14 +483,18 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
     inner.className = 'mem-inner';
     btn.appendChild(inner);
 
+    // Rückseite: zeigt die jeweilige SVG
     const back = document.createElement('div');
     back.className = 'mem-face back';
+    back.style.backgroundImage = `url('${c.img}')`;
+    back.setAttribute('aria-label', c.alt);
     inner.appendChild(back);
 
+    // Vorderseite: Text (Leistung)
     const front = document.createElement('div');
     front.className = 'mem-face front';
-    front.style.backgroundImage = `url('${c.img}')`;
-    front.setAttribute('aria-label', c.alt);
+    const svc = SERVICES_BY_PAIR[c.pairId] || {title:'',desc:''};
+    front.innerHTML = `<h5>${svc.title}</h5><p>${svc.desc}</p>`;
     inner.appendChild(front);
 
     btn.addEventListener('click', ()=> flip(card, btn, c));
