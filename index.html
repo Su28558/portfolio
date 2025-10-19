@@ -86,12 +86,12 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 }
 @keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
 
-/* ===== MEMORY (max 1600 × 896; Karten 520 × 438; responsiv) ===== */
+/* ===== MEMORY (max 1600 × 896; Karten 520 × 438; min 90% Scale) ===== */
 .memory-wrap{
   background:#fff;
   overflow:auto;
-  /* skaliere das Board gleichmäßig runter, nie über 100% */
-  --m-scale: min(1, 100vw / 1600);
+  /* min 90% der Zielgröße, sonst 100% bzw. viewport-basiert */
+  --m-scale: clamp(0.9, 100vw / 1600, 1);
 }
 .memory-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 16px}
 .memory-title{font-family:Fraunces,serif;font-size:20px;margin:0}
