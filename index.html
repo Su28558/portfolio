@@ -13,9 +13,7 @@
   --headerH: 72px;
 
   /* Leistungen */
-  --LHeadH: 120px;         /* Höhe der sticky Leistungen-Headline (per JS gesetzt) */
-  --hstageH: 380px;        /* Höhe der Bühne */
-  --tileGap: 20px;         /* Spaltabstand */
+  --LHeadH: 120px;
 }
 
 /* Reset / Base */
@@ -75,13 +73,13 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
   background:#fff; border-bottom:1px solid #eee;
 }
 .leistungen-hero .wrap{
-  padding-top:12px;   /* vorher größer – reduziert */
-  padding-bottom:0;   /* Leerraum direkt darunter entfernt */
+  padding-top:12px;
+  padding-bottom:0;
 }
 .bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 4px}
 .headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0}
 
-/* Hand (wieder da) */
+/* Hand-Hinweis */
 .hand-wrap{
   position:sticky; top:calc(var(--headerH) - 20px);
   display:flex; justify-content:flex-end; z-index:6; pointer-events:none; margin-bottom:8px;
@@ -93,43 +91,54 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 }
 @keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
 
-/* Pin-Zone */
-.offerH{background:#fff;color:var(--ink)}
-.hstack{position:relative;height:240vh;background:#fff}
-.hstage{
-  position:sticky;
-  top: calc(var(--headerH) + var(--LHeadH));
-  height: var(--hstageH);
-  background:#fff;
-  border-bottom:1px solid #eee;
+/* ===== MEMORY ===== */
+.memory-wrap{background:#fff}
+.memory-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 16px}
+.memory-title{font-family:Fraunces,serif;font-size:20px;margin:0}
+.memory-ctrls{display:flex;align-items:center;gap:10px}
+.mem-stat{font-size:14px;color:#555}
+.mem-reset{border:2px solid #121212;background:#121212;color:#fff;border-radius:0;padding:8px 12px;cursor:pointer;font-weight:600}
+.mem-reset:hover{transform:translateY(-1px)}
+.memory-grid{
+  display:grid; gap:12px;
+  grid-template-columns:repeat(4, minmax(120px,1fr));
 }
-.hstage-inner{
-  position:relative; height:100%;
-  display:block; isolation:isolate;
-  box-shadow:0 10px 30px rgba(0,0,0,.06) inset;
+@media (max-width: 900px){
+  .memory-grid{grid-template-columns:repeat(2, minmax(120px,1fr))}
 }
-
-/* Kacheln – Spaltenlayout (Desktop) */
-.htile{
-  position:absolute; top:0;
-  width: clamp(260px, 30vw, 360px);
-  height: calc(var(--hstageH) - 2px);
-  border:2px solid #000; border-radius:0; background:#fff; color:#000;
-  padding:22px 20px; box-shadow:0 18px 36px rgba(0,0,0,.08);
-  transform:translateY(120%); /* initial unten außerhalb */
-  will-change: transform;
+.mem-card{
+  position:relative; aspect-ratio: 3/4; perspective: 900px;
 }
-.htile.alt{background:#000;color:#fff;border-color:#000}
-.htile h4{font-family:Fraunces,serif;font-size:clamp(20px,2.2vw,28px);margin:0 0 8px}
-.htile p{margin:0;max-width:60ch;font-size:15px;line-height:1.5}
-
-/* ===== MOBILE BEHAVIOR ===== */
-@media (max-width: 899.98px){
-  .hstack{height:auto}
-  .hstage{position:relative; top:auto; height:auto; border:none}
-  .hstage-inner{box-shadow:none}
-  .htile{position:static; width:100%; height:auto; transform:none; margin:0 0 16px; border-width:2px}
+.mem-btn{
+  appearance:none; -webkit-appearance:none;
+  border:none; padding:0; margin:0; width:100%; height:100%; cursor:pointer; background:transparent;
+  outline-offset:4px;
 }
+.mem-inner{
+  position:relative; width:100%; height:100%;
+  transform-style:preserve-3d; transition:transform .38s ease;
+}
+.mem-card.is-flipped .mem-inner{ transform:rotateY(180deg) }
+.mem-face{
+  position:absolute; inset:0; backface-visibility:hidden; border:2px solid #000; border-radius:6px;
+  box-shadow:0 14px 26px rgba(0,0,0,.06);
+  display:grid; place-items:center; padding:12px;
+}
+.mem-face.back{
+  background:#fff url('wimmelbild.svg') center/cover no-repeat;   /* <— dein Wimmelbild als Kartenrückseite */
+}
+.mem-face.front{
+  background:#fff; transform:rotateY(180deg);
+  color:#000; text-align:center;
+}
+.mem-face.front .label{
+  font-family:Inter,system-ui; font-weight:600; font-size:clamp(14px,1.6vw,18px); line-height:1.25;
+}
+.mem-card.is-matched .mem-face{
+  border-color: var(--scroll-ink);
+  box-shadow:0 0 0 2px var(--scroll-ink) inset, 0 10px 24px rgba(191,164,255,.25);
+}
+.mem-a11y{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 
 /* ===== ANSATZ – ACCORDION ===== */
 #ansatz{background:#fff;color:var(--ink)}
@@ -262,35 +271,25 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
       </div>
     </div>
 
-    <!-- Hand-Hinweis (wieder sichtbar) -->
+    <!-- Hand & MEMORY -->
     <div class="offerH">
       <div class="wrap">
         <div class="hand-wrap">
-          <img class="hand-hint" src="hand.png" alt="Hinweis: Hier gibt’s was zu sehen">
+          <img class="hand-hint" src="hand.png" alt="Hinweis: Spiel starten – finde Paare">
         </div>
 
-        <div class="hstack" id="hstack">
-          <div class="hstage" id="hstage">
-            <div class="hstage-inner" id="hstageInner">
-              <!-- Reihenfolge: CMS, UX-Writing, Website-Erstellung -->
-              <article class="htile" id="tile0">
-                <h4>CMS-Pflege & Betreuung</h4>
-                <p>WordPress, TYPO3, Magnolia u. v. m. – modulare Inhalte, saubere Workflows, Qualitätssicherung und langfristig wartbare Strukturen.</p>
-              </article>
-
-              <article class="htile alt" id="tile1">
-                <h4>UX-Writing</h4>
-                <p>Mikrocopy, Fehlertexte, Onboarding & Navigationssprache – klare Nutzerführung mit Tonalität, die zu Marke und Ziel passt.</p>
-              </article>
-
-              <article class="htile" id="tile2">
-                <h4>Website-Erstellung</h4>
-                <p>Struktur, Text, visuelles System: vom Wireframe bis zur fertigen Seite – lesbar, zugänglich, schnell.</p>
-              </article>
+        <div class="memory-wrap" id="memory">
+          <div class="memory-head">
+            <h3 class="memory-title">Finde die passenden Leistungen</h3>
+            <div class="memory-ctrls">
+              <span class="mem-stat"><strong>Züge:</strong> <span id="memMoves">0</span></span>
+              <button class="mem-reset" id="memReset" type="button">Neu mischen</button>
             </div>
           </div>
-        </div>
 
+          <div class="memory-grid" id="memoryGrid" aria-label="Memory Spielbereich"></div>
+          <div class="mem-a11y" aria-live="polite" id="memLive"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -389,7 +388,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   addEventListener('resize', update);
 })();
 
-/* Höhe der sticky Leistungen-Headline als CSS-Variable setzen */
+/* Höhe der sticky Leistungen-Headline als CSS-Variable setzen (falls benötigt) */
 (function(){
   const head = document.getElementById('leistungenHero');
   function setH(){
@@ -398,59 +397,128 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   setH(); addEventListener('resize', setH);
 })();
 
-/* LEISTUNGEN: Desktop – vertikales Einrasten (von unten hoch) */
+/* ===== MEMORY GAME (2x4) ===== */
 (function(){
-  const mql = window.matchMedia('(min-width: 900px)');
-  const hstack = document.getElementById('hstack');
-  const inner  = document.getElementById('hstageInner');
-  const tiles  = [document.getElementById('tile0'), document.getElementById('tile1'), document.getElementById('tile2')];
+  const grid = document.getElementById('memoryGrid');
+  const live = document.getElementById('memLive');
+  const movesEl = document.getElementById('memMoves');
+  const resetBtn = document.getElementById('memReset');
 
-  function layout(){
-    if(!mql.matches){ 
-      tiles.forEach(t=>{ t.style.left=''; t.style.transform=''; });
+  // Platzhalter-Paare – Inhalte können wir später tauschen/erweitern
+  const PAIRS = [
+    {id:'cms', label:'CMS-Pflege'},
+    {id:'ux',  label:'UX-Writing'},
+    {id:'web', label:'Website'},
+    {id:'seo', label:'SEO'}
+  ]; // => 4 Paare → 8 Karten (2x4)
+
+  let deck = [];
+  let first = null, second = null, lock = false, moves = 0, matched = 0;
+
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function buildDeck(){
+    let idCounter = 0;
+    deck = shuffle(
+      PAIRS.flatMap(p => ([
+        { uid: ++idCounter, pairId: p.id, label: p.label },
+        { uid: ++idCounter, pairId: p.id, label: p.label },
+      ]))
+    );
+  }
+
+  function cardTpl(c){
+    const btn = document.createElement('button');
+    btn.className = 'mem-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Karte umdrehen');
+    btn.dataset.uid = c.uid;
+    btn.dataset.pair = c.pairId;
+
+    const card = document.createElement('div');
+    card.className = 'mem-card';
+    card.appendChild(btn);
+
+    const inner = document.createElement('div');
+    inner.className = 'mem-inner';
+    btn.appendChild(inner);
+
+    const back = document.createElement('div');
+    back.className = 'mem-face back';
+    inner.appendChild(back);
+
+    const front = document.createElement('div');
+    front.className = 'mem-face front';
+    front.innerHTML = `<span class="label">${c.label}</span>`;
+    inner.appendChild(front);
+
+    btn.addEventListener('click', ()=> flip(card, btn, c));
+    btn.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); btn.click(); }
+    });
+
+    return card;
+  }
+
+  function render(){
+    grid.innerHTML = '';
+    buildDeck();
+    deck.forEach(c => grid.appendChild(cardTpl(c)));
+    moves = 0; matched = 0; first = second = null; lock = false;
+    movesEl.textContent = '0';
+    live.textContent = 'Neues Spiel – 4 Paare.';
+  }
+
+  function flip(card, btn, c){
+    if(lock) return;
+    if(card.classList.contains('is-flipped')) return;
+    card.classList.add('is-flipped');
+
+    if(!first){
+      first = {card, btn, data:c};
       return;
     }
-    const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tileGap')) || 20;
-    const tileW = tiles[0].getBoundingClientRect().width;
+    if(first && !second){
+      second = {card, btn, data:c};
+      moves++; movesEl.textContent = String(moves);
+      lock = true;
 
-    tiles.forEach((t, i) => {
-      const left = i * (tileW + gap);
-      t.style.left = left + 'px';
-      t.dataset.startY  = inner.getBoundingClientRect().height * 0.9 + 80;
-      t.dataset.targetY = 0;
-      t.style.transform = `translateY(${t.dataset.startY}px)`;
-    });
+      if(first.data.pairId === second.data.pairId){
+        // Treffer
+        setTimeout(()=>{
+          first.card.classList.add('is-matched');
+          second.card.classList.add('is-matched');
+          first.btn.setAttribute('aria-disabled','true');
+          second.btn.setAttribute('aria-disabled','true');
+          matched++;
+          live.textContent = `Treffer: ${first.data.label}. ${matched===PAIRS.length ? 'Alle Paare gefunden!' : 'Weiter so.'}`;
+          first = second = null; lock = false;
 
-    inner.style.minWidth = (tileW*tiles.length + gap*(tiles.length-1)) + 'px';
+          if(matched === PAIRS.length){
+            // kleines Finish
+            grid.animate([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:500});
+          }
+        }, 320);
+      }else{
+        // Kein Treffer
+        setTimeout(()=>{
+          first.card.classList.remove('is-flipped');
+          second.card.classList.remove('is-flipped');
+          live.textContent = `Kein Treffer. Versuche es erneut.`;
+          first = second = null; lock = false;
+        }, 700);
+      }
+    }
   }
 
-  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-  function easeOut(t){ return 1 - Math.pow(1-t, 3); }
-
-  function onScroll(){
-    if(!mql.matches) return;
-    const rect = hstack.getBoundingClientRect();
-    const total = Math.max(hstack.offsetHeight - innerHeight, 1);
-    const passed = clamp(-rect.top, 0, total);
-    const p = passed / total;
-
-    tiles.forEach((t, i) => {
-      const segStart = i / tiles.length;
-      const segEnd   = (i+1) / tiles.length;
-      const local    = clamp((p - segStart) / (segEnd - segStart), 0, 1);
-      const e        = easeOut(local);
-
-      const startY = parseFloat(t.dataset.startY || '0');
-      const targetY= parseFloat(t.dataset.targetY || '0');
-      const y = startY + (targetY - startY) * e;
-
-      t.style.transform = `translateY(${y}px)`;
-    });
-  }
-
-  layout(); onScroll();
-  addEventListener('resize', ()=>{ layout(); onScroll(); });
-  addEventListener('scroll', onScroll, {passive:true});
+  resetBtn.addEventListener('click', render);
+  render();
 })();
 
 /* 🔥 Klick-Animation (Feuerball fliegt langsam/fallend zum Kontakt) */
