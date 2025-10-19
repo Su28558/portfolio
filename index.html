@@ -109,11 +109,21 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
   box-shadow:0 14px 26px rgba(0,0,0,.06);
   display:grid; place-items:center; padding:12px;
 }
+/* Rückseite: zeigt die neuen SVGs (je Karte individuell) */
 .mem-face.back{
-  background:#fff url('wimmelbild.svg') center/cover no-repeat;
+  background:#fff center/contain no-repeat;
 }
+/* Vorderseite: Textseite (Leistungen) */
 .mem-face.front{
-  background:#fff center/contain no-repeat; transform:rotateY(180deg);
+  background:#fff; transform:rotateY(180deg);
+  text-align:left; color:#121212;
+  padding:16px 14px; display:flex; flex-direction:column; justify-content:center; gap:8px;
+}
+.mem-face.front h5{
+  font-family:Fraunces,serif; font-size:clamp(16px,1.8vw,20px); margin:0;
+}
+.mem-face.front p{
+  margin:0; font-size:14px; line-height:1.5; color:#333;
 }
 .mem-card.is-matched .mem-face{
   border-color: var(--scroll-ink);
@@ -395,7 +405,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   const h1 = document.getElementById('headline');
   const hero = document.getElementById('hero');
 
-  const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>/gi,'\n');
+  const raw=h1.innerHTML.replace(/\n/g,' ').replace(/<br\s*\/?>(?i)/gi,'\n');
   h1.innerHTML=raw.split('').map(ch=>ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`).join('');
   const chars=[...h1.querySelectorAll('.char')];
 
@@ -428,16 +438,31 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
   const movesEl = document.getElementById('memMoves');
   const resetBtn = document.getElementById('memReset');
 
-  // Drei Paare: 9↔12, 10↔13, 11↔14
-  // Feste Anordnung: Oben: 9,10,11 · Unten: 12,13,14
+  // Drei Paare: 9↔12, 10↔13, 11↔14 (fixe Anordnung)
   const DECK_FIXED = [
-    { uid:1, pairId:'p1', img:'9.svg',  alt:'Karte 9'  },
-    { uid:2, pairId:'p2', img:'10.svg', alt:'Karte 10' },
-    { uid:3, pairId:'p3', img:'11.svg', alt:'Karte 11' },
-    { uid:4, pairId:'p1', img:'12.svg', alt:'Karte 12' },
-    { uid:5, pairId:'p2', img:'13.svg', alt:'Karte 13' },
-    { uid:6, pairId:'p3', img:'14.svg', alt:'Karte 14' },
+    { uid:1, pairId:'p1', img:'9.svg',  alt:'Kartenrückseite 9'  },
+    { uid:2, pairId:'p2', img:'10.svg', alt:'Kartenrückseite 10' },
+    { uid:3, pairId:'p3', img:'11.svg', alt:'Kartenrückseite 11' },
+    { uid:4, pairId:'p1', img:'12.svg', alt:'Kartenrückseite 12' },
+    { uid:5, pairId:'p2', img:'13.svg', alt:'Kartenrückseite 13' },
+    { uid:6, pairId:'p3', img:'14.svg', alt:'Kartenrückseite 14' },
   ];
+
+  // Text, der auf der VORDERSEITE (nach dem Umdrehen) stehen soll – identisch je Paar
+  const SERVICES_BY_PAIR = {
+    p1: {
+      title: 'CMS-Pflege & Betreuung',
+      desc:  'WordPress, TYPO3, Magnolia u. v. m. – modulare Inhalte, saubere Workflows, QA und langfristig wartbare Strukturen.'
+    },
+    p2: {
+      title: 'UX-Writing',
+      desc:  'Mikrocopy, States, Onboarding, Navigationssprache – klare Nutzerführung mit Tonalität, die zu Marke und Ziel passt.'
+    },
+    p3: {
+      title: 'Website-Erstellung',
+      desc:  'Struktur, Text, visuelle Grammatik – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Zugänglichkeit & Performance.'
+    },
+  };
 
   let first = null, second = null, lock = false, moves = 0, matched = 0;
 
@@ -457,16 +482,21 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
     inner.className = 'mem-inner';
     btn.appendChild(inner);
 
+    // Rückseite: zeigt die jeweilige SVG
     const back = document.createElement('div');
     back.className = 'mem-face back';
+    back.style.backgroundImage = `url('${c.img}')`;
+    back.setAttribute('aria-label', c.alt);
     inner.appendChild(back);
 
+    // Vorderseite: Text (Leistung)
     const front = document.createElement('div');
     front.className = 'mem-face front';
-    front.style.backgroundImage = `url('${c.img}')`;
-    front.setAttribute('aria-label', c.alt);
+    const svc = SERVICES_BY_PAIR[c.pairId] || {title:'',desc:''};
+    front.innerHTML = `<h5>${svc.title}</h5><p>${svc.desc}</p>`;
     inner.appendChild(front);
 
+    // Interaktion
     btn.addEventListener('click', ()=> flip(card, btn, c));
     btn.addEventListener('keydown', (e)=>{
       if(e.key==='Enter' || e.key===' '){ e.preventDefault(); btn.click(); }
@@ -498,7 +528,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
       lock = true;
 
       if(first.data.pairId === second.data.pairId){
-        // Treffer
         setTimeout(()=>{
           first.card.classList.add('is-matched');
           second.card.classList.add('is-matched');
@@ -513,7 +542,6 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{
           }
         }, 300);
       }else{
-        // Kein Treffer
         setTimeout(()=>{
           first.card.classList.remove('is-flipped');
           second.card.classList.remove('is-flipped');
