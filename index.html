@@ -86,13 +86,14 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 }
 @keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
 
-/* ===== MEMORY (fix 1600 × 896; Karten 520 × 438) ===== */
-.offerH .wrap{max-width:none} /* Memory darf breiter als 1180px sein */
+/* ===== MEMORY (mobile-first, responsive) ===== */
+.offerH .wrap{max-width:none}
+
 .memory-wrap{
   background:#fff;
-  overflow:auto;                 /* horizontaler Scroll nur hier */
-  padding-inline:16px;           /* etwas Weißraum links/rechts */
+  padding-inline:16px;
 }
+
 .memory-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 16px}
 .memory-title{font-family:Fraunces,serif;font-size:20px;margin:0}
 .memory-ctrls{display:flex;align-items:center;gap:10px}
@@ -100,43 +101,62 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .mem-reset{border:2px solid #121212;background:#121212;color:#fff;border-radius:0;padding:8px 12px;cursor:pointer;font-weight:600}
 .mem-reset:hover{transform:translateY(-1px)}
 
+/* Grid bricht automatisch 1 → 2 → 3 Spalten */
 .memory-grid{
+  --gap: clamp(10px, 2vw, 20px);
+
   display:grid;
-  grid-template-columns:repeat(3, 520px);
-  grid-auto-rows:438px;
-  column-gap:20px;
-  row-gap:20px;
-  width:1600px;
-  height:896px;
-  margin:0 auto;                 /* in großen Viewports zentrieren */
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  max-width: min(1180px, 100vw - 32px);
+  margin-inline:auto;
 }
 
-.mem-card{ position:relative; width:520px; height:438px; perspective:900px; }
+/* Karte füllt die Spalte und hält das 520×438-Verhältnis */
+.mem-card{
+  position:relative;
+  width:100%;
+  aspect-ratio: 520 / 438;
+  perspective:900px;
+}
+
 .mem-btn{
   appearance:none; border:none; padding:0; margin:0; width:100%; height:100%; cursor:pointer; background:transparent;
   outline-offset:4px;
 }
+
 .mem-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .38s ease; }
 .mem-card.is-flipped .mem-inner{ transform:rotateY(180deg) }
+
 .mem-face{
   position:absolute; inset:0; backface-visibility:hidden; border:none; border-radius:10px;
   box-shadow:0 10px 24px rgba(0,0,0,.08);
-  display:grid; place-items:center; padding:16px;  /* etwas Weißraum */
+  display:grid; place-items:center; padding: clamp(10px, 2.5vw, 20px);
 }
-/* Rückseite zeigt deine SVGs */
+
 .mem-face.back{ background:#fff center/contain no-repeat; }
-/* Vorderseite: Textseite */
 .mem-face.front{
-  background:#fff; transform:rotateY(180deg);
-  text-align:left; color:#121212;
-  display:flex; flex-direction:column; justify-content:center; gap:10px;
+  background:#fff; transform:rotateY(180deg); text-align:left; color:#121212;
+  display:flex; flex-direction:column; justify-content:center; gap: clamp(6px, 1.2vw, 12px);
 }
-.mem-face.front h5{ font-family:Fraunces,serif; font-size:20px; margin:0; }
-.mem-face.front p{ margin:0; font-size:14px; line-height:1.5; color:#333; }
+
+.mem-face.front h5{
+  font-family:Fraunces,serif;
+  font-size: clamp(16px, 2.6vw, 20px);
+  margin:0;
+}
+.mem-face.front p{
+  margin:0;
+  font-size: clamp(13px, 2.2vw, 14px);
+  line-height:1.5; color:#333;
+}
+
 .mem-card.is-matched .mem-face{
   box-shadow:0 0 0 2px var(--scroll-ink) inset, 0 10px 24px rgba(191,164,255,.25);
 }
+
 .mem-a11y{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
 
 /* ===== LEISTUNGEN – klassisch ===== */
 #leistungen-plain{background:#fff;color:var(--ink)}
