@@ -1,158 +1,633 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Feuerball Animation + Trail</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Denice-Su Cronauer – Online-Redaktion & Webgestaltung</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fraunces:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-    body {
-        height: 2000px;
-        margin: 0;
-        background: #111;
-        color: white;
-        font-family: sans-serif;
-        padding-top: 100px;
-        text-align: center;
-    }
+:root{
+  --bg:#0b0b0b; --fg:#f2f2f2; --muted:#a7a7a7; --line:#e6e6e6;
+  --ink:#121212;
+  --scroll-ink:#BFA4FF; --accent:#C09B6B;
+  --headerH: 72px;
+  --LHeadH: 120px;
+}
 
-    #fireball {
-        width: 120px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-        filter: drop-shadow(0 0 10px #ffae00);
-        position: relative;
-        z-index: 10;
-    }
+/* Reset / Base */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:var(--bg);overflow-x:hidden}
+a{color:inherit;text-decoration:none;text-underline-offset:.22em}
+.wrap{max-width:1180px;margin:auto;padding:0 clamp(16px,3vw,24px)}
+section{padding:48px 0;border-bottom:1px solid var(--line)}
 
-    #fireball:hover {
-        transform: scale(1.05);
-    }
+/* Header */
+header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(11,11,11,.7); backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(255,255,255,.08)
+}
+.headrow{display:flex;justify-content:space-between;align-items:center;height:var(--headerH)}
+.brand-wrap{display:flex;align-items:center;gap:10px}
+.brand-badge{width:28px;height:28px;border-radius:50%;object-fit:cover;display:block}
+.brand{font-family:Fraunces,serif;font-weight:700;font-size:20px}
+.nav-toggle-img{width:40px;height:auto;cursor:pointer}
+.nav-panel{display:none;border-bottom:1px solid rgba(255,255,255,.08)}
+.nav-panel.open{display:block}
+.nav-menu{display:flex;gap:8px;padding:8px 0;flex-wrap:wrap}
+.nav-menu a{padding:8px 12px;border-radius:6px}
+.nav-menu a:hover{background:rgba(255,255,255,.06)}
 
-    /* Trail-Partikel */
-    .trail {
-        position: absolute;
-        width: 80px;
-        opacity: 0.8;
-        pointer-events: none;
-        filter: drop-shadow(0 0 15px #ff4d00) blur(3px);
-        transform: translate(-50%, -50%);
-        animation: fadeOut 0.4s linear forwards;
-    }
+/* ===== HERO ===== */
+.hero{position:relative;height:180vh;padding:0;border-bottom:none}
+.hero-pin{position:sticky;top:calc(var(--headerH) + 12px);z-index:4;padding:84px 0 56px;background:var(--bg)}
+.eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-size:12px}
+h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-height:1.05;margin:.2em 0}
+.display .char{transition:color .12s ease}
+.display .char.is-colored{color:var(--scroll-ink)}
+.lead{color:var(--muted);max-width:60ch}
+.cta-inline{display:flex;align-items:center;gap:12px;margin-top:20px}
+.fire-icon{width:44px;cursor:pointer;animation:wobble 2.2s ease-in-out infinite}
+@keyframes wobble{0%,100%{transform:rotate(0)}50%{transform:rotate(6deg)}}
 
-    @keyframes fadeOut {
-        0%   { opacity: 0.8; transform: scale(1) translate(-50%, -50%); }
-        100% { opacity: 0; transform: scale(0.5) translate(-50%, -50%); }
-    }
+/* ===== LAUFBANNER ===== */
+.marquee-wrap{background:#fff;color:#000;border-top:1px solid #ddd;border-bottom:1px solid #ddd}
+.marquee{white-space:nowrap;overflow:hidden}
+.track{
+  display:inline-block;padding-block:clamp(0px,0.5vw,4px);line-height:1.02;
+  font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(32px,9vw,96px);
+  letter-spacing:.04em;color:#000;animation:scroll-left 32s linear infinite;
+  text-transform:uppercase;
+}
+.track span{margin:0 1.2em}
+.marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
+@keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-    /* Zielbereich zum Scrollen */
-    #ziel {
-        margin-top: 800px;
-        padding: 80px;
-        background: #222;
-        border-radius: 10px;
-    }
+/* ===== LEISTUNGEN (weiß) ===== */
+#leistungen{padding-top:0;border-bottom:none;background:#fff;color:var(--ink)}
+.leistungen-hero{
+  position:sticky; top:var(--headerH); z-index:5;
+  background:#fff; border-bottom:1px solid #eee;
+}
+.leistungen-hero .wrap{padding-top:12px;padding-bottom:0}
+.bigcaps{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 4px}
+.headline-large{font-family:Fraunces,serif;font-size:clamp(28px,3.2vw,40px);margin:0}
+
+/* Hand-Hinweis */
+.hand-wrap{
+  position:sticky; top:calc(var(--headerH) - 20px);
+  display:flex; justify-content:flex-end; z-index:6; pointer-events:none; margin-bottom:8px;
+}
+.hand-hint{
+  width: clamp(160px, 20vw, 280px);
+  height:auto; filter:drop-shadow(0 6px 18px rgba(0,0,0,.2));
+  animation:handWiggle 2.4s ease-in-out infinite; pointer-events:none;
+}
+@keyframes handWiggle{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-6px) rotate(-6deg)}60%{transform:translateY(3px) rotate(4deg)}}
+
+/* ===== MEMORY (mobile-first, responsive) ===== */
+.offerH .wrap{max-width:none}
+
+.memory-wrap{
+  background:#fff;
+  padding-inline:16px;
+}
+
+.memory-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:8px 0 16px}
+.memory-title{font-family:Fraunces,serif;font-size:20px;margin:0}
+.memory-ctrls{display:flex;align-items:center;gap:10px}
+.mem-stat{font-size:14px;color:#555}
+.mem-reset{border:2px solid #121212;background:#121212;color:#fff;border-radius:0;padding:8px 12px;cursor:pointer;font-weight:600}
+.mem-reset:hover{transform:translateY(-1px)}
+
+/* Grid bricht automatisch 1 → 2 → 3 Spalten */
+.memory-grid{
+  --gap: clamp(10px, 2vw, 20px);
+
+  display:grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  max-width: min(1180px, 100vw - 32px);
+  margin-inline:auto;
+}
+
+/* Karte füllt die Spalte und hält das 520×438-Verhältnis */
+.mem-card{
+  position:relative;
+  width:100%;
+  aspect-ratio: 520 / 438;
+  perspective:900px;
+}
+
+.mem-btn{
+  appearance:none; border:none; padding:0; margin:0; width:100%; height:100%; cursor:pointer; background:transparent;
+  outline-offset:4px;
+}
+
+.mem-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .38s ease; }
+.mem-card.is-flipped .mem-inner{ transform:rotateY(180deg) }
+
+.mem-face{
+  position:absolute; inset:0; backface-visibility:hidden; border:none; border-radius:10px;
+  box-shadow:0 10px 24px rgba(0,0,0,.08);
+  display:grid; place-items:center; padding: clamp(10px, 2.5vw, 20px);
+}
+
+.mem-face.back{ background:#fff center/contain no-repeat; }
+.mem-face.front{
+  background:#fff; transform:rotateY(180deg); text-align:left; color:#121212;
+  display:flex; flex-direction:column; justify-content:center; gap: clamp(6px, 1.2vw, 12px);
+}
+
+.mem-face.front h5{
+  font-family:Fraunces,serif;
+  font-size: clamp(16px, 2.6vw, 20px);
+  margin:0;
+}
+.mem-face.front p{
+  margin:0;
+  font-size: clamp(13px, 2.2vw, 14px);
+  line-height:1.5; color:#333;
+}
+
+.mem-card.is-matched .mem-face{
+  box-shadow:0 0 0 2px var(--scroll-ink) inset, 0 10px 24px rgba(191,164,255,.25);
+}
+
+.mem-a11y{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+
+/* ===== LEISTUNGEN – klassisch ===== */
+#leistungen-plain{background:#fff;color:var(--ink)}
+.lp-hero{position:sticky; top:var(--headerH); z-index:4; background:#fff; border-bottom:1px solid #eee;}
+.lp-hero .wrap{padding-top:16px;padding-bottom:10px}
+.lp-hero .kicker{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 6px}
+.lp-hero h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:0}
+.lp-rail{position:relative}
+.lp-tile{
+  position:sticky; top:calc(var(--headerH) + 72px);
+  background:#fff;color:#000;border:2px solid #000;border-radius:0;padding:22px 20px;
+  box-shadow:0 18px 36px rgba(0,0,0,.06); margin:0 0 26vh;
+}
+.lp-tile h4{font-family:Fraunces,serif;font-size:clamp(20px,2.2vw,28px);margin:0 0 8px}
+.lp-tile p{margin:0;max-width:62ch}
+
+/* ===== ANSATZ ===== */
+#ansatz{background:#fff;color:var(--ink)}
+.accordion{display:grid;gap:10px}
+details.ac{border:1px solid #eee;border-radius:8px;background:#fff;overflow:hidden}
+details.ac[open]{box-shadow:0 8px 28px rgba(0,0,0,.06)}
+details.ac summary{
+  list-style:none; cursor:pointer; padding:16px 18px; position:relative;
+  font-family:Fraunces,serif; font-size:clamp(18px,1.6vw,22px);
+}
+details.ac summary::-webkit-details-marker{display:none}
+details.ac summary::after{
+  content:"＋"; position:absolute; right:16px; top:16px; font-family:Inter,system-ui;
+  transition:transform .2s ease;
+}
+details.ac[open] summary::after{content:"–"; transform:scale(1.05)}
+.ac-body{padding:0 18px 16px 18px; color:#333; line-height:1.6}
+
+/* KONTAKT */
+#kontakt{background:#fff;color:var(--ink);margin-top:0;padding-top:56px;border-bottom:none}
+.contact-hero{position:relative;min-height:360px;display:grid;align-items:center}
+@media(min-width:900px){ .contact-hero{min-height:420px} }
+.contact-media{position:absolute;inset:0;overflow:hidden;z-index:0}
+.contact-media img{
+  position:absolute; left:-6vw; top:50%; transform:translateY(-50%);
+  width:100%; height:100%; max-height:420px; object-fit:cover; object-position:left center;
+  filter:contrast(1.02) saturate(1.02) brightness(0.98);
+}
+.contact-card{
+  position:relative; z-index:1; background:rgba(255,255,255,.96);
+  border:2px solid #121212; border-radius:0; padding:24px 20px; box-shadow:0 20px 46px rgba(0,0,0,.08);
+  max-width:560px; margin-left:auto; margin-right:clamp(16px,4vw,40px);
+}
+.contact-card h3{font-family:Fraunces,serif;font-size:clamp(22px,2.6vw,34px);margin:0 0 14px}
+.form{display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field label{font-size:14px;color:#333}
+.field input,.field textarea{border:2px solid #121212;border-radius:0;background:#fff;color:#121212;padding:12px 10px;font:inherit}
+.field textarea{min-height:120px;resize:vertical}
+.submit-btn{border:2px solid #121212;background:#121212;color:#fff;border-radius:0;padding:12px 16px;cursor:pointer;font-weight:600;transition:transform .15s ease}
+.submit-btn:hover{transform:translateY(-2px)}
+
+footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#fff}
+
+/* Feuerball */
+.fireball-flying{position:fixed;width:56px;z-index:50;pointer-events:none;animation:spin 1.4s linear infinite;filter:drop-shadow(0 8px 22px rgba(191,164,255,.42))}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.fb-spark{position:fixed;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0));pointer-events:none;z-index:49;animation:fbSpark .8s ease-out forwards}
+@keyframes fbSpark{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(.3)}}
 </style>
 </head>
 
 <body>
+<header>
+  <div class="wrap headrow">
+    <div class="brand-wrap">
+      <img class="brand-badge" src="ich.png" alt="Ich" />
+      <a class="brand" href="#">Denice-Su Cronauer</a>
+    </div>
+    <img id="navToggleImg" class="nav-toggle-img" src="menue1.png" alt="Menü">
+  </div>
+  <div class="nav-panel" id="navPanel">
+    <div class="wrap">
+      <nav class="nav-menu">
+        <a href="#leistungen">Leistungen</a>
+        <a href="#leistungen-plain">Kurz erklärt</a>
+        <a href="#ansatz">Ansatz</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </div>
+  </div>
+</header>
 
-<h1>🔥 Klick auf den Feuerball</h1>
+<main>
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-pin">
+      <div class="wrap">
+        <div class="eyebrow">Online-Redaktion & Webgestaltung</div>
+        <h1 class="display" id="headline">Inhalte<br>mit Struktur.<br>Websites<br>mit Haltung.</h1>
+        <p class="lead">Ich arbeite als Online-Redakteurin und Content Managerin – und gestalte als Freelancerin Websites, die Klarheit schaffen.</p>
+        <div class="cta-inline">
+          <span class="label">Zum Kontaktformular</span>
+          <img id="fireBtn" class="fire-icon" src="feuer.png" alt="Feuerball">
+        </div>
+      </div>
+    </div>
+  </section>
 
-<img id="fireball" src="https://upload.wikimedia.org/wikipedia/commons/5/57/Fireball_red.png" alt="Feuerball">
+  <!-- LAUFBANNER -->
+  <section class="marquee-wrap" aria-label="Kompetenzen">
+    <div class="marquee" id="marquee" tabindex="0">
+      <div class="track" aria-hidden="true">
+        <span>CONTENT & UX-WRITING</span> ·
+        <span>CMS & REDAKTIONSSYSTEME</span> ·
+        <span>DESIGN & STRUKTUR</span> ·
+        <span>WORDPRESS & CO.</span> ·
+        <span>CONTENT & UX-WRITING</span> ·
+        <span>CMS & REDAKTIONSSYSTEME</span> ·
+        <span>DESIGN & STRUKTUR</span> ·
+        <span>WORDPRESS & CO.</span>
+      </div>
+      <div class="track" aria-hidden="true">
+        <span>CONTENT & UX-WRITING</span> ·
+        <span>CMS & REDAKTIONSSYSTEME</span> ·
+        <span>DESIGN & STRUKTUR</span> ·
+        <span>WORDPRESS & CO.</span> ·
+        <span>CONTENT & UX-WRITING</span> ·
+        <span>CMS & REDAKTIONSSYSTEME</span> ·
+        <span>DESIGN & STRUKTUR</span> ·
+        <span>WORDPRESS & CO.</span>
+      </div>
+    </div>
+  </section>
 
-<div id="ziel">
-    <h2>Zielbereich</h2>
-    <p>Hier scrollt der Feuerball hin.</p>
-</div>
+  <!-- LEISTUNGEN (Memory) -->
+  <section id="leistungen">
+    <div class="leistungen-hero" id="leistungenHero">
+      <div class="wrap">
+        <div class="bigcaps">LEISTUNGEN</div>
+        <h2 class="headline-large">Was ich anbiete</h2>
+      </div>
+    </div>
+
+    <div class="offerH">
+      <div class="wrap">
+        <div class="hand-wrap">
+          <img class="hand-hint" src="hand.png" alt="Hinweis: Spiel starten – finde Paare">
+        </div>
+
+        <div class="memory-wrap" id="memory">
+          <div class="memory-head">
+            <h3 class="memory-title">Finde die passenden Leistungen</h3>
+            <div class="memory-ctrls">
+              <span class="mem-stat"><strong>Züge:</strong> <span id="memMoves">0</span></span>
+              <button class="mem-reset" id="memReset" type="button">Zurücksetzen</button>
+            </div>
+          </div>
+
+          <div class="memory-grid" id="memoryGrid" aria-label="Memory Spielbereich"></div>
+          <div class="mem-a11y" aria-live="polite" id="memLive"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEISTUNGEN – klassisch erklärt (sticky + stack) -->
+  <section id="leistungen-plain">
+    <div class="lp-hero">
+      <div class="wrap">
+        <div class="kicker">LEISTUNGEN</div>
+        <h3>Kurz erklärt (ohne Spiel)</h3>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="lp-rail">
+        <article class="lp-tile">
+          <h4>CMS-Pflege & Betreuung</h4>
+          <p>WordPress, TYPO3, Magnolia u. v. m. – modulare Inhalte, saubere Workflows, QA und langfristig wartbare Strukturen.</p>
+        </article>
+        <article class="lp-tile">
+          <h4>UX-Writing</h4>
+          <p>Mikrocopy, States, Onboarding, Navigationssprache – klare Nutzerführung mit Tonalität, die zu Marke und Ziel passt.</p>
+        </article>
+        <article class="lp-tile">
+          <h4>Website-Erstellung</h4>
+          <p>Struktur, Text, visuelle Grammatik – vom Wireframe bis zur fertigen Seite. Fokus auf Lesbarkeit, Zugänglichkeit & Performance.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANSATZ – Accordion -->
+  <section id="ansatz">
+    <div class="wrap">
+      <h2 class="kicker" style="font-family:Fraunces,serif;margin:0 0 8px">Ansatz</h2>
+      <h3 class="section" style="font-family:Fraunces,serif;margin:0 0 16px">Wie ich arbeite</h3>
+
+      <div class="accordion">
+        <details class="ac" open>
+          <summary>01 · Denken in Inhalt</summary>
+          <div class="ac-body">
+            Text ist kein Füllstoff. Ich beginne jedes Projekt mit Struktur und Tonalität, bevor Gestaltung passiert.
+          </div>
+        </details>
+
+        <details class="ac">
+          <summary>02 · Gestaltung als Sprache</summary>
+          <div class="ac-body">
+            Design ist für mich visuelle Grammatik: Hierarchie, Weißraum, Rhythmus – alles führt durch die Inhalte.
+          </div>
+        </details>
+
+        <details class="ac">
+          <summary>03 · Technik als Werkzeug</summary>
+          <div class="ac-body">
+            Code ist kein Selbstzweck. Ich setze ihn ein, um Inhalte präzise, zugänglich und performant umzusetzen.
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section id="kontakt">
+    <div class="contact-hero">
+      <div class="contact-media" aria-hidden="true">
+        <img src="telefon.png" alt="">
+      </div>
+      <div class="wrap">
+        <div class="contact-card">
+          <h3>Kontaktformular</h3>
+          <form class="form" onsubmit="event.preventDefault(); window.location='mailto:denice@mailadresse.de?subject=Anfrage%20Website&body='+encodeURIComponent(document.getElementById('msg').value);">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="email">E-Mail</label>
+              <input id="email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="msg">Nachricht</label>
+              <textarea id="msg" name="message" placeholder="Kurz: Ziele, Umfang, Timing …"></textarea>
+            </div>
+            <button class="submit-btn" type="submit">Senden</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">© <span id="y"></span> Denice-Su Cronauer</div></footer>
 
 <script>
-(function() {
-    const img = document.getElementById("fireball");
-    let animating = false;
+/* Jahr im Footer */
+document.getElementById('y').textContent=new Date().getFullYear();
 
-    /** Sanftes Scrollen */
-    function smoothScrollTo(targetY, duration = 1200) {
-        const startY = window.pageYOffset;
-        const distance = targetY - startY;
-        let startTime = null;
+/* Menü via PNG (menue1.png) */
+document.getElementById('navToggleImg').addEventListener('click',()=>{
+  document.getElementById('navPanel').classList.toggle('open');
+});
 
-        function animationFrame(now) {
-            if (!startTime) startTime = now;
-            const progress = now - startTime;
-            const percent = Math.min(progress / duration, 1);
+/* H1-Buchstaben färben beim Hero-Scroll */
+(function(){
+  const h1 = document.getElementById('headline');
+  const hero = document.getElementById('hero');
 
-            window.scrollTo(0, startY + distance * percent);
+  const raw = h1.innerHTML
+    .replace(/\n/g,' ')
+    .replace(/<br\s*\/?>/gi,'\n');
 
-            if (progress < duration) {
-                requestAnimationFrame(animationFrame);
-            }
-        }
+  h1.innerHTML = raw.split('')
+    .map(ch => ch===' ' ? '<span class="char">&nbsp;</span>' : ch==='\n' ? '<br>' : `<span class="char">${ch}</span>`)
+    .join('');
 
-        requestAnimationFrame(animationFrame);
-    }
+  const chars=[...h1.querySelectorAll('.char')];
 
-    /** Erstellt Funken-Trail */
-    function createTrailParticle(x, y) {
-        const particle = document.createElement("img");
-        particle.src = img.src;
-        particle.classList.add("trail");
-        particle.style.left = x + "px";
-        particle.style.top = y + "px";
+  function update(){
+    const r=hero.getBoundingClientRect();
+    const total = Math.max(r.height - innerHeight, 1);
+    const scrolled = Math.min(Math.max(-r.top, 0), total);
+    const progress = scrolled / total;
+    const count = Math.floor(chars.length * progress);
+    chars.forEach((c,i)=>c.classList.toggle('is-colored', i < count));
+  }
+  update();
+  addEventListener('scroll', update, {passive:true});
+  addEventListener('resize', update);
+})();
 
-        document.body.appendChild(particle);
+/* Höhe der sticky Leistungen-Headline als CSS-Variable setzen */
+(function(){
+  const head = document.getElementById('leistungenHero');
+  function setH(){
+    document.documentElement.style.setProperty('--LHeadH', head.offsetHeight+'px');
+  }
+  setH(); addEventListener('resize', setH);
+})();
 
-        setTimeout(() => particle.remove(), 400);
-    }
+/* ===== MEMORY GAME (6 Karten, feste Anordnung 3x2) ===== */
+(function(){
+  const grid = document.getElementById('memoryGrid');
+  const live = document.getElementById('memLive');
+  const movesEl = document.getElementById('memMoves');
+  const resetBtn = document.getElementById('memReset');
 
-    /** Feuerball fliegt + erzeugt Trail */
-    function flyOnce() {
-        if (animating) return;
-        animating = true;
+  // Drei Paare: 15↔18, 16↔19, 17↔20
+  // Feste Anordnung: Oben: 15,16,17 · Unten: 18,19,20
+  const DECK_FIXED = [
+    { uid:1, pairId:'p1', img:'15.svg', alt:'Karte 15' },
+    { uid:2, pairId:'p2', img:'16.svg', alt:'Karte 16' },
+    { uid:3, pairId:'p3', img:'17.svg', alt:'Karte 17' },
+    { uid:4, pairId:'p1', img:'18.svg', alt:'Karte 18' },
+    { uid:5, pairId:'p2', img:'19.svg', alt:'Karte 19' },
+    { uid:6, pairId:'p3', img:'20.svg', alt:'Karte 20' },
+  ];
 
-        const startX = img.getBoundingClientRect().left + window.scrollX;
-        const startY = img.getBoundingClientRect().top + window.scrollY;
-        const endX = startX + 600;  
+  // Texte je Paar (Vorderseite)
+  const SERVICES_BY_PAIR = {
+    p1: { title: 'CMS-Pflege & Betreuung', desc: 'WordPress, TYPO3, Magnolia u. v. m. – modulare Inhalte, saubere Workflows, QA und wartbare Strukturen.' },
+    p2: { title: 'UX-Writing', desc: 'Mikrocopy, States, Onboarding, Navigationssprache – klare Nutzerführung in passender Tonalität.' },
+    p3: { title: 'Website-Erstellung', desc: 'Struktur, Text, visuelle Grammatik – vom Wireframe bis zur Seite. Lesbarkeit, Zugänglichkeit & Performance.' },
+  };
 
-        const duration = 800;
-        let startTime = null;
+  let first = null, second = null, lock = false, moves = 0, matched = 0;
 
-        function step(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const progress = timestamp - startTime;
-            const t = Math.min(progress / duration, 1);
+  function cardTpl(c){
+    const btn = document.createElement('button');
+    btn.className = 'mem-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Karte umdrehen');
+    btn.dataset.uid = c.uid;
+    btn.dataset.pair = c.pairId;
 
-            const currentX = startX + (endX - startX) * t;
+    const card = document.createElement('div');
+    card.className = 'mem-card';
+    card.appendChild(btn);
 
-            img.style.position = "absolute";
-            img.style.left = currentX + "px";
-            img.style.top = startY + "px";
+    const inner = document.createElement('div');
+    inner.className = 'mem-inner';
+    btn.appendChild(inner);
 
-            // Trail erzeugen
-            createTrailParticle(currentX, startY);
+    // Rückseite: neue SVG (15–20.svg)
+    const back = document.createElement('div');
+    back.className = 'mem-face back';
+    back.style.backgroundImage = `url('${c.img}')`;
+    back.setAttribute('aria-label', c.alt);
+    inner.appendChild(back);
 
-            if (t < 1) {
-                requestAnimationFrame(step);
-            } else {
-                // Reset Position
-                img.style.position = "";
-                img.style.left = "";
-                img.style.top = "";
-                animating = false;
-            }
-        }
+    // Vorderseite: Text (Leistung)
+    const front = document.createElement('div');
+    front.className = 'mem-face front';
+    const svc = SERVICES_BY_PAIR[c.pairId] || {title:'',desc:''};
+    front.innerHTML = `<h5>${svc.title}</h5><p>${svc.desc}</p>`;
+    inner.appendChild(front);
 
-        requestAnimationFrame(step);
-    }
-
-    const target = document.getElementById("ziel");
-
-    img.addEventListener("click", () => {
-        flyOnce();
-        smoothScrollTo(target.offsetTop - 40, 1300);
+    btn.addEventListener('click', ()=> flip(card, btn, c));
+    btn.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); btn.click(); }
     });
+
+    return card;
+  }
+
+  function render(){
+    grid.innerHTML = '';
+    DECK_FIXED.forEach(c => grid.appendChild(cardTpl(c)));
+    moves = 0; matched = 0; first = second = null; lock = false;
+    movesEl.textContent = '0';
+    live.textContent = 'Neues Spiel – 3 Paare.';
+  }
+
+  function flip(card, btn, c){
+    if(lock) return;
+    if(card.classList.contains('is-flipped')) return;
+    card.classList.add('is-flipped');
+
+    if(!first){
+      first = {card, btn, data:c};
+      return;
+    }
+    if(first && !second){
+      second = {card, btn, data:c};
+      moves++; movesEl.textContent = String(moves);
+      lock = true;
+
+      if(first.data.pairId === second.data.pairId){
+        setTimeout(()=>{
+          first.card.classList.add('is-matched');
+          second.card.classList.add('is-matched');
+          first.btn.setAttribute('aria-disabled','true');
+          second.btn.setAttribute('aria-disabled','true');
+          matched++;
+          live.textContent = `Treffer. ${matched===3 ? 'Alle Paare gefunden!' : 'Weiter so.'}`;
+          first = second = null; lock = false;
+
+          if(matched === 3){
+            grid.animate([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:500});
+          }
+        }, 300);
+      }else{
+        setTimeout(()=>{
+          first.card.classList.remove('is-flipped');
+          second.card.classList.remove('is-flipped');
+          live.textContent = `Kein Treffer. Versuche es erneut.`;
+          first = second = null; lock = false;
+        }, 650);
+      }
+    }
+  }
+
+  resetBtn.addEventListener('click', render);
+  render();
+})();
+
+/* 🔥 Klick-Animation (Feuerball fliegt langsam/fallend zum Kontakt) */
+(function(){
+  const img = document.getElementById('fireBtn');
+  const target = document.getElementById('kontakt');
+  if(!img || !target) return;
+
+  function smoothScrollTo(targetY, duration){
+    const startY = window.scrollY, delta = targetY - startY, startT = performance.now();
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+    function tick(now){
+      const p = Math.min((now-startT)/duration,1);
+      window.scrollTo(0, startY + delta*easeOutCubic(p));
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function flyOnce(){
+    const r = img.getBoundingClientRect();
+    const sx = r.left + r.width/2, sy = r.top + r.height/2;
+    const tr = target.getBoundingClientRect();
+    const ex = innerWidth * 0.5;
+    const ey = tr.top + scrollY + 24;
+
+    const ctrlX = (sx + ex)/2 + innerWidth*0.12;
+    const ctrlY = sy + (ey - sy)*0.35 - 120;
+
+    const clone = img.cloneNode(true);
+    clone.classList.add('fireball-flying');
+    document.body.appendChild(clone);
+
+    const duration = 3600; let start = null, lastSpark = 0;
+
+    function spark(x,y){
+      const s = document.createElement('span'); s.className='fb-spark';
+      const size = 10 + Math.random()*12; s.style.width=size+'px'; s.style.height=size+'px';
+      s.style.left=x+'px'; s.style.top=y+'px'; document.body.appendChild(s);
+      s.addEventListener('animationend',()=>s.remove());
+    }
+
+    function q(t,p0,p1,p2){ const u=1-t; return u*u*p0 + 2*u*t*p1 + t*t*p2; }
+
+    function step(ts){
+      if(!start) start = ts;
+      const raw = Math.min((ts-start)/duration, 1);
+      const x = q(raw, sx, ctrlX, ex);
+      const y = q(raw, sy, ctrlY, ey);
+      clone.style.left = x+'px';
+      clone.style.top  = (y - scrollY)+'px';
+      if(ts - lastSpark > 70){ lastSpark = ts; spark(x, y - scrollY); }
+      if(raw<1) requestAnimationFrame(step); else clone.remove();
+    }
+
+    requestAnimationFrame(step);
+    smoothScrollTo(ey, duration);
+  }
+
+  img.addEventListener('click', e => { e.preventDefault(); flyOnce(); });
 })();
 </script>
-
 </body>
 </html>
