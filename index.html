@@ -64,7 +64,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 .marquee:hover .track,.marquee.paused .track{animation-play-state:paused}
 @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* ===== LEISTUNGEN (Memory) ===== */
+/* ===== LEISTUNGEN (weiß) ===== */
 #leistungen{padding-top:0;border-bottom:none;background:#fff;color:var(--ink)}
 .leistungen-hero{
   position:sticky; top:var(--headerH); z-index:5;
@@ -157,18 +157,17 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 .mem-a11y{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 
-/* ===== LEISTUNGEN – klassisch (modern scrollbar) ===== */
+/* ===== LEISTUNGEN – klassisch ===== */
 #leistungen-plain{background:#fff;color:var(--ink)}
 .lp-hero{position:sticky; top:var(--headerH); z-index:4; background:#fff; border-bottom:1px solid #eee;}
 .lp-hero .wrap{padding-top:16px;padding-bottom:10px}
 .lp-hero .kicker{letter-spacing:.16em;font-size:14px;color:#666;text-transform:uppercase;margin:0 0 6px}
 .lp-hero h3{font-family:Fraunces,serif;font-size:clamp(22px,3vw,34px);margin:0}
-.lp-rail{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:32px}
+.lp-rail{position:relative}
 .lp-tile{
-  flex:0 0 auto;
-  scroll-snap-align:start;
+  position:sticky; top:calc(var(--headerH) + 72px);
   background:#fff;color:#000;border:2px solid #000;border-radius:0;padding:22px 20px;
-  box-shadow:0 18px 36px rgba(0,0,0,.06);
+  box-shadow:0 18px 36px rgba(0,0,0,.06); margin:0 0 26vh;
 }
 .lp-tile h4{font-family:Fraunces,serif;font-size:clamp(20px,2.2vw,28px);margin:0 0 8px}
 .lp-tile p{margin:0;max-width:62ch}
@@ -299,60 +298,50 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
     <div class="offerH">
       <div class="wrap">
         <div class="hand-wrap">
-          <img class="hand-hint" src="hand.png" alt="Hinweis: Klicken Sie die Karten">
+          <img class="hand-hint" src="hand.png" alt="Hinweis: Spiel starten – finde Paare">
         </div>
-        <div class="memory-wrap">
+
+        <div class="memory-wrap" id="memory">
           <div class="memory-head">
-            <h3 class="memory-title">Memory</h3>
+            <h3 class="memory-title">Finde die passenden Leistungen</h3>
             <div class="memory-ctrls">
-              <span class="mem-stat">0 Paare</span>
-              <button class="mem-reset">Reset</button>
+              <span class="mem-stat"><strong>Züge:</strong> <span id="memMoves">0</span></span>
+              <button class="mem-reset" id="memReset" type="button">Zurücksetzen</button>
             </div>
           </div>
-          <div class="memory-grid">
-            <div class="mem-card">
-              <button class="mem-btn"><div class="mem-inner">
-                <div class="mem-face front"><h5>Content Planung</h5><p>Strukturierte Inhalte für Web & Social Media</p></div>
-                <div class="mem-face back" style="background-image:url('icon1.png');"></div>
-              </div></button>
-            </div>
-            <div class="mem-card">
-              <button class="mem-btn"><div class="mem-inner">
-                <div class="mem-face front"><h5>CMS & Systeme</h5><p>Wordpress, Craft, Redaktionssysteme</p></div>
-                <div class="mem-face back" style="background-image:url('icon2.png');"></div>
-              </div></button>
-            </div>
-            <!-- Weitere Karten hier ... -->
+
+          <div class="memory-grid" id="memoryGrid" aria-label="Memory Spielbereich">
+            <!-- Karten werden automatisch via JS erzeugt -->
           </div>
+          <div class="mem-a11y" aria-live="polite" id="memLive"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- LEISTUNGEN KURZ ERKLÄRT -->
+  <!-- LEISTUNGEN – klassisch -->
   <section id="leistungen-plain">
     <div class="lp-hero">
       <div class="wrap">
-        <div class="kicker">Kurz erklärt</div>
-        <h3>Meine Kompetenzen auf einen Blick</h3>
+        <div class="kicker">Leistungen</div>
+        <h3>Kurz erklärt</h3>
       </div>
-    </div>
-    <div class="wrap lp-rail">
-      <div class="lp-tile"><h4>Content Strategie</h4><p>Gezielte Planung für klare Botschaften.</p></div>
-      <div class="lp-tile"><h4>UX Writing</h4><p>Texte, die Nutzer führen und informieren.</p></div>
-      <div class="lp-tile"><h4>Redaktionssysteme</h4><p>Effiziente CMS-Lösungen und Workflows.</p></div>
-      <div class="lp-tile"><h4>Design & Struktur</h4><p>Visuelle Klarheit für Webseiten & Landingpages.</p></div>
     </div>
   </section>
 
   <!-- ANSATZ -->
   <section id="ansatz">
     <div class="wrap">
-      <h3>Mein Ansatz</h3>
+      <h2>Mein Ansatz</h2>
       <div class="accordion">
-        <details class="ac"><summary>Research & Analyse</summary><div class="ac-body"><p>Ich analysiere Ihre Inhalte und Ihre Zielgruppe gründlich.</p></div></details>
-        <details class="ac"><summary>Content Strategie</summary><div class="ac-body"><p>Strukturierte Planung Ihrer Inhalte für maximale Wirkung.</p></div></details>
-        <details class="ac"><summary>Umsetzung & Testing</summary><div class="ac-body"><p>Ich begleite die Produktion und teste die Umsetzung auf allen Endgeräten.</p></div></details>
+        <details class="ac">
+          <summary>Online-Redaktion</summary>
+          <div class="ac-body">Hier erkläre ich kurz meinen redaktionellen Ansatz...</div>
+        </details>
+        <details class="ac">
+          <summary>Webgestaltung</summary>
+          <div class="ac-body">Hier erkläre ich meine gestalterische Philosophie...</div>
+        </details>
       </div>
     </div>
   </section>
@@ -361,14 +350,23 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
   <section id="kontakt">
     <div class="contact-hero">
       <div class="contact-media">
-        <img src="contact-bg.jpg" alt="">
+        <img src="kontaktbild.jpg" alt="Kontakt Hintergrund">
       </div>
       <div class="contact-card">
-        <h3>Kontakt</h3>
+        <h3>Schreib mir</h3>
         <form class="form">
-          <div class="field"><label for="name">Name</label><input type="text" id="name" name="name"></div>
-          <div class="field"><label for="email">E-Mail</label><input type="email" id="email" name="email"></div>
-          <div class="field"><label for="message">Nachricht</label><textarea id="message" name="message"></textarea></div>
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" type="text">
+          </div>
+          <div class="field">
+            <label for="email">E-Mail</label>
+            <input id="email" type="email">
+          </div>
+          <div class="field">
+            <label for="message">Nachricht</label>
+            <textarea id="message"></textarea>
+          </div>
           <button type="submit" class="submit-btn">Senden</button>
         </form>
       </div>
@@ -377,53 +375,61 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
 </main>
 
 <footer>
-  &copy; 2025 Denice-Su Cronauer. Alle Rechte vorbehalten.
+  &copy; 2025 Denice-Su Cronauer
 </footer>
 
 <script>
-/* NAV TOGGLE */
-const navToggle = document.getElementById('navToggleImg');
-const navPanel = document.getElementById('navPanel');
-navToggle.addEventListener('click',()=>{navPanel.classList.toggle('open')});
+const navToggle=document.getElementById("navToggleImg"),navPanel=document.getElementById("navPanel");
+navToggle.addEventListener("click",()=>{navPanel.classList.toggle("open")});
 
-/* MARQUEE PAUSE ON FOCUS */
-const marquee = document.getElementById('marquee');
-marquee.addEventListener('focus',()=>{marquee.classList.add('paused')});
-marquee.addEventListener('blur',()=>{marquee.classList.remove('paused')});
-
-/* MEMORY GAME */
-const memCards=document.querySelectorAll('.mem-card');
-const memReset=document.querySelector('.mem-reset');
-const memStat=document.querySelector('.mem-stat');
-let flipped=[],matched=0;
-
-function flipCard(card){
-  if(card.classList.contains('is-flipped')||flipped.length===2)return;
-  card.classList.add('is-flipped'); flipped.push(card);
+// Memory JS
+const memoryGrid=document.getElementById("memoryGrid"),memReset=document.getElementById("memReset"),memMoves=document.getElementById("memMoves"),memLive=document.getElementById("memLive");
+let cardsData=[
+  {id:1,title:"Content Strategie",img:"leistungen1.png"},
+  {id:1,title:"Content Strategie",img:"leistungen1.png"},
+  {id:2,title:"SEO & Texte",img:"leistungen2.png"},
+  {id:2,title:"SEO & Texte",img:"leistungen2.png"},
+  {id:3,title:"UX Writing",img:"leistungen3.png"},
+  {id:3,title:"UX Writing",img:"leistungen3.png"},
+  {id:4,title:"Webdesign",img:"leistungen4.png"},
+  {id:4,title:"Webdesign",img:"leistungen4.png"},
+  {id:5,title:"CMS & Pflege",img:"leistungen5.png"},
+  {id:5,title:"CMS & Pflege",img:"leistungen5.png"},
+  {id:6,title:"Beratung",img:"leistungen6.png"},
+  {id:6,title:"Beratung",img:"leistungen6.png"}
+];
+let flipped=[],moves=0;
+function shuffle(a){return a.sort(()=>Math.random()-.5)}
+function createCard(data){
+  const card=document.createElement("div");card.className="mem-card";card.innerHTML=`
+  <button class="mem-btn">
+    <div class="mem-inner">
+      <div class="mem-face front">
+        <img src="${data.img}" alt="${data.title}" style="max-width:80%;margin-bottom:8px"/>
+        <h5>${data.title}</h5>
+      </div>
+      <div class="mem-face back"></div>
+    </div>
+  </button>`;card.querySelector(".mem-btn").addEventListener("click",()=>flipCard(card,data));return card;
+}
+function flipCard(card,data){
+  if(card.classList.contains("is-flipped")||flipped.length===2)return;
+  card.classList.add("is-flipped");flipped.push({card,data});
   if(flipped.length===2){
-    const [first,second]=flipped;
-    if(first.querySelector('.mem-face.front h5').innerText===second.querySelector('.mem-face.front h5').innerText){
-      first.classList.add('is-matched'); second.classList.add('is-matched'); matched++;
-      memStat.textContent=`${matched} Paare`;
-      flipped=[];
-    } else {
-      setTimeout(()=>{first.classList.remove('is-flipped'); second.classList.remove('is-flipped'); flipped=[]},1000);
+    moves++;memMoves.textContent=moves;
+    if(flipped[0].data.id===flipped[1].data.id){
+      flipped.forEach(f=>f.card.classList.add("is-matched"));
+      memLive.textContent="Treffer! Gut gemacht.";
+      setTimeout(()=>flipped=[],600);
+    }else{
+      memLive.textContent="Nicht getroffen, versuche es noch einmal.";
+      setTimeout(()=>{flipped.forEach(f=>f.card.classList.remove("is-flipped"));flipped=[]},800);
     }
   }
 }
-
-memCards.forEach(card=>{
-  card.addEventListener('click',()=>flipCard(card));
-});
-
-memReset.addEventListener('click',()=>{
-  memCards.forEach(c=>c.classList.remove('is-flipped','is-matched'));
-  flipped=[]; matched=0; memStat.textContent='0 Paare';
-});
-
-/* FIREBALL CLICK */
-const fireBtn=document.getElementById('fireBtn');
-fireBtn.addEventListener('click',()=>{alert('Feuerball aktiviert!')});
+function initMemory(){memoryGrid.innerHTML="";shuffle(cardsData).forEach(d=>memoryGrid.appendChild(createCard(d)));moves=0;memMoves.textContent="0";memLive.textContent="";}
+memReset.addEventListener("click",initMemory);
+initMemory();
 </script>
 
 </body>
