@@ -64,7 +64,7 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 /* ===== LEISTUNGEN (Memory) ===== */
 .memory-wrap{
-  background:#fff;
+  background:#fff; /* Bereich komplett weiß */
   padding-inline:16px;
 }
 
@@ -99,13 +99,18 @@ h1.display{font-family:Fraunces,serif;font-size:clamp(48px,8vw,100px);line-heigh
 
 .mem-face{
   position:absolute; inset:0; backface-visibility:hidden; border:none; border-radius:10px;
-  box-shadow:0 10px 24px rgba(0,0,0,.08);
   display:grid; place-items:center; padding: clamp(10px, 2.5vw, 20px);
+  background:#fff; /* Karten weiß */
+  box-shadow:0 10px 24px rgba(0,0,0,.05); /* leichter Schatten */
 }
 
-.mem-face.back{ background:#fff center/contain no-repeat; }
+.mem-face.back{
+  background:#fff center/contain no-repeat; /* Rückseite ebenfalls hell */
+}
+
 .mem-face.front{
-  background:#fff; transform:rotateY(180deg); text-align:left; color:#121212;
+  background:#fff; transform:rotateY(180deg);
+  text-align:left; color:#121212;
   display:flex; flex-direction:column; justify-content:center; gap: clamp(6px, 1.2vw, 12px);
 }
 
@@ -173,11 +178,10 @@ footer{padding:24px 0;text-align:center;color:#999;font-size:14px;background:#ff
 .fb-spark{position:fixed;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#e5dcff,#c6b3ff 60%,rgba(168,139,255,0));pointer-events:none;z-index:49;animation:fbSpark .8s ease-out forwards}
 @keyframes fbSpark{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(.3)}}
 
-  .leistungen-hero {
-  background: #fff; /* Hintergrundfarbe */
+.leistungen-hero {
+  background: #fff; /* Hintergrundfarbe komplett weiß */
   color: var(--ink); /* Textfarbe optional */
 }
-
 </style>
 </head>
 
@@ -422,7 +426,7 @@ document.getElementById('navToggleImg').addEventListener('click',()=>{document.g
     const duration=3600; let start=null,lastSpark=0;
     function spark(x,y){const s=document.createElement('span'); s.className='fb-spark'; const size=10+Math.random()*12; s.style.width=size+'px'; s.style.height=size+'px'; s.style.left=x+'px'; s.style.top=y+'px'; document.body.appendChild(s); s.addEventListener('animationend',()=>s.remove());}
     function q(t,p0,p1,p2){const u=1-t; return u*u*p0+2*u*t*p1+t*t*p2;}
-    function step(ts){if(!start) start=ts; const raw=Math.min((ts-start)/duration,1); const x=q(raw,sx,ctrlX,ex); const y=q(raw,sy,ctrlY,ey); clone.style.left=x+'px'; clone.style.top=(y-scrollY)+'px'; if(ts-lastSpark>70){lastSpark=ts;spark(x,y-scrollY);} if(raw<1) requestAnimationFrame(step); else clone.remove();}
+    function step(ts){if(!start) start=ts; const raw=Math.min((ts-start)/duration,1); clone.style.left=q(raw,sx,ctrlX,ex)+'px'; clone.style.top=q(raw,sy,ctrlY,ey)-scrollY+'px'; if(ts-lastSpark>70){lastSpark=ts;spark(parseFloat(clone.style.left),parseFloat(clone.style.top));} if(raw<1) requestAnimationFrame(step); else clone.remove();}
     requestAnimationFrame(step); smoothScrollTo(ey,duration);
   }
 
